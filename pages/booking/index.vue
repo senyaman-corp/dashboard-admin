@@ -14,4 +14,27 @@
 
 <script setup>
 import DataTables from "@/components/Table/DataTables.vue";
+import {useBookingStore} from "@/stores/booking";
+import { useAuthStore } from "~/stores/auth";
+const config = useRuntimeConfig();
+const bookingStore = useBookingStore();
+const authStore = useAuthStore();
+const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}bookings/list`,{
+            method:'POST',
+            lazy: true,
+            headers:{
+              'Authorization':'Bearer ' + authStore.getToken
+            }
+        })
+  console.log(statusCode);
+  if(status == 1){
+    bookingStore.setBooking(data);
+  }else{
+    if(statusCode == 403){
+      //redirect login;
+    }
+  }
+  definePageMeta({
+    middleware: ["auth"]
+  })
 </script>
