@@ -2,9 +2,10 @@
     <div>
         <CardBaseCard title="Tambah Kamar">
             <FormBaseForm @submit="handleSubmit">
+                <InputBaseInput v-model="formData.room_number" label="Nomor Kamar" placeholder="Masukkan Nomor Kamar" />
                 <InputBaseInput v-model="formData.name" label="Nama Kamar" placeholder="Masukkan Nama Kamar" />
-                <InputBaseInput v-model="formData.type" label="Tipe Kamar" placeholder="Masukkan Tipe Kamar" />
-                <InputBaseInput v-model="formData.view" label="View Kamar" placeholder="Masukkan View Kamar" />
+                <InputWithCombobox v-model="formData.type" :options="['Deluxe','Studio']" label="Tipe Kamar"  />
+                <InputWithCombobox v-model="formData.view" :options="['Mountain','City']" label="View Kamar" placeholder="Masukkan View Kamar" />
                 <InputBaseInput v-model="formData.floor" label="Lantai Kamar" placeholder="Masukkan Lantai Kamar" />
                 <InputBaseInput v-model="formData.floor" label="Properti Kamar" placeholder="Masukkan Properti Kamar" />
                 <InputBaseInput v-model="formData.floor" label="Ukuran Kamar" placeholder="Masukkan Ukuran Kamar" />
@@ -20,9 +21,18 @@
 import { ref } from "vue";
 
 const formData = ref({
+  room_number:'',
   name: "",
+  type:'',
+  view:'',
+  floor_number:'',
+  status:'',
+  default_price:'',
+  size:'',
   description: "",
-  file: null,
+  username_wifi:'',
+  password_wifi:''
+  //file: null,
 });
 
 const submittedData = ref({

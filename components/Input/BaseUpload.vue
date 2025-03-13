@@ -7,6 +7,7 @@
       class="form-control"
       @change="handleFileUpload"
       :disabled="disabled"
+      :accept="accept"
     />
     <div v-if="error" class="text-danger mt-1">{{ error }}</div>
   </div>
@@ -20,6 +21,7 @@ defineProps({
   id: String,
   disabled: Boolean,
   error: String,
+  accept: String,
 });
 
 const emit = defineEmits(["fileSelected"]);

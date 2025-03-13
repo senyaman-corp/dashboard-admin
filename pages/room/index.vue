@@ -14,4 +14,28 @@
 
 <script setup>
 import DataTables from "@/components/Table/DataTables.vue";
+
+import { useAuthStore } from "~/stores/auth";
+const config = useRuntimeConfig();
+const authStore = useAuthStore();
+const rooms = ref([]);
+const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/list`,{
+            method:'POST',
+            lazy: true,
+            headers:{
+              'Authorization':'Bearer ' + authStore.getToken
+            },
+            body:{
+                date:new Date('Y-m-d')
+            }
+        });
+        console.log("Rooms",data)
+  if(status == 1){
+    rooms.value = data ;
+    console.log("Rooms",rooms.value)
+  }else{
+    if(statusCode == 403){
+      //redirect login;
+    }
+  }
 </script>
