@@ -26,7 +26,6 @@ const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}bookin
               'Authorization':'Bearer ' + authStore.getToken
             }
         })
-  console.log(statusCode);
   if(status == 1){
     bookingStore.setBooking(data);
   }else{

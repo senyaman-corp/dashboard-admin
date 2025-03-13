@@ -26,4 +26,7 @@ const formData = ref({
 const submit = () => {
   console.log("Submitted:", formData.value);
 };
+definePageMeta({
+  middleware: ["auth"]
+})
 </script>

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore('auth', {
+
     state: () => {
         return {
             token:null,
@@ -12,6 +13,12 @@ export const useAuthStore = defineStore('auth', {
             return this.token
         },
         isLoggedin(){
+            const { $parseJwt} = useNuxtApp();
+            let parseToken = $parseJwt(this.token);
+            var expDate = new Date(parseToken.exp * 1000);
+            if(new Date() > expDate){
+                this.loggedin = false;
+            }
             return this.loggedin
         }
     },
