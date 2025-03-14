@@ -16,8 +16,7 @@
 import DataTables from "@/components/Table/DataTables.vue";
 
 import { useAuthStore } from "~/stores/auth";
-import { useNavigatorStore } from "~/stores/navigator";
-const navStore = useNavigatorStore();
+const {$bus} = useNuxtApp();
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const rooms = ref([]);
@@ -42,8 +41,7 @@ const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/
   }
 
   onMounted(() => {
-    navStore.setPage("Room");
-    navStore.setSubpage("Index Room");
+    $bus.$emit('pagechange',{page:'Room',subpage:'Index Room'})
   });
 
   definePageMeta({

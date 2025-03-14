@@ -34,6 +34,9 @@ const handleFile = (file) => {
 const handleSubmit = () => {
   submittedData.value = { ...formData.value };
 };
+onMounted(() => {
+  $bus.$emit('pagechange',{page:'Room',subpage:'Add Property'})
+  });
 definePageMeta({
     middleware: ["auth"]
   })

@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+
 import { ref } from "vue";
 
 const formData = ref({
@@ -48,6 +49,9 @@ const handleFile = (file) => {
 const handleSubmit = () => {
   submittedData.value = { ...formData.value };
 };
+onMounted(() => {
+  $bus.$emit('pagechange',{page:'Room',subpage:'Add Room'})
+  });
 definePageMeta({
     middleware: ["auth"]
   })

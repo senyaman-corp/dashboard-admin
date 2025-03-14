@@ -19,6 +19,7 @@ import { useAuthStore } from "~/stores/auth";
 const config = useRuntimeConfig();
 const bookingStore = useBookingStore();
 const authStore = useAuthStore();
+const {$bus} = useNuxtApp();
 const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}bookings/list`,{
             method:'POST',
             lazy: true,
@@ -33,6 +34,10 @@ const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}bookin
       //redirect login;
     }
   }
+
+  onMounted(() => {
+    $bus.$emit('pagechange',{page:'Booking',subpage:'Index Booking'})
+  });
   definePageMeta({
     middleware: ["auth"]
   })

@@ -24,21 +24,21 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="javascript:void(0);" class="nav-link has-arrow" data-bs-toggle="collapse" data-bs-target="#menu-reservation" aria-expanded="false">
+                        <a href="javascript:void(0);" class="nav-link has-arrow" data-bs-toggle="collapse" data-bs-target="#menu-reservation" :aria-expanded="page == 'Reservation'">
                             <i class="fas fa-file-alt"></i>
                             <span>Reservation</span>
                         </a>
-                        <ul class="sub-menu collapse" id="menu-reservation">
-                            <li><NuxtLink to="/reservation">Reservation</NuxtLink></li>
+                        <ul class="sub-menu collapse" :class="{show:page=='Reservation'}" id="menu-reservation">
+                            <li :class="{ active:subpage == 'Index Reservation'}"><NuxtLink to="/reservation">Reservation</NuxtLink></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="javascript:void(0);" class="nav-link has-arrow" data-bs-toggle="collapse" data-bs-target="#menu-booking" aria-expanded="false">
+                        <a href="javascript:void(0);" class="nav-link has-arrow" data-bs-toggle="collapse" data-bs-target="#menu-booking" :aria-expanded="page == 'Booking'">
                             <i class="fas fa-address-book"></i>
                             <span>Booking</span>
                         </a>
-                        <ul class="sub-menu collapse" id="menu-booking">
-                            <li><NuxtLink to="/booking">Booking</NuxtLink></li>
+                        <ul class="sub-menu collapse" :class="{show:page=='Booking'}" id="menu-booking">
+                            <li :class="{ active:subpage == 'Index Booking'}"><NuxtLink to="/booking">Booking</NuxtLink></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -57,16 +57,17 @@
 </template>
 <script setup>
 //import { onMounted } from "vue";
-import { useNavigatorStore } from "~/stores/navigator";
-const navStore = useNavigatorStore();
-const page = navStore.page;
-const subpage = navStore.subpage;
-
-
+const { $bus} = useNuxtApp();
+const page = ref('');
+const subpage = ref('')
     onMounted(() => {
-        console.log("Sidebar Component Mounted");
         document.getElementById("sidebar-menu")?.addEventListener("click", () => {
             document.body.classList.toggle("sidebar-enable");
         });
+        $bus.$on('pagechange', (data) => {
+            console.log("Page Change" ,data);
+            page.value = data.page;
+            subpage.value = data.subpage;
+        })
     });
 </script>

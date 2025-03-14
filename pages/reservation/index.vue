@@ -14,7 +14,11 @@
 
 <script setup>
 import DataTables from "@/components/Table/DataTables.vue";
+const { $bus} = useNuxtApp();
 
+onMounted(() => {
+    $bus.$emit('pagechange',{page:'Reservation',subpage:'Index Reservation'})
+  });
 definePageMeta({
     middleware: ["auth"]
   })

@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '~/assets/css/bootstrap.min.css',
     '~/assets/libs/simplebar/simplebar.min.css',
     '~/assets/css/app.min.css',
+    '~/assets/css/override.css',
   ],
 
   plugins: [

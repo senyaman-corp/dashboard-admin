@@ -232,7 +232,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer card-footer-bordered rounded-0"><a href="auth-login.html" class="btn btn-label-danger">Sign out</a></div>
+                                <div class="card-footer card-footer-bordered rounded-0"><a href="javascript:void(0)" @click="logout" class="btn btn-label-danger">Sign out</a></div>
                             </div>
                         </div>
                     </div>
@@ -245,10 +245,10 @@
     <!-- End topbar -->
 </template>
 
-<script>
-export default {
-
-}
+<script setup>
+    const logout = () => {
+        window.location.href = "/login";
+    }
 </script>
 
 <style>
