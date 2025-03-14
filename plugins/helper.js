@@ -12,7 +12,24 @@ export default defineNuxtPlugin((nuxtApp) => {
                 }).join(''));
                 
                 return JSON.parse(jsonPayload);
-            }
+            },
+           
+              readInputFile:(file)=>{
+                return new Promise((resolve, reject) => {
+                  //var _URL = window.URL || window.webkitURL;
+                  var img = new Image();
+                  //var objectUrl = _URL.createObjectURL(file);
+                  img.onload = function () {
+                    //_URL.revokeObjectURL(objectUrl);
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                      resolve(e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                  };
+                  //img.src = objectUrl;
+                })
+              }
         }
     }
 });

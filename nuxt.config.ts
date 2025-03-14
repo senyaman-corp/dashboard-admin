@@ -16,7 +16,11 @@ export default defineNuxtConfig({
     '~/plugins/easy-datatables.client.ts',
   ],
 
-  modules: ['@pinia/nuxt','pinia-plugin-persistedstate/nuxt'],
+  modules: [
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+    '@nuxt/image',
+  ],
   runtimeConfig:{
     public:{
       baseUrl:process.env.BASE_URL + "api/v1/",

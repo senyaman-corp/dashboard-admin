@@ -20,7 +20,7 @@
                             <span>Customer</span>
                         </a>
                         <ul class="sub-menu collapse" id="menu-customer">
-                            <li><NuxtLink to="/customer">Customer</NuxtLink></li>
+                            <li><NuxtLink to="/guests">Guests</NuxtLink></li>
                         </ul>
                     </li>
                     <li class="nav-item">

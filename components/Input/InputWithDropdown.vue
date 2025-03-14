@@ -1,7 +1,7 @@
 <template>
   <div class="mb-3">
     <label :for="id" class="form-label">{{ label }}</label>
-    <select class="form-select" :id="id" v-model="model">
+    <select class="form-select" :id="id" >
       <option v-for="option in options" :key="option" :value="option">
         {{ option }}
       </option>
@@ -11,12 +11,12 @@
 
 <script setup>
 defineProps({
-  id: { type: String, required: true },
+  id: { type: String },
   label: { type: String, default: "Select Option" },
   options: { type: Array, required: true },
   modelValue: { type: String, default: "" },
 });
 
 const emit = defineEmits(["update:modelValue"]);
-const model = defineModel();
+//const model = defineModel();
 </script>
