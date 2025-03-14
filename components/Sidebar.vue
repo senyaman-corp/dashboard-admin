@@ -4,14 +4,14 @@
             <div id="sidebar-menu">
                 <ul class="left-menu list-unstyled">
                     <li class="nav-item">
-                        <a href="javascript:void(0);" class="nav-link has-arrow" data-bs-toggle="collapse" data-bs-target="#menu-rooms" aria-expanded="false">
+                        <a href="javascript:void(0);" class="nav-link has-arrow active" data-bs-toggle="collapse" data-bs-target="#menu-rooms" :aria-expanded="page == 'Room'">
                             <i class="fas fa-house-user"></i>
                             <span>Rooms</span>
                         </a>
-                        <ul class="sub-menu collapse" id="menu-rooms">
-                            <li><NuxtLink to="/room">Index</NuxtLink></li>
-                            <li><NuxtLink to="/property">Property</NuxtLink></li>
-                            <li><NuxtLink to="/price">Price</NuxtLink></li>
+                        <ul class="sub-menu collapse" :class="{show:page=='Room'}" id="menu-rooms">
+                            <li :class="{ active:subpage == 'Index Room'}"><NuxtLink to="/room">Index</NuxtLink></li>
+                            <li :class="{ active:subpage == 'Index Property'}"><NuxtLink to="/property">Property</NuxtLink></li>
+                            <li :class="{ active:subpage == 'Index Price'}"><NuxtLink to="/price">Price</NuxtLink></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -56,7 +56,13 @@
     </div>
 </template>
 <script setup>
-import { onMounted } from "vue";
+//import { onMounted } from "vue";
+import { useNavigatorStore } from "~/stores/navigator";
+const navStore = useNavigatorStore();
+const page = navStore.page;
+const subpage = navStore.subpage;
+
+
     onMounted(() => {
         console.log("Sidebar Component Mounted");
         document.getElementById("sidebar-menu")?.addEventListener("click", () => {

@@ -16,6 +16,8 @@
 import DataTables from "@/components/Table/DataTables.vue";
 
 import { useAuthStore } from "~/stores/auth";
+import { useNavigatorStore } from "~/stores/navigator";
+const navStore = useNavigatorStore();
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const rooms = ref([]);
@@ -38,6 +40,11 @@ const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/
       //redirect login;
     }
   }
+
+  onMounted(() => {
+    navStore.setPage("Room");
+    navStore.setSubpage("Index Room");
+  });
 
   definePageMeta({
     middleware: ["auth"]
