@@ -15,6 +15,9 @@ export const useAuthStore = defineStore('auth', {
         isLoggedin(){
             const { $parseJwt} = useNuxtApp();
             let parseToken = $parseJwt(this.token);
+            if(!parseToken){
+                return false
+            }
             var expDate = new Date(parseToken.exp * 1000);
             if(new Date() > expDate){
                 this.loggedin = false;

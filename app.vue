@@ -1,4 +1,5 @@
 <template>
+  <!-- 
   <div>
     <Navbar/>
     <client-only>
@@ -12,4 +13,8 @@
       </div>
     </div>
   </div>
+  -->
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>

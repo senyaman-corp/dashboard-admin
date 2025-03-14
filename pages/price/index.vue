@@ -14,4 +14,7 @@
 
 <script setup>
 import DataTables from "@/components/Table/DataTables.vue";
+definePageMeta({
+    middleware: ["auth"]
+  })
 </script>

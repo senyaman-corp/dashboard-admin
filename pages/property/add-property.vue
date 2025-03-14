@@ -34,4 +34,7 @@ const handleFile = (file) => {
 const handleSubmit = () => {
   submittedData.value = { ...formData.value };
 };
+definePageMeta({
+    middleware: ["auth"]
+  })
 </script>

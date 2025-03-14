@@ -1,16 +1,23 @@
 <template>
     <div>
-        <form  @submit.prevent="signIn">
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" class="form-control" v-model="email" required>
+        <div class="d-flex justify-content-center align-items-center w-100 min-50vh">
+            <div class="w-50">
+            <h3>Login</h3>
+            <div>
+                <form  @submit.prevent="signIn">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" v-model="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" v-model="password" required>
+                    </div>
+                    <button class="btn btn-primary">Login</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" v-model="password" required>
             </div>
-            <button class="btn btn-primary">Login</button>
-        </form> 
+        </div>
     </div>
 </template>
 
@@ -44,8 +51,13 @@
             
         })
     }
+    definePageMeta({
+        layout: 'login'
+        })
 </script>
 
 <style>
-
+.min-50vh{
+  min-height: 50vh;
+}
 </style>

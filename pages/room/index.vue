@@ -38,4 +38,8 @@ const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/
       //redirect login;
     }
   }
+
+  definePageMeta({
+    middleware: ["auth"]
+  })
 </script>
