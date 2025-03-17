@@ -119,6 +119,7 @@ const formatPrice = (price) => {
 
 // Add another room selection
 const addRoom = () => {
+    console.log('Adding room');
     formData.value.selectedRooms.push({ room_id: null });
 };
 

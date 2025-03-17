@@ -133,7 +133,7 @@ watch([selectedMonth, selectedYear], () => {
 
 onMounted(() => {
   initializePrices();
-  $bus.$emit('pagechange', { page: 'Room', subpage: 'Room Pricing' });
+  $bus.$emit('pagechange', { page: 'Room', subpage: 'Index Room' });
 });
 
 definePageMeta({

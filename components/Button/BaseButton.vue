@@ -5,7 +5,7 @@
     :class="['btn', `btn-${variant}`, { 'btn-block': block }]"
     :type="to ? undefined : type"
     :disabled="!to && disabled"
-    @click="!to ? $emit('click') : null"
+    
   >
     <slot />
   </component>
