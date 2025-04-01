@@ -1,27 +1,6 @@
 <template>
   <div>
       <CardBaseCard title="Room Pricing Management">
-          <!-- 
-          <div class="mb-4 flex justify-between items-center">
-              <div class="flex gap-4">
-                  <InputWithCombobox 
-                      v-model="selectedMonth" 
-                      :options="months" 
-                      label="Month" 
-                      :id="'month'" 
-                  />
-                  <InputWithCombobox 
-                      v-model="selectedYear" 
-                      :options="years" 
-                      label="Year" 
-                      :id="'year'" 
-                  />
-              </div>
-              <ButtonBaseButton @click="searchPrice" variant="primary">
-                  Save All Changes
-              </ButtonBaseButton>
-          </div>
-           -->
            <div class="row justify-content-end">
             <div class="col-lg-2">
               <select class="form-select form-select-lg" :id="'year'"  @change="filterByType" v-model="roomType">
@@ -53,17 +32,46 @@
                       <tr v-for="room in rooms" :key="room.id">
                           <td class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200">
                               <div class="t-bold">{{ room.room_number }} - {{ room.name }}</div>
-                              <div class="small">{{room.type}}</div>
+                              <div class="small">{{room.type}}({{room.view }})</div>
                           </td>
                           
                           <td v-for="(price,index) in room.actual_prices" :key="index" class="px-4 py-2 text-center border-bottom-1 border-gray-200" :class="{'text-danger': isHoliday(index + 1)}">
-                              <div>{{ price.status }}</div>
+                              <div class="room-item" @click="viewDetail(room.id,index)">{{ price.status }}</div>
                           </td>
                       </tr>
                   </tbody>
               </table>
           </div>
       </CardBaseCard>
+      <WidgetModalPad>
+        <div class="w-100">
+          <div class="h4 t-bold text-center">Room Detail</div>
+          <div class="w-100 d-flex justify-content-between  form-group">
+              <label class="t-bold">Room Name</label>
+              <div class="ms-2">{{detail.name}}</div>
+          </div>
+          <div class="w-100 d-flex justify-content-between  form-group">
+              <label class="t-bold">Room Number</label>
+              <div class="ms-2">{{detail.room_number}}</div>
+          </div>
+          <div class="w-100 d-flex justify-content-between  form-group">
+              <label class="t-bold">Room Type</label>
+              <div class="ms-2">{{detail.type}}</div>
+          </div>
+          <div class="w-100 d-flex justify-content-between  form-group">
+              <label class="t-bold">View</label>
+              <div class="ms-2">{{detail.view}}</div>
+          </div>
+          <div class="w-100 d-flex justify-content-between  form-group">
+              <label class="t-bold">Price</label>
+              <div class="ms-2">{{detail.price !== undefined  ? (detail.price.length > 0 ? 'Rp.' + $formatAngka(detail.price[0].price) : 'Rp.' + $formatAngka(detail.default_price)) : 'Rp.' + $formatAngka(detail.default_price)}}</div>
+          </div>
+          <div class="w-100 d-flex justify-content-between  form-group">
+              <label class="t-bold">Date</label>
+              <div class="ms-2">{{detail.price !== undefined  ? (detail.price.length > 0 ? detail.price[0].tanggal : '') : ''}}</div>
+          </div>
+        </div>
+      </WidgetModalPad>
   </div>
 </template>
 
@@ -77,7 +85,7 @@ const config = useRuntimeConfig();
 const { $bus } = useNuxtApp();
 const date = ref({ month:new Date().getMonth(), year:new Date().getFullYear()});
 const roomType = ref();
-
+const detail = ref({})
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);
 const preservedRooms = ref([]);
@@ -121,7 +129,6 @@ const initData = async()=>{
 }
 
 function isHoliday (day){
-  console.log("Day",daysInMonth.value)
   if(date.value === undefined){
     return false;
   }
@@ -153,7 +160,45 @@ const searchRoom = ()=>{
   initData();
 }
 
+const viewDetail = async(id,index)=>{
+  let y = date.value.year;
+  let m = date.value.month + 1;
+  let d = index + 1;
+  if(m < 10){
+    m = "0" + m;
+  }
+  if(d < 10){
+    d = "0" + d;
+  }
+  
+  let selectedDate = new Date(y, m, d);
+  if(date.value === undefined){
+    selectedDate =  new Date()
+  }
+  let tanggal = y + "-" + m + "-" + d;
+  console.log(tanggal)
 
+  const response = await $fetch(`${config.public.baseUrl}rooms/detail`,{
+          method:'POST',
+          lazy: true,
+          headers:{
+            'Authorization':'Bearer '+ authStore.getToken
+          },
+          body:{
+            id:id,
+            date:tanggal
+          }
+    })
+    console.log(response);
+    if(response.status == 1){
+      detail.value = response.data;
+      $bus.$emit('openModal',{
+       
+      })
+    }
+    console.log(response)
+    
+}
 
 const filterByType = ()=>{
   if(roomType.value == ""){
@@ -199,5 +244,8 @@ th{
   color: #fff;
   font-weight: bold;
   font-size: 18px;
+}
+.room-item{
+  cursor: pointer;
 }
 </style>

@@ -2,7 +2,7 @@
   <component
     :is="to ? NuxtLink : 'button'"
     :to="to ? to : undefined"
-    :class="['btn', `btn-${variant}`, { 'btn-block': block }]"
+    :class="['btn', `btn-${size}`,`btn-${variant}`, { 'btn-block': block }]"
     :type="to ? undefined : type"
     :disabled="!to && disabled"
     
@@ -20,5 +20,6 @@ defineProps({
   block: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   to: { type: String, default: null },
+  size: { type: String, default: 'md' },
 });
 </script>
