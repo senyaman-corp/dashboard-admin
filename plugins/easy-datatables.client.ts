@@ -4,5 +4,5 @@ import "vue3-easy-data-table/dist/style.css";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const EasyDataTable = defineAsyncComponent(() => import("vue3-easy-data-table"));
-  nuxtApp.vueApp.component("EasyDataTable", EasyDataTable);
-});
+    nuxtApp.vueApp.component("EasyDataTable", EasyDataTable);
+  });

@@ -5,37 +5,40 @@
         id="data-table"
         :headers="headers"
         :items="items"
-        :rows-per-page="10"
         alternating
         table-class="table table-hover table-bordered table-striped"
+        v-model:server-options="serverOptions"
       />
     </client-only>
   </div>
 </template>
 
 <script setup>
-const headers = [
-  { text: "PLAYER", value: "player" },
-  { text: "TEAM", value: "team"},
-  { text: "NUMBER", value: "number"},
-  { text: "POSITION", value: "position"},
-  { text: "HEIGHT", value: "indicator.height"},
-  { text: "WEIGHT (lbs)", value: "indicator.weight" },
-  { text: "LAST ATTENDED", value: "lastAttended", width: 200},
-  { text: "COUNTRY", value: "country"},
+const props = defineProps({
+    headers: {
+        type: Array,
+        required: true,
+    },
+    items: {
+        type: Array,
+        required: true,
+    },
+});
+const {$bus} = useNuxtApp();
+const serverOptions = ref({
+    page: 1,
+    perPage: 10,
+    sortBy: "id",
+    sortDesc: false,
+    search: "",
+});
+watch(
+      serverOptions,
+      (value) => {
+        $bus.$emit("paginate", serverOptions.value);
+      },
+      { deep: true }
+    );
 
-];
-
-const baseItems = [
-  { player: "Stephen Curry", team: "GSW", number: 30, position: 'G', indicator: {"height": '6-2', "weight": 185}, lastAttended: "Davidson", country: "USA"},
-  { player: "Lebron James", team: "LAL", number: 6, position: 'F', indicator: {"height": '6-9', "weight": 250}, lastAttended: "St. Vincent-St. Mary HS (OH)", country: "USA"},
-  { player: "Kevin Durant", team: "BKN", number: 7, position: 'F', indicator: {"height": '6-10', "weight": 240}, lastAttended: "Texas-Austin", country: "USA"},
-  { player: "Giannis Antetokounmpo", team: "MIL", number: 34, position: 'F', indicator: {"height": '6-11', "weight": 242}, lastAttended: "Filathlitikos", country: "Greece"},
-];
-
-const items = Array(10).fill(baseItems).flat().map((item, index) => ({
-  ...item,
-  id: index + 1, 
-}));
-
+    
 </script>

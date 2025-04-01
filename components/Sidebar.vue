@@ -57,6 +57,7 @@
 </template>
 <script setup>
 //import { onMounted } from "vue";
+
 const { $bus} = useNuxtApp();
 const page = ref('');
 const subpage = ref('')
@@ -65,7 +66,6 @@ const subpage = ref('')
             document.body.classList.toggle("sidebar-enable");
         });
         $bus.$on('pagechange', (data) => {
-            console.log("Page Change" ,data);
             page.value = data.page;
             subpage.value = data.subpage;
         })

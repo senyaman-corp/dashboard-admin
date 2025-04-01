@@ -76,7 +76,7 @@
 import { useAuthStore } from "~/stores/auth";
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
-
+const {$bus} = useNuxtApp();
 const formData = ref({
     name: '',
     no_telp: '',
@@ -180,6 +180,7 @@ const handleSubmit = async () => {
 
 onMounted(() => {
     updateAvailableRooms();
+    $bus.$emit('pagechange',{page:'Booking',subpage:'Index Booking'})
 });
 
 definePageMeta({
