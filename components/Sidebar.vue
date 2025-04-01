@@ -10,7 +10,7 @@
                         </a>
                         <ul class="sub-menu collapse" :class="{show:page=='Room'}" id="menu-rooms">
                             <li :class="{ active:subpage == 'Index Room'}"><NuxtLink to="/room">Index</NuxtLink></li>
-                            <li :class="{ active:subpage == 'Index Property'}"><NuxtLink to="/property">Property</NuxtLink></li>
+                            <li :class="{ active:subpage == 'Add Room'}"><NuxtLink to="/room/add-room">Add Room</NuxtLink></li>
                             <li :class="{ active:subpage == 'Index Price'}"><NuxtLink to="/price">Price</NuxtLink></li>
                         </ul>
                     </li>

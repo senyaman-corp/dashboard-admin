@@ -81,7 +81,6 @@ const roomType = ref();
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);
 const preservedRooms = ref([]);
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 
               'July', 'August', 'September', 'October', 'November', 'December'];
 const bulans = ['01', '02', '03', '04', '05', '06', 
