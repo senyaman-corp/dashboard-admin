@@ -68,7 +68,7 @@
           </div>
           <div class="w-100 d-flex justify-content-between  form-group">
               <label class="t-bold">Date</label>
-              <div class="ms-2">{{detail.price !== undefined  ? (detail.price.length > 0 ? detail.price[0].tanggal : '') : ''}}</div>
+              <div class="ms-2">{{detail.price !== undefined  ? (detail.price.length > 0 ? detail.price[0].tanggal : detail.date) : detail.date}}</div>
           </div>
         </div>
       </WidgetModalPad>
