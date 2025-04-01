@@ -7,10 +7,10 @@
             <div class="navbar-logo-box">
                 <a href="index.html" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-sm.png" alt="logo-sm-dark" height="20">
+                        <img src="assets/icons/icon-512x512.png" alt="logo-sm-dark" height="20"><b class="text-18 text-default">Senyaman</b>
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-dark.png" alt="logo-dark" height="18">
+                        <img src="assets/icons/icon-512x512.png" alt="logo-dark" height="18"><b class="text-18 text-default">Senyaman</b>
                     </span>
                 </a>
 

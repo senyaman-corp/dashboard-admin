@@ -1,3 +1,21 @@
 .nav-item li.active{
     background: linear-gradient(90deg, #b5e4b6, transparent);
 }
+.text-18{
+    font-size: 18px;
+}
+.text-24{
+    font-size: 24px;
+}
+.authentication-bg{
+    background-image: url("../images/authentication-bg.jpg");
+}
+.text-default{
+    color:#787c79;
+}
+.t-bold{
+    font-weight: bold;
+}
+.border-bottom-1{
+    border-bottom: 1px solid #e3e3e3;
+}
