@@ -7,13 +7,12 @@
       </div>
     </div>
     <div class="mt-3">
-      <DataTables />
+      <TableReservation />
     </div>
   </div>
 </template>
 
 <script setup>
-import DataTables from "@/components/Table/DataTables.vue";
 const { $bus} = useNuxtApp();
 
 onMounted(() => {
