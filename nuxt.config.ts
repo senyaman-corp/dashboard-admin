@@ -13,7 +13,10 @@ export default defineNuxtConfig({
     '~/plugins/app.client.ts',
     '~/plugins/metisMenu.client.ts',
     '~/plugins/simplebar.client.ts',
-    '~/plugins/easy-datatables.client.ts',
+    '~/plugins/datatables.client.ts',
+    '~/plugins/vue-multiselect.ts',
+    '~/plugins/autonumeric.ts',
+    '~/plugins/loading.js',
   ],
 
   modules: [

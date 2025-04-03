@@ -1,39 +1,81 @@
 <template>
-  <div class="mb-3">
-    <label :for="id" class="form-label">{{ label }}</label>
-    <input
-      type="text"
+  <div class="mb-3" id="multiselect-style">
+    <label v-if="label" :for="id" class="form-label">{{ label }}</label>
+    <Multiselect
+      v-model="selectedValue"
+      :options="options"
+      :searchable="searchable"
+      :multiple="multiple"
+      :close-on-select="!multiple"
+      :clear-on-select="false"
+      :allow-empty="!required"
+      track-by="value"
+      label="label"
       class="form-control"
-      :id="id"
-      v-model="searchTerm"
-      @input="filterOptions"
-      placeholder="Search..."
+      placeholder="Pilih opsi"
+      @update:modelValue="updateValue"
     />
-    <select class="form-select mt-2" v-model="model">
-      <option v-for="option in filteredOptions" :key="option" :value="option">
-        {{ option }}
-      </option>
-    </select>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, watch, computed } from "vue";
+import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.css";
 
 const props = defineProps({
-  id: { type: String, required: true },
-  label: { type: String, default: "Select Option" },
+  modelValue: [String, Number, Array, Object],
   options: { type: Array, required: true },
-  modelValue: { type: String, default: "" },
+  label: String,
+  id: String,
+  multiple: Boolean,
+  searchable: { type: Boolean, default: true },
+  required: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["update:modelValue"]);
-const model = defineModel();
-const searchTerm = ref("");
 
-const filteredOptions = computed(() => {
-  return props.options.filter((opt) =>
-    opt.toLowerCase().includes(searchTerm.value.toLowerCase())
-  );
-});
+const selectedValue = ref(
+  props.multiple
+    ? props.options.filter((opt) => props.modelValue.includes(opt.value))
+    : props.options.find((opt) => opt.value === props.modelValue) || null
+);
+
+const updateValue = (value) => {
+  if (Array.isArray(value)) {
+    emit("update:modelValue", value.map((item) => item.value));
+  } else {
+    emit("update:modelValue", value?.value || "");
+  }
+};
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    selectedValue.value = props.multiple
+      ? props.options.filter((opt) => newValue.includes(opt.value))
+      : props.options.find((opt) => opt.value === newValue) || null;
+  },
+  { immediate: true }
+);
 </script>
+<style>
+#multiselect-style .multiselect {
+  min-height: 18px !important;
+}
+#multiselect-style .multiselect__tags {
+  min-height: 18px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  background: 0 !important;
+}
+#multiselect-style .multiselect__input, .multiselect__single {
+  border-radius: 0 !important;
+  background: 0 !important;
+  font-size: .8rem !important;
+}
+#multiselect-style span {
+  margin-bottom: 0px !important;
+}
+</style>

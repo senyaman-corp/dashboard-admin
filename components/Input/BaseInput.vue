@@ -5,9 +5,10 @@
       :type="type"
       :id="id"
       class="form-control"
-      v-model="model"
       :placeholder="placeholder"
       :disabled="disabled"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
     />
     <div v-if="error" class="text-danger mt-1">{{ error }}</div>
   </div>

@@ -1,28 +1,58 @@
 <template>
-    <div>
-        <div class="d-flex justify-content-center align-items-center w-100 min-50vh">
-            <div class="w-50">
-            <h3>Login</h3>
-            <div>
-                <form  @submit.prevent="signIn">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" v-model="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" class="form-control" v-model="password" required>
-                    </div>
-                    <button class="btn btn-primary">Login</button>
-                </form>
+  <div class="container-fluid authentication-bg overflow-hidden">
+    <div class="bg-overlay"></div>
+    <div class="row align-items-center justify-content-center min-vh-100">
+      <div class="col-10 col-md-6 col-lg-4 col-xxl-3">
+        <CardBaseCard>
+          <template #default>
+            <div class="text-center">
+              <h4 class="text-muted">Sign in to SENYAMAN</h4>
             </div>
+            <div class="p-2 mt-4">
+              <FormBaseForm @submit="signIn">
+                <InputBaseInput 
+                  type="email" 
+                  v-model="email" 
+                  label="Email" 
+                  id="email" 
+                  placeholder="Enter email" 
+                  required 
+                />
+                <InputBaseInput 
+                  type="password" 
+                  v-model="password" 
+                  label="Password" 
+                  id="password" 
+                  placeholder="Enter password" 
+                  required 
+                />
+                <div class="mb-sm-5">
+                  <div class="form-check float-sm-start">
+                    <input type="checkbox" class="form-check-input" id="customControlInline">
+                    <label class="form-check-label" for="customControlInline">Remember me</label>
+                  </div>
+                  <div class="float-sm-end">
+                    <a href="auth-recoverpw.html" class="text-muted">
+                      <i class="mdi mdi-lock me-1"></i> Forgot your password?
+                    </a>
+                  </div>
+                </div>
+                <div class="pt-5 text-center">
+                  <button class="btn btn-primary w-xl waves-effect waves-light" type="submit">Log In</button>
+                </div>
+              </FormBaseForm>
             </div>
-        </div>
+          </template>
+        </CardBaseCard>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
+    import { ref, onMounted } from 'vue';
     import { useAuthStore } from "~/stores/auth";
+
     const config = useRuntimeConfig();
     const authStore = useAuthStore();
     const email = ref('');
@@ -53,11 +83,5 @@
     }
     definePageMeta({
         layout: 'login'
-        })
+    })
 </script>
-
-<style>
-.min-50vh{
-  min-height: 50vh;
-}
-</style>

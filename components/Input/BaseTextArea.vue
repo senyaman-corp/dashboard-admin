@@ -4,10 +4,11 @@
     <textarea
       :id="id"
       class="form-control"
-      v-model="model"
       :rows="rows"
       :placeholder="placeholder"
       :disabled="disabled"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
     ></textarea>
     <div v-if="error" class="text-danger mt-1">{{ error }}</div>
   </div>

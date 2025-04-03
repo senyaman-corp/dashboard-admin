@@ -39,15 +39,21 @@
                                 Remove Room
                             </ButtonBaseButton>
                         </div>
-                        
-                        <InputWithCombobox
+                        <InputWithCombobox 
+                            v-model="formData.room_id" 
+                            label="Select Room" 
+                            placeholder="Select Room" 
+                            :options="roomOptions" 
+                            multiple
+                        />
+                        <!-- <InputWithCombobox
                             v-model="roomSelection.room_id"
                             :options="availableRooms"
                             label="Select Room"
                             :id="'room-' + index"
                             :option-label="room => `${room.room_number} - ${room.name} (${formatPrice(room.default_price)})`"
                             :option-value="room => room.id"
-                        />
+                        /> -->
                     </div>
                 </div>
 
@@ -85,6 +91,30 @@ const formData = ref({
     check_out: '',
     selectedRooms: [{ room_id: null }]
 });
+
+const roomOptions = ref([]);
+
+const fetchRooms = async () => {
+  try {
+    const response = await $fetch(`${config.public.baseUrl}rooms/list`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + authStore.getToken,
+      },
+    });
+    console.log("API Response:", response);
+    if (response.status === 1 && Array.isArray(response.data)) {
+      roomOptions.value = response.data.map((room) => ({
+        label: `${room.room_number} - ${room.name} - ${room.type}`,
+        value: String(room.id),
+      }));
+    } else {
+      console.error("Error fetching rooms:", response);
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
+  }
+};
 
 const availableRooms = ref([]);
 const today = ref(new Date().toISOString().split('T')[0]);
@@ -180,6 +210,7 @@ const handleSubmit = async () => {
 
 onMounted(() => {
     updateAvailableRooms();
+    fetchRooms();
 });
 
 definePageMeta({
