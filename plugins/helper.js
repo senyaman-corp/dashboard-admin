@@ -29,7 +29,22 @@ export default defineNuxtPlugin((nuxtApp) => {
                   };
                   //img.src = objectUrl;
                 })
-              }
+              },
+              formatAngka:(angka)=>{
+                return new Intl.NumberFormat('ID',{
+                  maximumFractionDigits:0
+                }).format(angka);
+              },
+              formatDate(dateStr) {
+                return new Intl.DateTimeFormat('id', {
+                 //weekday: 'long',
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                }).format(new Date(dateStr));
+                
+                
+              },
         }
     }
 });

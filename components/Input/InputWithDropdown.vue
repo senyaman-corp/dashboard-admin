@@ -1,7 +1,7 @@
 <template>
   <div class="mb-3">
     <label :for="id" class="form-label">{{ label }}</label>
-    <select class="form-select" :id="id" >
+    <select class="form-select" :id="id">
       <option v-for="option in options" :key="option" :value="option">
         {{ option }}
       </option>

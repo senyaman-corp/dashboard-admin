@@ -1,14 +1,28 @@
 <template>
-    <div>
-        <CardBaseCard title="Tambah User Role">
-            <FormBaseForm @submit="handleSubmit">
-                <InputBaseInput v-model="formData.name" label="Nama User" placeholder="Masukkan Nama User" />
-                <InputBaseInput v-model="formData.type" label="Role User" placeholder="Masukkan Role User" />
-                <InputBaseUpload label="Foto User" id="fileUpload" @fileSelected="handleFile" />
-                <ButtonBaseButton type="submit" variant="primary">Submit</ButtonBaseButton>
-            </FormBaseForm>
-        </CardBaseCard>
-    </div>
+  <div>
+    <CardBaseCard title="Tambah User Role">
+      <FormBaseForm @submit="handleSubmit">
+        <InputBaseInput
+          v-model="formData.name"
+          label="Nama User"
+          placeholder="Masukkan Nama User"
+        />
+        <InputBaseInput
+          v-model="formData.type"
+          label="Role User"
+          placeholder="Masukkan Role User"
+        />
+        <InputBaseUpload
+          label="Foto User"
+          id="fileUpload"
+          @fileSelected="handleFile"
+        />
+        <ButtonBaseButton type="submit" variant="primary"
+          >Submit</ButtonBaseButton
+        >
+      </FormBaseForm>
+    </CardBaseCard>
+  </div>
 </template>
 
 <script setup>
@@ -35,6 +49,6 @@ const handleSubmit = () => {
 };
 
 definePageMeta({
-    middleware: ["auth"]
-  })
+  middleware: ["auth"],
+});
 </script>

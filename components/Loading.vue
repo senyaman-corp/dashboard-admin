@@ -6,15 +6,18 @@
 </template>
 
 <script setup>
-import { watch } from 'vue';
+import { watch } from "vue";
 
 const props = defineProps({
-  isLoading: Boolean
+  isLoading: Boolean,
 });
 
-watch(() => props.isLoading, (newVal) => {
-  console.log('Loading.vue received isLoading:', newVal);
-});
+watch(
+  () => props.isLoading,
+  (newVal) => {
+    console.log("Loading.vue received isLoading:", newVal);
+  }
+);
 </script>
 
 <style>

@@ -1,15 +1,34 @@
 <template>
-    <div>
-        <CardBaseCard title="Tambah Properti">
-            <FormBaseForm @submit="handleSubmit">
-                <InputBaseInput v-model="formData.name" label="Nama Properti" placeholder="Masukkan Nama Properti" />
-                <InputBaseInput v-model="formData.type" label="Tipe Properti" placeholder="Masukkan Tipe Properti" />
-                <InputBaseInput v-model="formData.quantity" type="Number" label="Jumlah Properti" placeholder="Masukkan Jumlah Properti" />
-                <InputBaseUpload label="Foto Properti" id="fileUpload" @fileSelected="handleFile" />
-                <ButtonBaseButton type="submit" variant="primary">Submit</ButtonBaseButton>
-            </FormBaseForm>
-        </CardBaseCard>
-    </div>
+  <div>
+    <CardBaseCard title="Tambah Properti">
+      <FormBaseForm @submit="handleSubmit">
+        <InputBaseInput
+          v-model="formData.name"
+          label="Nama Properti"
+          placeholder="Masukkan Nama Properti"
+        />
+        <InputBaseInput
+          v-model="formData.type"
+          label="Tipe Properti"
+          placeholder="Masukkan Tipe Properti"
+        />
+        <InputBaseInput
+          v-model="formData.quantity"
+          type="Number"
+          label="Jumlah Properti"
+          placeholder="Masukkan Jumlah Properti"
+        />
+        <InputBaseUpload
+          label="Foto Properti"
+          id="fileUpload"
+          @fileSelected="handleFile"
+        />
+        <ButtonBaseButton type="submit" variant="primary"
+          >Submit</ButtonBaseButton
+        >
+      </FormBaseForm>
+    </CardBaseCard>
+  </div>
 </template>
 
 <script setup>
@@ -35,9 +54,9 @@ const handleSubmit = () => {
   submittedData.value = { ...formData.value };
 };
 onMounted(() => {
-  $bus.$emit('pagechange',{page:'Room',subpage:'Add Property'})
-  });
+  $bus.$emit("pagechange", { page: "Room", subpage: "Add Property" });
+});
 definePageMeta({
-    middleware: ["auth"]
-  })
+  middleware: ["auth"],
+});
 </script>

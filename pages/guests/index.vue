@@ -11,15 +11,14 @@
         class="table table-striped table-bordered"
         :columns="columns"
         :data="formattedRooms"
-        style="width:100%"
+        style="width: 100%"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-
 definePageMeta({
-    middleware: ["auth"]
-  })
+  middleware: ["auth"],
+});
 </script>

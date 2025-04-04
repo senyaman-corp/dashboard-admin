@@ -43,7 +43,10 @@ const selectedValue = ref(
 
 const updateValue = (value) => {
   if (Array.isArray(value)) {
-    emit("update:modelValue", value.map((item) => item.value));
+    emit(
+      "update:modelValue",
+      value.map((item) => item.value)
+    );
   } else {
     emit("update:modelValue", value?.value || "");
   }
@@ -70,10 +73,11 @@ watch(
   border: 0 !important;
   background: 0 !important;
 }
-#multiselect-style .multiselect__input, .multiselect__single {
+#multiselect-style .multiselect__input,
+.multiselect__single {
   border-radius: 0 !important;
   background: 0 !important;
-  font-size: .8rem !important;
+  font-size: 0.8rem !important;
 }
 #multiselect-style span {
   margin-bottom: 0px !important;

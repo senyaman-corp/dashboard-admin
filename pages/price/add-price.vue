@@ -2,19 +2,27 @@
     <div>
         <CardBaseCard title="Tambah Harga">
             <FormBaseForm @submit="handleSubmit">
+                <div class="form-group">
+                  <label class="t-bold">Tanggal</label>
+                  <VueDatePicker v-model="formData.date" auto-apply :format="'yyyy-MM-dd'" class="mb-3"></VueDatePicker>
+                </div>
                 <InputWithCombobox 
-                  v-model="formData.room_id" 
-                  label="Select Room" 
-                  placeholder="Select Room" 
-                  :options="roomOptions" 
-                  multiple
+                  v-model="formData.room_type" 
+                  label="Type Room" 
+                  placeholder="Type Room" 
+                  :options="roomTypes" 
+                />
+                <InputWithCombobox 
+                  v-model="formData.room_view" 
+                  label="Type Room" 
+                  placeholder="Type Room" 
+                  :options="roomView" 
                 />
                 <InputAutonumeric
                   v-model="formData.price"
                   label="Harga Kamar"
                   placeholder="Masukkan Harga Kamar"
                 />
-                <InputBaseInput v-model="formData.date" type="date" label="Tanggal" placeholder="Masukkan Tanggal" />
                 <ButtonBaseButton type="submit" variant="primary">Submit</ButtonBaseButton>
             </FormBaseForm>
         </CardBaseCard>
@@ -24,48 +32,43 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useAuthStore } from "~/stores/auth";
-
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 
 const formData = ref({
-  room_id: [],
+  room_type: '',
+  room_view:'',
   date: null,
   price: 0,
 });
 
 const roomOptions = ref([]);
+const roomTypes = ref([
+  { value: "Studio", label: "Studio" },
+  { value: "2 BR-A", label: "2 BR-A" },
+  { value: "2 BR-B", label: "2 BR-B" },
+  { value: "2 BR-C", label: "2 BR-C" },
+  { value: "2 BR-D", label: "2 BR-D" },
+  { value: "Suite", label: "Suite" },
+]);
 
-const fetchRooms = async () => {
-  try {
-    const response = await $fetch(`${config.public.baseUrl}rooms/list`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + authStore.getToken,
-      },
-    });
-    console.log("API Response:", response);
-    if (response.status === 1 && Array.isArray(response.data)) {
-      roomOptions.value = response.data.map((room) => ({
-        label: `${room.room_number} - ${room.name} - ${room.type}`,
-        value: String(room.id),
-      }));
-    } else {
-      console.error("Error fetching rooms:", response);
-    }
-  } catch (error) {
-    console.error("Request failed:", error);
-  }
-};
+const roomView = ref([
+  { value: "Mountain", label: "Mountain" },
+  { value: "City", label: "City" },
+]);
 
 const handleSubmit = async () => {
+  console.log('data', formData.value)
+  const formattedDate = formData.value.date ? formData.value.date.toISOString().split("T")[0] : "";
+
   const form = new FormData();
 
-  formData.value.room_id.forEach((id) => 
-    form.append("room_id[]", id)
-  );
-  form.append("date", formData.value.date);
+  form.append("room_type", formData.value.room_type);
+  form.append("view", formData.value.room_view);
+  form.append("date", formattedDate);
   form.append("price", formData.value.price);
 
   try {
@@ -87,8 +90,6 @@ const handleSubmit = async () => {
     console.error("Request failed:", error);
   }
 };
-
-onMounted(fetchRooms);
 
 definePageMeta({
     middleware: ["auth"]

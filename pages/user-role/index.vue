@@ -3,7 +3,12 @@
     <div class="d-flex justify-content-between align-items-center">
       <h3>Data User Role</h3>
       <div>
-        <ButtonBaseButton variant="primary" to="/user-role/add-user-role" class="mx-3">Tambah User Role</ButtonBaseButton>
+        <ButtonBaseButton
+          variant="primary"
+          to="/user-role/add-user-role"
+          class="mx-3"
+          >Tambah User Role</ButtonBaseButton
+        >
       </div>
     </div>
     <div class="table-responsive mt-3">
@@ -12,7 +17,7 @@
           class="table table-striped table-bordered"
           :columns="columns"
           :data="users"
-          style="width:100%"
+          style="width: 100%"
         />
       </client-only>
     </div>
@@ -24,7 +29,6 @@ import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
-const isLoading = inject('isLoading');
 
 const users = ref([]);
 const columns = ref([
@@ -39,14 +43,14 @@ const fetchUsers = async () => {
       lazy: true,
       method: "POST",
       headers: {
-        Authorization: "Bearer " + authStore.getToken
-      }
+        Authorization: "Bearer " + authStore.getToken,
+      },
     });
 
     if (!response.ok) throw new Error("Failed to fetch users");
 
     const result = await response.json();
-    users.value = result.data; 
+    users.value = result.data;
   } catch (error) {
     console.error("Error fetching users:", error);
   }
@@ -57,6 +61,6 @@ onMounted(() => {
 });
 
 definePageMeta({
-    middleware: ["auth"]
-  })
+  middleware: ["auth"],
+});
 </script>

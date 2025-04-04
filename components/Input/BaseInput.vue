@@ -23,6 +23,7 @@ defineProps({
   placeholder: String,
   disabled: Boolean,
   error: String,
+  required: { type: Boolean, default: false },
 });
 
 defineEmits(["update:modelValue"]);
