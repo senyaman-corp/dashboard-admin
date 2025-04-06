@@ -60,7 +60,10 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "~/stores/auth";
-
+import { useNavigatorStore } from "~/stores/navigator";
+const navStore = useNavigatorStore();
+navStore.setPage("Room");
+navStore.setSubpage("Add Room");
 const { $bus, $readInputFile } = useNuxtApp();
 const config = useRuntimeConfig();
 const authStore = useAuthStore();

@@ -32,7 +32,10 @@ import { useAuthStore } from "~/stores/auth";
 const config = useRuntimeConfig();
 const bookingStore = useBookingStore();
 const authStore = useAuthStore();
+const navStore = useNavigatorStore();
 const { $bus } = useNuxtApp();
+navStore.setPage("Booking");
+navStore.setSubpage("Index Booking");
 
 const bookings = ref([]);
 const columns = ref([

@@ -32,6 +32,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="customControlInline"
+                      v-model="remember_me"
                     />
                     <label class="form-check-label" for="customControlInline"
                       >Remember me</label
@@ -68,13 +69,10 @@ const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const email = ref("");
 const password = ref("");
+const remember_me = ref(false);
 const year = new Date().getFullYear();
 const error = ref("");
 const inputType = ref("password");
-onMounted(() => {
-  authStore.setLoggedin(false);
-  authStore.setToken(null);
-});
 
 function signIn() {
   const formData = new FormData();
@@ -88,6 +86,11 @@ function signIn() {
     if (response.status == 1) {
       authStore.setToken(response.data);
       authStore.setLoggedin(true);
+     if(remember_me.value){
+      authStore.setEmail(email.value);
+      authStore.setPassword(password.value);
+      console.log(authStore.email);
+     }
       window.location.href = "/room";
     } else {
       error.value = response.message;

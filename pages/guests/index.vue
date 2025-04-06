@@ -18,6 +18,13 @@
 </template>
 
 <script setup>
+const navStore = useNavigatorStore();
+const { $bus } = useNuxtApp();
+navStore.setPage("Guests");
+navStore.setSubpage("Index Guest");
+onMounted(() => {
+  $bus.$emit("pagechange", { page: "Guests", subpage: "Index Guest" });
+});
 definePageMeta({
   middleware: ["auth"],
 });

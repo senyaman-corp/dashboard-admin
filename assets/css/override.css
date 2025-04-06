@@ -1,6 +1,9 @@
 .nav-item li.active{
     background: linear-gradient(90deg, #b5e4b6, transparent);
 }
+.nav-item.active{
+    background: linear-gradient(90deg, #b5e4b6, transparent);
+}
 .text-18{
     font-size: 18px;
 }

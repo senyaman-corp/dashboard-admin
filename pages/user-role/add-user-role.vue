@@ -3,21 +3,35 @@
     <CardBaseCard title="Tambah User Role">
       <FormBaseForm @submit="handleSubmit">
         <InputBaseInput
-          v-model="formData.name"
+          v-model="formData.name" required
           label="Nama User"
           placeholder="Masukkan Nama User"
         />
         <InputBaseInput
-          v-model="formData.type"
+          v-model="formData.email" required
+          label="Email"
+          placeholder="Masukkan Email"
+          type="email" inputmode="email"
+        />
+        <InputBaseInput
+          v-model="formData.password" required
+          label="Password"
+          placeholder="Masukkan Password"
+          type="password" inputmode="text"
+        />
+        <InputWithDropdown
+          id="role"
+          v-model="formData.roles"
           label="Role User"
-          placeholder="Masukkan Role User"
+          placeholder="Pilih Role User"
+          :options="['Admin', 'User']"
         />
         <InputBaseUpload
           label="Foto User"
           id="fileUpload"
           @fileSelected="handleFile"
         />
-        <ButtonBaseButton type="submit" variant="primary"
+        <ButtonBaseButton type="submit" variant="primary" class="btn-lg"
           >Submit</ButtonBaseButton
         >
       </FormBaseForm>
@@ -27,11 +41,15 @@
 
 <script setup>
 import { ref } from "vue";
-
+const navStore = useNavigatorStore();
+const { $bus } = useNuxtApp();
+navStore.setPage("User_roles");
+navStore.setSubpage("Index User");
 const formData = ref({
   name: "",
-  description: "",
-  file: null,
+  email:'',
+  password:'',
+  roles:'',
 });
 
 const submittedData = ref({
@@ -45,8 +63,13 @@ const handleFile = (file) => {
 };
 
 const handleSubmit = () => {
-  submittedData.value = { ...formData.value };
+  console.log(formData.value);
+  //submittedData.value = { ...formData.value };
 };
+
+onMounted(() => {
+  $bus.$emit("pagechange", { page: "User_roles", subpage: "Index User" });
+});
 
 definePageMeta({
   middleware: ["auth"],

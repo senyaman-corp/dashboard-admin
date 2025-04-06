@@ -21,5 +21,6 @@ export const useNavigatorStore = defineStore('navigator', {
         setSubpage(subpage){
             this.subpage = subpage;
         }
-    }
+    },
+    persist:true
 });

@@ -337,7 +337,13 @@
 </template>
 
 <script setup>
+import { useAuthStore } from "~/stores/auth";
+const authStore = useAuthStore();
 const logout = () => {
+  authStore.setLoggedin(false);
+  authStore.setToken(null);
+  authStore.setEmail(null);
+  authStore.setPassword(null);
   window.location.href = "/login";
 };
 </script>

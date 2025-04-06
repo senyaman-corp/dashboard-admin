@@ -1,23 +1,23 @@
 <template>
-  <div v-if="isLoading" class="loading-overlay">
-    <p>Loading...</p>
-    <img src="@/assets/images/loading.gif" alt="Loading..." />
+  <div v-show="isLoading" class="loading-overlay">
+    <div class="text-center">
+      <p>Loading...</p>
+      <img src="@/assets/images/loading.gif" alt="Loading..." />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { watch } from "vue";
+const { $bus } = useNuxtApp();
 
-const props = defineProps({
-  isLoading: Boolean,
+const isLoading = ref(false);
+
+onMounted(() => {
+  $bus.$on("loading", (loading) => {
+    isLoading.value = loading;
+  });
 });
-
-watch(
-  () => props.isLoading,
-  (newVal) => {
-    console.log("Loading.vue received isLoading:", newVal);
-  }
-);
 </script>
 
 <style>

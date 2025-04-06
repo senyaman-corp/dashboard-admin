@@ -14,7 +14,17 @@
       class="form-control"
       placeholder="Pilih opsi"
       @update:modelValue="updateValue"
-    />
+    >
+      <template #singleLabel="props">
+        <span class="option__desc"><span class="option__title">{{ props.option.label }}</span></span>
+      </template>
+      <template #option="props">
+        <div class="option__desc">
+          <div class="option__title t-bold">{{ props.option.name }}</div>
+          <div class="option__small">{{ props.option.view }}</div>
+        </div>
+      </template>
+    </Multiselect>
   </div>
 </template>
 
@@ -61,6 +71,7 @@ watch(
   },
   { immediate: true }
 );
+
 </script>
 <style>
 #multiselect-style .multiselect {

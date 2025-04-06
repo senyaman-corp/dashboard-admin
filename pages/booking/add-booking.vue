@@ -35,8 +35,7 @@
                 v-if="index > 0"
                 @click="removeRoom(index)"
                 variant="danger"
-                type="button"
-              >
+                type="button" >
                 Remove Room
               </ButtonBaseButton>
             </div>
@@ -45,10 +44,11 @@
                 <div class="mb-3">
                   <label class="form-label">Tanggal Checkin</label>
                   <VueDatePicker
-                    v-model="roomSelection.tanggal_checkin"
+                    v-model="roomSelection.checkin_date"
                     auto-apply
                     :format="'yyyy-MM-dd'"
                     placeholder="Tanggal Checkin"
+                    @update:model-value="handleStartDate(index)"
                   ></VueDatePicker>
                 </div>
               </div>
@@ -56,10 +56,11 @@
                 <div class="mb-3">
                   <label class="form-label">Tanggal Checkout</label>
                   <VueDatePicker
-                    v-model="roomSelection.tanggal_checkout"
+                    v-model="roomSelection.checkout_date"
                     auto-apply
                     :format="'yyyy-MM-dd'"
                     placeholder="Tanggal Checkout"
+                    @update:model-value="handleEndDate(index)"
                   ></VueDatePicker>
                 </div>
               </div>
@@ -69,6 +70,9 @@
               label="Select Room"
               placeholder="Select Room"
               :options="roomOptions"
+              :searchable="true"
+              :multiple="false"
+             
             />
             <div class="row">
               <div class="col-md-6">
@@ -146,7 +150,7 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
-const { $bus, $readInputFile } = useNuxtApp();
+const { $bus, $readInputFile,$formatDate } = useNuxtApp();
 const formData = ref({
   name: "",
   no_telp: "",
@@ -200,8 +204,9 @@ const fetchRooms = async () => {
     console.log("API Response:", response);
     if (response.status === 1 && Array.isArray(response.data)) {
       roomOptions.value = response.data.map((room) => ({
-        label: `${room.room_number} - ${room.name} - ${room.type}`,
+        label: `<div class="text-bold">${room.room_number} - ${room.name} - ${room.type}</div>`,
         value: String(room.id),
+       
       }));
     } else {
       console.error("Error fetching rooms:", response);
@@ -257,29 +262,7 @@ const removeRoom = (index) => {
 const updateAvailableRooms = async () => {
   if (!formData.value.check_in || !formData.value.check_out) return;
 
-  try {
-    const { data, status, statusCode } = await $fetch(
-      `${config.public.baseUrl}rooms/list`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + authStore.getToken,
-        },
-        body: {
-          check_in: formData.value.check_in,
-          check_out: formData.value.check_out,
-        },
-      }
-    );
-
-    if (status === 1) {
-      availableRooms.value = data;
-    } else if (statusCode === 403) {
-      // Handle unauthorized access
-    }
-  } catch (error) {
-    console.error("Error fetching available rooms:", error);
-  }
+  
 };
 
 const handleSubmit = async () => {
@@ -296,10 +279,13 @@ const handleSubmit = async () => {
   //   form.append("booking_type[]", formData.value.booking_type);
   form.append("gender", formData.value.gender);
   form.append("total_price", formData.value.total_price);
+
   formData.value.selectedRooms.forEach((room) => {
+    const checkinDate = $formatDate(room.checkin_date);
+    const checkoutDate = $formatDate(room.checkout_date);
     form.append("room_id[]", room.room_id || "");
-    form.append("checkin_date[]", room.checkin_date || "");
-    form.append("checkout_date[]", room.checkout_date || "");
+    form.append("checkin_date[]", checkinDate);
+    form.append("checkout_date[]", checkoutDate);
     form.append("current_price[]", room.current_price || "");
     form.append("booking_package[]", room.booking_package || "");
     form.append("noofadult[]", room.noofadult || "");
@@ -331,9 +317,65 @@ const handleSubmit = async () => {
   }
 };
 
+const searchRoom = async (startDate, endDate) => {
+  try {
+    const { data, status, statusCode } = await $fetch(
+      `${config.public.baseUrl}rooms/check-available-room`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + authStore.getToken,
+        },
+        body: {
+          start_date: startDate,
+          end_date: endDate,
+        },
+      }
+    );
+
+    if (status === 1) {
+      availableRooms.value = data;
+      roomOptions.value = data.map((room) => ({
+        label: `${room.room_number} - ${room.name} - ${room.type}`,
+        value: String(room.id),
+        name:room.name,
+        price:room.actual_prices,
+        type:room.type,
+        view:room.view,
+        default_price:room.default_price
+      }));
+    
+    } else if (statusCode === 403) {
+      window.location.href = "/login";
+    }
+  } catch (error) {
+    console.error("Error fetching available rooms:", error);
+  }
+
+}
+
+const handleStartDate = (index) => {
+ 
+};
+
+const handleEndDate = (index) => {
+  const startDate = formData.value.selectedRooms[index].checkin_date;
+  const endDate = formData.value.selectedRooms[index].checkout_date;
+  if (startDate && endDate) {
+    searchRoom(startDate, endDate);
+  }
+}
+const selectRoom = (roomId,index) => {
+  formData.value.selectedRooms[index].id = roomId;
+}
+/*
+watch([roomSelection.room_id], (newValue) => {
+  console.log(newValue)
+});
+*/
 onMounted(() => {
-  updateAvailableRooms();
-  fetchRooms();
+  //updateAvailableRooms();
+  //fetchRooms();
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
 });
 
@@ -348,5 +390,15 @@ definePageMeta({
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 0.5rem;
+}
+.max-vh-50{
+  max-height: 30vh;
+  overflow-y: auto;
+}
+tr{
+  cursor: pointer;
+}
+tr.selected{
+  background: linear-gradient(90deg, #b5e4b6, transparent);
 }
 </style>

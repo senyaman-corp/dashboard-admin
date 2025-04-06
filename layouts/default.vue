@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Loading  />
     <Navbar />
     <client-only>
       <Sidebar />
@@ -14,8 +15,8 @@
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+const isLoading = ref(false);
 </script>
 
 <style></style>

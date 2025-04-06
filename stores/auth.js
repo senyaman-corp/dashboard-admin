@@ -5,13 +5,22 @@ export const useAuthStore = defineStore('auth', {
     state: () => {
         return {
             token:null,
-            loggedin:false
+            loggedin:false,
+            email:null,
+            password:null
         };
     },
     getters: {
         getToken(){
             return this.token
         },
+        getEmail(){
+            return this.token
+        },
+        getPassword(){
+            return this.password;
+        },
+        
         isLoggedin(){
             const { $parseJwt} = useNuxtApp();
             let parseToken = $parseJwt(this.token);
@@ -23,7 +32,17 @@ export const useAuthStore = defineStore('auth', {
                 this.loggedin = false;
             }
             return this.loggedin
+        },
+        isAuthorized(page){
+            const { $parseJwt} = useNuxtApp();
+            let parseToken = $parseJwt(this.token);
+            if(!parseToken){
+                return false
+            }
+            var roles = JSON.parse(parseToken.roles);
+            return roles.includes(page);            
         }
+
     },
     actions:{
         setToken(value){
@@ -31,6 +50,15 @@ export const useAuthStore = defineStore('auth', {
         },
         setLoggedin(value){
             this.loggedin = value;
+        },
+        setEmail(value){
+            this.email = value;
+        },
+        setPassword(value){
+            this.password = value;
+        },
+        updateToken(value){
+            this.token = value;
         }
 
     },

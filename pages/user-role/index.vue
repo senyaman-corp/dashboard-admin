@@ -29,6 +29,10 @@ import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
+const navStore = useNavigatorStore();
+const { $bus } = useNuxtApp();
+navStore.setPage("User_roles");
+navStore.setSubpage("Index User");
 
 const users = ref([]);
 const columns = ref([
@@ -57,6 +61,7 @@ const fetchUsers = async () => {
 };
 
 onMounted(() => {
+  $bus.$emit("pagechange", { page: "User_roles", subpage: "Index User" });
   fetchUsers();
 });
 
