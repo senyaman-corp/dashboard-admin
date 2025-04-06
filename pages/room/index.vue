@@ -135,6 +135,9 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
+const navStore = useNavigatorStore();
+navStore.setPage("Room");
+navStore.setSubpage("Index Room");
 const config = useRuntimeConfig();
 const { $bus } = useNuxtApp();
 const date = ref({ month:new Date().getMonth(), year:new Date().getFullYear()});

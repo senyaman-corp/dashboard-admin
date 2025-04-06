@@ -69,11 +69,13 @@ const roomType = ref();
 
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);
+
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 
               'July', 'August', 'September', 'October', 'November', 'December'];
 const bulans = ['01', '02', '03', '04', '05', '06', 
               '07', '08', '09`', '10', '11', '12'];
-const years = ['2024', '2025', '2026'];
+const selectedMonth = ref(months[date.value.month]);
+const selectedYear = ref(date.value.year.toString());
 const daysInMonth = computed(() => {
   const monthIndex = months.indexOf(selectedMonth.value);
   const year = parseInt(selectedYear.value);

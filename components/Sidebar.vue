@@ -19,7 +19,7 @@
               :class="{ show: page == 'Room' }"
               id="menu-rooms"
             >
-              <li :class="{ active: subpage == 'Room' }">
+              <li :class="{ active: subpage == 'Index Room' }">
                 <NuxtLink to="/room">Index</NuxtLink>
               </li>
               <li :class="{ active: subpage == 'Price' }">

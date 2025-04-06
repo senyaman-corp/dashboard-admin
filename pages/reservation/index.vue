@@ -27,8 +27,8 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "~/stores/auth";
-const navStore = useNavigatorStore();
 const { $bus } = useNuxtApp();
+const navStore = useNavigatorStore();
 navStore.setPage("Reservation");
 navStore.setSubpage("Index Reservation");
 const authStore = useAuthStore();
