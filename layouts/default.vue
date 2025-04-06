@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-const isLoading = ref(false);
+
 </script>
 
 <style></style>

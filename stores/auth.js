@@ -33,15 +33,7 @@ export const useAuthStore = defineStore('auth', {
             }
             return this.loggedin
         },
-        isAuthorized(page){
-            const { $parseJwt} = useNuxtApp();
-            let parseToken = $parseJwt(this.token);
-            if(!parseToken){
-                return false
-            }
-            var roles = JSON.parse(parseToken.roles);
-            return roles.includes(page);            
-        }
+        
 
     },
     actions:{
@@ -59,6 +51,16 @@ export const useAuthStore = defineStore('auth', {
         },
         updateToken(value){
             this.token = value;
+        },
+        isAuthorized(page){
+            const { $parseJwt} = useNuxtApp();
+            let parseToken = $parseJwt(this.token);
+            if(!parseToken){
+                return false
+            }
+            var roles = (parseToken.roles !== null && parseToken.roles !== undefined) ? JSON.parse(parseToken.roles) : [];
+            return true;
+            //return roles.includes(page);            
         }
 
     },

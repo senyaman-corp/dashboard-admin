@@ -1,87 +1,138 @@
 <template>
   <div>
-      <CardBaseCard title="Room Pricing Management">
-           <div class="row justify-content-end">
-            <div class="col-lg-2">
-              <select class="form-select form-select-lg" :id="'year'"  @change="filterByType" v-model="roomType">
-                  <option value="">Pilih Type</option>
-                  <option value="Studio">Studio</option>
-                  <option value="2 BR-A">2 BR-A</option>
-                  <option value="2 BR-B">2 BR-B</option>
-                  <option value="2 BR-C">2 BR-C</option>
-                  <option value="2 BR-D">2 BR-D</option>
-                  <option value="Suite">Suite</option>
-              </select>
-            </div>
-            <div class="col-lg-2">
-              <VueDatePicker v-model="date" month-picker auto-apply :format="'yyyy-MM'" @closed="searchRoom" class="mb-3"></VueDatePicker>
-            </div>
-           </div>
-          
-          <div class="overflow-auto max-vh-65">
-              <table class="min-w-full divide-y divide-gray-200">
-                  <thead class="bg-gray-50">
-                      <tr>
-                          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Room</th>
-                          <th v-for="day in daysInMonth" :key="day" class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase" :class="{'text-danger': isHoliday(day)}">
-                              {{ day }}
-                          </th>
-                      </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
-                      <tr v-for="room in rooms" :key="room.id">
-                          <td class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200">
-                              <div class="t-bold">{{ room.room_number }} - {{ room.name }}</div>
-                              <div class="small">{{room.type}}({{room.view }})</div>
-                          </td>
-                          
-                          <td v-for="(price,index) in room.actual_prices" :key="index" class="px-4 py-2 text-center border-bottom-1 border-gray-200" :class="{'text-danger': isHoliday(index + 1)}">
-                              <div class="room-item" @click="viewDetail(room.id,index)">{{ price.status }}</div>
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
+    <CardBaseCard title="Room Pricing Management">
+      <div class="row justify-content-end">
+        <div class="col-lg-1 flex-grow-1">
+          <NuxtLink to="/room/add-room">
+            <ButtonBaseButton variant="primary"> Add Room </ButtonBaseButton>
+          </NuxtLink>
+        </div>
+        <div class="col-lg-2">
+          <select
+            class="form-select form-select-lg"
+            :id="'year'"
+            @change="filterByType"
+            v-model="roomType"
+          >
+            <option value="">Pilih Type</option>
+            <option value="Studio">Studio</option>
+            <option value="2 BR-A">2 BR-A</option>
+            <option value="2 BR-B">2 BR-B</option>
+            <option value="2 BR-C">2 BR-C</option>
+            <option value="2 BR-D">2 BR-D</option>
+            <option value="Suite">Suite</option>
+          </select>
+        </div>
+        <div class="col-lg-2">
+          <VueDatePicker
+            v-model="date"
+            month-picker
+            auto-apply
+            :format="'yyyy-MM'"
+            @closed="searchRoom"
+            class="mb-3"
+          ></VueDatePicker>
+        </div>
+      </div>
+
+      <div class="overflow-auto max-vh-65">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Room
+              </th>
+              <th
+                v-for="day in daysInMonth"
+                :key="day"
+                class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
+                :class="{ 'text-danger': isHoliday(day) }"
+              >
+                {{ day }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="room in rooms" :key="room.id">
+              <td
+                class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200"
+              >
+                <div class="t-bold">
+                  {{ room.room_number }} - {{ room.name }}
+                </div>
+                <div class="small">{{ room.type }}({{ room.view }})</div>
+              </td>
+
+              <td
+                v-for="(price, index) in room.actual_prices"
+                :key="index"
+                class="px-4 py-2 text-center border-bottom-1 border-gray-200"
+                :class="{ 'text-danger': isHoliday(index + 1) }"
+              >
+                <div class="room-item" @click="viewDetail(room.id, index)">
+                  {{ price.status }}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </CardBaseCard>
+    <WidgetModalPad>
+      <div class="container-fluid px-1">
+        <div class="row gy-2">
+          <div class="col-12 d-flex justify-content-between">
+            <span class="text-muted fw-semibold">Room Name:</span>
+            <span class="fw-medium">{{ detail.name }}</span>
           </div>
-      </CardBaseCard>
-      <WidgetModalPad>
-        <div class="w-100">
-          <div class="h4 t-bold text-center">Room Detail</div>
-          <div class="w-100 d-flex justify-content-between  form-group">
-              <label class="t-bold">Room Name</label>
-              <div class="ms-2">{{detail.name}}</div>
+          <div class="col-12 d-flex justify-content-between">
+            <span class="text-muted fw-semibold">Room Number:</span>
+            <span class="fw-medium">{{ detail.room_number }}</span>
           </div>
-          <div class="w-100 d-flex justify-content-between  form-group">
-              <label class="t-bold">Room Number</label>
-              <div class="ms-2">{{detail.room_number}}</div>
+          <div class="col-12 d-flex justify-content-between">
+            <span class="text-muted fw-semibold">Room Type:</span>
+            <span class="fw-medium">{{ detail.type }}</span>
           </div>
-          <div class="w-100 d-flex justify-content-between  form-group">
-              <label class="t-bold">Room Type</label>
-              <div class="ms-2">{{detail.type}}</div>
+          <div class="col-12 d-flex justify-content-between">
+            <span class="text-muted fw-semibold">View:</span>
+            <span class="fw-medium">{{ detail.view }}</span>
           </div>
-          <div class="w-100 d-flex justify-content-between  form-group">
-              <label class="t-bold">View</label>
-              <div class="ms-2">{{detail.view}}</div>
+          <div class="col-12 d-flex justify-content-between">
+            <span class="text-muted fw-semibold">Price:</span>
+            <span class="fw-medium">
+              {{
+                detail.price !== undefined
+                  ? detail.price.length > 0
+                    ? "Rp." + $formatAngka(detail.price[0].price)
+                    : "Rp." + $formatAngka(detail.default_price)
+                  : "Rp." + $formatAngka(detail.default_price)
+              }}
+            </span>
           </div>
-          <div class="w-100 d-flex justify-content-between  form-group">
-              <label class="t-bold">Price</label>
-              <div class="ms-2">{{detail.price !== undefined  ? (detail.price.length > 0 ? 'Rp.' + $formatAngka(detail.price[0].price) : 'Rp.' + $formatAngka(detail.default_price)) : 'Rp.' + $formatAngka(detail.default_price)}}</div>
-          </div>
-          <div class="w-100 d-flex justify-content-between  form-group">
-              <label class="t-bold">Date</label>
-              <div class="ms-2">{{detail.price !== undefined  ? (detail.price.length > 0 ? detail.price[0].tanggal : detail.date) : detail.date}}</div>
+          <div class="col-12 d-flex justify-content-between">
+            <span class="text-muted fw-semibold">Date:</span>
+            <span class="fw-medium">
+              {{
+                detail.price !== undefined
+                  ? detail.price.length > 0
+                    ? detail.price[0].tanggal
+                    : detail.date
+                  : detail.date
+              }}
+            </span>
           </div>
         </div>
-      </WidgetModalPad>
+      </div>
+    </WidgetModalPad>
   </div>
 </template>
 
 <script setup>
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
-import { useNavigatorStore } from "~/stores/navigator";
-const navStore = useNavigatorStore();
-navStore.setPage("Room");
-navStore.setSubpage("Index Room");
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
 import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
@@ -236,19 +287,19 @@ definePageMeta({
 .whitespace-nowrap {
   white-space: nowrap;
 }
-.max-vh-65{
+.max-vh-65 {
   max-height: 70vh;
   overflow-y: auto;
 }
-th{
+th {
   position: sticky;
   top: 0;
-  background-color: #139b1f;
+  background-color: #38c66c;
   color: #fff;
   font-weight: bold;
   font-size: 18px;
 }
-.room-item{
+.room-item {
   cursor: pointer;
 }
 </style>

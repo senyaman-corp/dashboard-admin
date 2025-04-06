@@ -1,23 +1,14 @@
 <template>
-  <div v-show="isLoading" class="loading-overlay">
-    <div class="text-center">
-      <p>Loading...</p>
-      <img src="@/assets/images/loading.gif" alt="Loading..." />
+  <Transition name="fade">
+    <div v-if="show" class="loading-overlay">
+      <img :src="loadingGif" alt="Loading..." class="w-20 h-20" />
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup>
-import { watch } from "vue";
-const { $bus } = useNuxtApp();
-
-const isLoading = ref(false);
-
-onMounted(() => {
-  $bus.$on("loading", (loading) => {
-    isLoading.value = loading;
-  });
-});
+import loadingGif from "@/assets/images/loading.gif";
+const show = useState("loading");
 </script>
 
 <style>
@@ -32,5 +23,13 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     '~/plugins/datatables.client.ts',
     '~/plugins/vue-multiselect.ts',
     '~/plugins/autonumeric.ts',
-    '~/plugins/loading.js',
+    '~/plugins/loading.client.ts',
   ],
 
   modules: [

@@ -141,7 +141,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Add Room" });
+  $bus.$emit("pagechange", { page: "Room", subpage: "Room" });
 });
 definePageMeta({
   middleware: ["auth"],

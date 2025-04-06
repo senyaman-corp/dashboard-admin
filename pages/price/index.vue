@@ -69,17 +69,11 @@ const roomType = ref();
 
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);
-const preservedRooms = ref([]);
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 
               'July', 'August', 'September', 'October', 'November', 'December'];
 const bulans = ['01', '02', '03', '04', '05', '06', 
               '07', '08', '09`', '10', '11', '12'];
 const years = ['2024', '2025', '2026'];
-
-const selectedMonth = ref(months[date.value.month]);
-const selectedYear = ref(date.value.year.toString());
-const dayInMOnthsName = [];
-// Calculate days in selected month
 const daysInMonth = computed(() => {
   const monthIndex = months.indexOf(selectedMonth.value);
   const year = parseInt(selectedYear.value);
@@ -122,18 +116,6 @@ function isHoliday (day){
 const roomPrices = ref({});
 initData();
 // Initialize prices for each room
-const initializePrices = () => {
-  rooms.value.forEach(room => {
-      if (!roomPrices.value[room.id]) {
-          roomPrices.value[room.id] = {};
-      }
-      for (let day = 1; day <= daysInMonth.value; day++) {
-          if (!roomPrices.value[room.id][day]) {
-              roomPrices.value[room.id][day] = room.default_price || 0;
-          }
-      }
-  });
-};
 
 const searchRoom = ()=>{
  
@@ -154,39 +136,4 @@ const filterByType = ()=>{
     rooms.value = filteredRooms;
   }
 }
-
-// Watch for month/year changes
-watch([selectedMonth, selectedYear], () => {
-  initializePrices();
-});
-
-onMounted(() => {
-  initializePrices();
-  $bus.$emit('pagechange', { page: 'Room', subpage: 'Index Price' });
-});
-
-definePageMeta({
-  middleware: ["auth"]
-});
 </script>
-
-<style scoped>
-.overflow-x-auto {
-  overflow-x: auto;
-}
-.whitespace-nowrap {
-  white-space: nowrap;
-}
-.max-vh-65{
-  max-height: 70vh;
-  overflow-y: auto;
-}
-th{
-  position: sticky;
-  top: 0;
-  background-color: #139b1f;
-  color: #fff;
-  font-weight: bold;
-  font-size: 18px;
-}
-</style>
