@@ -57,6 +57,7 @@ const fetchBookings = async () => {
       headers: {
         Authorization: "Bearer " + authStore.getToken,
       },
+      
     });
 
     if (!response.ok) throw new Error("Failed to fetch users");
