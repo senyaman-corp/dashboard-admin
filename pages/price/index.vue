@@ -10,8 +10,9 @@
         <div class="col-lg-2">
           <select
             class="form-select form-select-lg"
+            :id="'year'"
+            @change="filterByType"
             v-model="roomType"
-            @change="searchRoom"
           >
             <option value="">Pilih Type</option>
             <option value="Studio">Studio</option>
@@ -27,43 +28,72 @@
             v-model="date"
             month-picker
             auto-apply
-            format="yyyy-MM"
-            @update:modelValue="searchRoom"
+            :format="'yyyy-MM'"
+            @closed="searchRoom"
             class="mb-3"
           ></VueDatePicker>
         </div>
       </div>
 
-      <div class="table-responsive">
-        <client-only>
-          <DataTable
-            class="table table-striped table-bordered"
-            :columns="columns"
-            :data="formattedPrices"
-            style="width: 100%"
-          />
-        </client-only>
+      <div class="overflow-auto max-vh-65">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Room
+              </th>
+              <th
+                v-for="day in daysInMonth"
+                :key="day"
+                class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
+                :class="{ 'text-danger': isHoliday(day) }"
+              >
+                {{ day }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="(room, index) in rooms" :key="index">
+              <td
+                class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200"
+              >
+                <div class="t-bold">{{ room.type }}</div>
+                <div class="small">{{ room.view }}</div>
+              </td>
+
+              <td
+                v-for="(price, index) in room.price"
+                :key="index"
+                class="px-4 py-2 text-center border-bottom-1 border-gray-200"
+              >
+                <div>{{ $formatAngka(price.price) }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </CardBaseCard>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue";
-import { useAuthStore } from "~/stores/auth";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
+import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
 const { $bus } = useNuxtApp();
-
 const date = ref({
   month: new Date().getMonth(),
   year: new Date().getFullYear(),
 });
-const roomType = ref("");
+const roomType = ref();
 
+const rooms = ref([]);
+const preservedRooms = ref([]);
 const months = [
   "January",
   "February",
@@ -95,90 +125,114 @@ const bulans = [
 const years = ["2024", "2025", "2026"];
 
 const selectedMonth = ref(months[date.value.month]);
+const selectedYear = ref(date.value.year.toString());
+const dayInMOnthsName = [];
 
-const { data: pricesData } = await useAsyncData(
-  "prices",
-  async () => {
-    return await $fetch(`${config.public.baseUrl}prices/list`, {
+const daysInMonth = computed(() => {
+  const monthIndex = months.indexOf(selectedMonth.value);
+  const year = parseInt(selectedYear.value);
+  return new Date(year, monthIndex + 1, 0).getDate();
+});
+const initData = async () => {
+  const { data, status, statusCode } = await $fetch(
+    `${config.public.baseUrl}prices/list`,
+    {
       method: "POST",
+      lazy: true,
       headers: {
         Authorization: "Bearer " + authStore.getToken,
       },
       body: {
         month: date.value.year + "-" + bulans[date.value.month],
       },
-    });
-  },
-  { lazy: true }
-);
-
-const prices = computed(() => pricesData.value?.data || []);
-
-const dateRange = computed(() => {
-  const startDate = new Date();
-  const dates = [];
-
-  for (let i = 0; i < 30; i++) {
-    const currentDate = new Date(startDate);
-    currentDate.setDate(startDate.getDate() + i);
-
-    const formattedDate = currentDate.toISOString().split("T")[0];
-    dates.push({
-      title: currentDate.getDate().toString(),
-      date: formattedDate,
-    });
+    }
+  );
+  console.log("Rooms", data);
+  if (status == 1) {
+    rooms.value = data;
+    preservedRooms.value = data;
+    console.log("Rooms", rooms.value);
+  } else {
+    if (statusCode == 403) {
+      //redirect login;
+    }
   }
-
-  return dates;
-});
-
-const columns = computed(() => {
-  const headers = [{ title: "Price", data: "priceInfo" }];
-  dateRange.value.forEach((day) => {
-    headers.push({ title: day.title, data: `prices.${day.date}` });
-  });
-  return headers;
-});
-
-const filteredPrices = computed(() => {
-  return prices.value.filter((price) => {
-    const matchType = !roomType.value || price.type === roomType.value;
-    const matchMonth =
-      date.value || price.price.some((p) => p.date.startsWith(date.value));
-
-    console.log("matchMonth", date.value);
-    return matchType && matchMonth;
-  });
-});
-
-const formattedPrices = computed(() => {
-  return filteredPrices.value.map((price) => {
-    const priceMap = {};
-    dateRange.value.forEach((day) => {
-      const foundPrice = price.price?.find((p) => p.date.startsWith(day.date));
-      priceMap[day.date] = foundPrice ? foundPrice.price : "-";
-    });
-    return {
-      priceInfo: `${price.type} - ${price.view}`,
-      prices: priceMap,
-    };
-  });
-});
-
-const searchRoom = () => {
-  fetchPrices();
 };
 
-watch(date, () => {
+function isHoliday(day) {
+  console.log("Day", daysInMonth.value);
+  if (date.value === undefined) {
+    return false;
+  }
+  const tanggal = new Date();
+  tanggal.setFullYear(date.value.year, date.value.month, day);
+  return tanggal.getDay() === 0 || tanggal.getDay() === 6;
+}
+const roomPrices = ref({});
+initData();
+const initializePrices = () => {
+  rooms.value.forEach((room) => {
+    if (!roomPrices.value[room.id]) {
+      roomPrices.value[room.id] = {};
+    }
+    for (let day = 1; day <= daysInMonth.value; day++) {
+      if (!roomPrices.value[room.id][day]) {
+        roomPrices.value[room.id][day] = room.default_price || 0;
+      }
+    }
+  });
+};
+
+const searchRoom = () => {
   selectedMonth.value = months[date.value.month];
-  searchRoom();
+  console.log(selectedMonth.value);
+  initData();
+};
+
+const filterByType = () => {
+  if (roomType.value == "") {
+    rooms.value = preservedRooms.value;
+    return;
+  }
+  if (preservedRooms.value.length > 0) {
+    const filteredRooms = preservedRooms.value.filter(
+      (room) => room.type === roomType.value
+    );
+    rooms.value = filteredRooms;
+  }
+};
+
+watch([selectedMonth, selectedYear], () => {
+  initializePrices();
 });
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "price", subpage: "Index Price" });
+  initializePrices();
+  $bus.$emit("pagechange", { page: "Room", subpage: "Price" });
 });
 
 definePageMeta({
   middleware: ["auth"],
 });
 </script>
+
+<style scoped>
+.overflow-x-auto {
+  overflow-x: auto;
+}
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.max-vh-65 {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+th {
+  position: sticky;
+  top: 0;
+  background-color: #38c66c;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+}
+</style>

@@ -1,23 +1,14 @@
 <template>
-  <div v-if="isLoading" class="loading-overlay">
-    <p>Loading...</p>
-    <img src="@/assets/images/loading.gif" alt="Loading..." />
-  </div>
+  <Transition name="fade">
+    <div v-if="show" class="loading-overlay">
+      <img :src="loadingGif" alt="Loading..." class="w-20 h-20" />
+    </div>
+  </Transition>
 </template>
 
 <script setup>
-import { watch } from "vue";
-
-const props = defineProps({
-  isLoading: Boolean,
-});
-
-watch(
-  () => props.isLoading,
-  (newVal) => {
-    console.log("Loading.vue received isLoading:", newVal);
-  }
-);
+import loadingGif from "@/assets/images/loading.gif";
+const show = useState("loading");
 </script>
 
 <style>
@@ -32,5 +23,13 @@ watch(
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
