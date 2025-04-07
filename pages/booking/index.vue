@@ -42,12 +42,14 @@ const totalRecords = ref(0);
 const columns = ref([
   { title: "Guest Name", data: "name" },
   { title: "No Telp", data: "no_telp" },
-  { title: "Created", data: "created_at" },
-  { title: "Sub Total", data: "subtotal" },
-  { title: "Discount", data: "discount" },
-  { title: "Tax", data: "taxamount" },
-  { title: "Deposit", data: "deposit" },
-  { title: "Total", data: "total_price" },
+  { title: "Unit", data: "room_number" },
+  { title: "Type", data: "room_type" },
+  { title: "View", data: "room_view" },
+  { title: "Checkin", data: "checkin_date" },
+  { title: "Checkout", data: "checkout_date" },
+  { title: "Package", data: "booking_package" },
+  { title: "Action", data: "id" },
+
 ]);
 
   const {data,status }  = await $fetch(`${config.public.baseUrl}bookings/list`, {

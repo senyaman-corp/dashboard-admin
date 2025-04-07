@@ -8,6 +8,7 @@
       :placeholder="placeholder"
       :disabled="disabled"
       :value="modelValue"
+      :required="required"
       @input="$emit('update:modelValue', $event.target.value)"
     />
     <div v-if="error" class="text-danger mt-1">{{ error }}</div>
