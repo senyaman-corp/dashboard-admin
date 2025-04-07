@@ -73,6 +73,7 @@ const remember_me = ref(false);
 const year = new Date().getFullYear();
 const error = ref("");
 const inputType = ref("password");
+const router = useRouter();
 
 function signIn() {
   const formData = new FormData();
@@ -84,14 +85,17 @@ function signIn() {
     body: formData,
   }).then((response) => {
     if (response.status == 1) {
-      authStore.setToken(response.data);
+      authStore.setToken(response.data.token);
+      authStore.setUser(response.data.user);
       authStore.setLoggedin(true);
      if(remember_me.value){
-      authStore.setEmail(email.value);
-      authStore.setPassword(password.value);
-      console.log(authStore.email);
+        authStore.setEmail(email.value);
+        authStore.setPassword(password.value);
+        console.log(authStore.email);
      }
-      window.location.href = "/room";
+      router.push({
+        path: "/room",
+      })
     } else {
       error.value = response.message;
     }

@@ -10,6 +10,7 @@
       :value="modelValue"
       :required="required"
       @input="$emit('update:modelValue', $event.target.value)"
+      autocomplete="off"
     />
     <div v-if="error" class="text-danger mt-1">{{ error }}</div>
   </div>

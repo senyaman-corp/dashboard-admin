@@ -11,7 +11,9 @@
         :columns="columns"
         :data="checklistRooms"
         style="width: 100%"
-      />
+      >
+
+      </DataTable>
     </div>
   </div>
 </template>
@@ -47,6 +49,7 @@ const {data,status} = await $fetch(`${config.public.baseUrl}housekeeping/checkli
 if(status == 1){
   checklistRooms.value = data;
 }
+
 const submit = async () => {
   const { data, status } = await $fetch(`${config.public.baseUrl}housekeeping/checklist-room`, {
     method: "POST",
@@ -62,8 +65,11 @@ const submit = async () => {
     name = "";
   }
 };
+
 onMounted(() => {
   $bus.$emit("pagechange", { page: "Housekeeping", subpage: "Checklist Room" });
+  const user = authStore.getUser;
+  console.log(user.name);
 });
 </script>
 

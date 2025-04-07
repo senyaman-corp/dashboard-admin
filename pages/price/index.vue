@@ -65,7 +65,7 @@ const authStore = useAuthStore();
 const config = useRuntimeConfig();
 const { $bus } = useNuxtApp();
 const date = ref({ month:new Date().getMonth(), year:new Date().getFullYear()});
-const roomType = ref();
+const roomType = ref('');
 
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);

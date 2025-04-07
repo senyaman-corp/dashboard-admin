@@ -45,6 +45,30 @@ export default defineNuxtPlugin((nuxtApp) => {
                 
                 
               },
+              dataTableOptions(url,token,body = null){
+                return {
+                  serverSide: true,
+                  processing: true,
+                  responsive: true,
+                  ajax: {
+                    url: url,
+                    type: 'POST',
+                    headers: {
+                      Authorization: "Bearer " + token,
+                    },
+                    data: (d) => {
+                      if (body !== null) {
+                        for (let key in body) {
+                          d[key] = body[key];
+                        }
+                      }
+                    },
+                    error: function (jqXHR, textStatus, error) {
+                      console.log("Error Status", jqXHR.status)
+                    }
+                  },
+                }
+              }
         }
     }
 });

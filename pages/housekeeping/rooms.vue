@@ -1,12 +1,7 @@
 <template>
   <div>
-    <CardBaseCard title="Room Pricing Management">
+    <CardBaseCard title="Rooms">
       <div class="row justify-content-end">
-        <div class="col-lg-1 flex-grow-1">
-          <NuxtLink to="/room/add-room">
-            <ButtonBaseButton variant="primary"> Add Room </ButtonBaseButton>
-          </NuxtLink>
-        </div>
         <div class="col-lg-2">
           <select
             class="form-select form-select-lg"
@@ -14,7 +9,7 @@
             @change="filterByType"
             v-model="roomType"
           >
-            <option value="" selected>Pilih Type</option>
+            <option value="">Pilih Type</option>
             <option v-for="type in roomTypes" :key="type.id" :value="type.type">{{ type.type }}</option>
           </select>
         </div>
@@ -127,14 +122,14 @@
 <script setup>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-
 import { useAuthStore } from "~/stores/auth";
-const authStore = useAuthStore();
+import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
-navStore.setPage("Room");
-navStore.setSubpage("Index Room");
-const config = useRuntimeConfig();
+const authStore = useAuthStore();
 const { $bus } = useNuxtApp();
+navStore.setPage("Housekeeping");
+navStore.setSubpage("Rooms");
+const config = useRuntimeConfig();
 const date = ref({ month:new Date().getMonth(), year:new Date().getFullYear()});
 const roomType = ref('');
 const detail = ref({})
@@ -277,6 +272,11 @@ onMounted(() => {
 definePageMeta({
   middleware: ["auth"]
 });
+
+onMounted(() => {
+  $bus.$emit("pagechange", { page: "Housekeeping", subpage: "Rooms" });
+});
+
 </script>
 
 <style scoped>

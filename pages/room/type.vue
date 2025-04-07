@@ -295,9 +295,9 @@
             },
         });
         if (status == 1) {
-            properties.value.push(data);
-            
-            console.log(properties.value);
+            if(data !== null){
+                properties.value.push(data);
+            }
             category.value = "";
             name.value = "";
         }

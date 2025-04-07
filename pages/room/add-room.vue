@@ -67,16 +67,23 @@ navStore.setSubpage("Add Room");
 const { $bus, $readInputFile } = useNuxtApp();
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
-
-const roomTypes = ref([
-  { value: "Studio", label: "Studio" },
-  { value: "2 BR-A", label: "2 BR-A" },
-  { value: "2 BR-B", label: "2 BR-B" },
-  { value: "2 BR-C", label: "2 BR-C" },
-  { value: "2 BR-D", label: "2 BR-D" },
-  { value: "Suite", label: "Suite" },
-]);
-
+const roomTypes = ref([]);
+const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/list-room-type`,{
+          method:'POST',
+          lazy: true,
+          headers:{
+            'Authorization':'Bearer ' + authStore.getToken
+          },
+      });
+if(status == 1){
+ 
+  data.room_type.map((item) => {
+    item.value = item.type
+    item.label= item.type;
+  });
+  console.log(data.room_type);
+  roomTypes.value = data.room_type;
+}
 const roomView = ref([
   { value: "Mountain", label: "Mountain" },
   { value: "City", label: "City" },
