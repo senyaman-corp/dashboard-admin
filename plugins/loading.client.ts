@@ -12,6 +12,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     console.log('[PLUGIN] Page finish')
     setTimeout(() => {
       loading.value = false
-    }, 300) 
+    }, 100) 
   })
 })

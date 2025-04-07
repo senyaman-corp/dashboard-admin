@@ -69,6 +69,7 @@ const roomType = ref();
 
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);
+const preservedRooms = ref([]);
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 
               'July', 'August', 'September', 'October', 'November', 'December'];
@@ -126,8 +127,6 @@ const searchRoom = ()=>{
   initData();
 }
 
-
-
 const filterByType = ()=>{
   if(roomType.value == ""){
     rooms.value = preservedRooms.value;
@@ -138,4 +137,12 @@ const filterByType = ()=>{
     rooms.value = filteredRooms;
   }
 }
+
+onMounted(() => {
+  $bus.$emit("pagechange", { page: "Room", subpage: "Index Price" });
+});
+
+definePageMeta({
+  middleware: ["auth"],
+});
 </script>

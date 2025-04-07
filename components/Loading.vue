@@ -1,6 +1,6 @@
 <template>
   <Transition name="fade">
-    <div v-if="show" class="loading-overlay">
+    <div v-if="show || showLoading" class="loading-overlay">
       <img :src="loadingGif" alt="Loading..." class="w-20 h-20" />
     </div>
   </Transition>
@@ -9,6 +9,14 @@
 <script setup>
 import loadingGif from "@/assets/images/loading.gif";
 const show = useState("loading");
+const showLoading = ref(false);
+const { $bus } = useNuxtApp();
+
+onMounted(() => {
+  $bus.$on("loading", (value) => {
+    showLoading.value = value;
+  });
+});
 </script>
 
 <style>

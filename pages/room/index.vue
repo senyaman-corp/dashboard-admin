@@ -154,7 +154,7 @@ const years = ['2024', '2025', '2026'];
 
 const selectedMonth = ref(months[date.value.month]);
 const selectedYear = ref(date.value.year.toString());
-
+const loading = ref(false);
 // Calculate days in selected month
 const daysInMonth = computed(() => {
   const monthIndex = months.indexOf(selectedMonth.value);
@@ -162,6 +162,7 @@ const daysInMonth = computed(() => {
   return new Date(year, monthIndex + 1, 0).getDate();
 });
 const initData = async()=>{
+  $bus.$emit('loading',true)
   const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/list`,{
           method:'POST',
           lazy: true,
@@ -173,7 +174,7 @@ const initData = async()=>{
           }
           
       });
-      console.log("Rooms",data)
+  $bus.$emit('loading',false)
   if(status == 1){
     rooms.value = data ;
     preservedRooms.value = data;
@@ -184,7 +185,7 @@ const initData = async()=>{
     }
   }
 }
-
+initData();
 function isHoliday (day){
   if(date.value === undefined){
     return false;
@@ -195,7 +196,6 @@ function isHoliday (day){
 };
 // Initialize room prices
 const roomPrices = ref({});
-initData();
 // Initialize prices for each room
 const initializePrices = () => {
   rooms.value.forEach(room => {
@@ -211,7 +211,6 @@ const initializePrices = () => {
 };
 
 const searchRoom = ()=>{
- 
  selectedMonth.value = months[date.value.month];
  console.log(selectedMonth.value)
   initData();

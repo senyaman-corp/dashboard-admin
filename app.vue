@@ -17,6 +17,7 @@ watch(isLoading, (newVal) => {
   console.log('Loading State:', newVal);
 });
 
+/*
 router.beforeEach(() => {
   console.log('Route change detected - Start loading');
   isLoading.value = true;
@@ -30,4 +31,5 @@ router.afterEach(() => {
     $bus.$emit('loading', false);
   }, 100);
 });
+*/
 </script>

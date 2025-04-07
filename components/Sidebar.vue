@@ -22,7 +22,7 @@
               <li :class="{ active: subpage == 'Index Room' }">
                 <NuxtLink to="/room">Index</NuxtLink>
               </li>
-              <li :class="{ active: subpage == 'Price' }">
+              <li :class="{ active: subpage == 'Index Price' }">
                 <NuxtLink to="/price">Price</NuxtLink>
               </li>
               <li :class="{ active: subpage == 'Room Type' }">
@@ -87,6 +87,7 @@
               <span>House Keeping</span>
             </a>
             <ul class="sub-menu collapse" :class="{ show: page == 'Housekeeping' }" id="menu-housekeeping">
+              <li :class="{ active: subpage == 'Checklist Room' }"><NuxtLink to="/housekeeping/checklist-room">Checklist Room</NuxtLink></li>
               <li :class="{ active: subpage == 'Index Housekeeping' }"><NuxtLink to="/housekeeping">Housekeeping</NuxtLink></li>
             </ul>
           </li>
