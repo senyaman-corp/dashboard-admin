@@ -80,6 +80,27 @@
               href="javascript:void(0);"
               class="nav-link has-arrow"
               data-bs-toggle="collapse"
+              data-bs-target="#menu-prebuy"
+              :aria-expanded="page == 'PreBuy'"
+            >
+              <i class="fas fa-address-book"></i>
+              <span>Pre Buy</span>
+            </a>
+            <ul
+              class="sub-menu collapse"
+              :class="{ show: page == 'PreBuy' }"
+              id="menu-prebuy"
+            >
+              <li :class="{ active: subpage == 'Index PreBuy' }">
+                <NuxtLink to="/pre-buy">List Pre Buy</NuxtLink>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a
+              href="javascript:void(0);"
+              class="nav-link has-arrow"
+              data-bs-toggle="collapse"
               data-bs-target="#menu-housekeeping"
               :aria-expanded="page == 'Housekeeping'"
             >
@@ -107,7 +128,6 @@
               <li :class="{ active: subpage == 'Index User' }"><NuxtLink to="/user-role">Users</NuxtLink></li>
             </ul>
           </li>
-
         </ul>
       </div>
     </div>

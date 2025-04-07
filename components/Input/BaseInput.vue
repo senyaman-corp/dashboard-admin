@@ -11,7 +11,11 @@
       :required="required"
       @input="$emit('update:modelValue', $event.target.value)"
       autocomplete="off"
+      :list="list ? 'vendorList' : ''"
     />
+    <datalist v-if="list" id="vendorList">
+      <option v-for="item in list" :key="item">{{ item }}</option>
+    </datalist>
     <div v-if="error" class="text-danger mt-1">{{ error }}</div>
   </div>
 </template>
@@ -26,6 +30,7 @@ defineProps({
   disabled: Boolean,
   error: String,
   required: { type: Boolean, default: false },
+  list:{ type: Array }
 });
 
 defineEmits(["update:modelValue"]);
