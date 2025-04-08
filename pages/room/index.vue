@@ -9,26 +9,33 @@
         </div>
         <div class="col-lg-2">
           <client-only>
-          <InputWithCombobox
-            v-model="roomView"
-            :options="roomViewOptions"
-            class="mx-3"
-            id="room-view"
-            :placeholder="'Select Room View'"
-            @update:modelValue="filterByView"
-          />
+            <InputWithCombobox
+              v-model="roomView"
+              :options="roomViewOptions"
+              class="mx-3"
+              id="room-view"
+              :placeholder="'Select Room View'"
+              @update:modelValue="filterByView"
+            />
           </client-only>
         </div>
         <div class="col-lg-2">
           <client-only>
-          <InputWithCombobox
-            v-model="roomType"
-            :options="roomTypeOptions"
-            class="mx-3"
-            id="room-type"
-            :placeholder="'Select Room Type'"
-            @update:modelValue="filterByType"
-          />
+            <select
+              class="form-select form-select-lg"
+              :id="'year'"
+              @change="filterByType"
+              v-model="roomType"
+            >
+              <option value="" selected>Pilih Type</option>
+              <option
+                v-for="type in roomTypes"
+                :key="type.id"
+                :value="type.type"
+              >
+                {{ type.type }}
+              </option>
+            </select>
           </client-only>
         </div>
         <div class="col-lg-2">
@@ -115,6 +122,7 @@ const date = ref({
   year: new Date().getFullYear(),
 });
 const roomType = ref();
+const roomTypes = ref([]);
 const roomView = ref();
 const detail = ref({});
 const rooms = ref([]);
@@ -148,15 +156,7 @@ const bulans = [
   "12",
 ];
 const years = ["2024", "2025", "2026"];
-const roomTypeOptions = [
-  { label: "Pilih Type", value: "" },
-  { label: "Studio", value: "Studio" },
-  { label: "2 BR-A", value: "2 BR-A" },
-  { label: "2 BR-B", value: "2 BR-B" },
-  { label: "2 BR-C", value: "2 BR-C" },
-  { label: "2 BR-D", value: "2 BR-D" },
-  { label: "Suite", value: "Suite" },
-];
+const roomTypeOptions = ref([]);
 const roomViewOptions = [
   { label: "Pilih View", value: "" },
   { label: "Mountain", value: "Mountain" },
@@ -186,8 +186,9 @@ const initData = async () => {
     }
   );
   if (status == 1) {
-    rooms.value = data;
-    preservedRooms.value = data;
+    rooms.value = data.rooms;
+    preservedRooms.value = data.rooms;
+    roomTypes.value = data.room_type;
   } else {
     if (statusCode == 403) {
       //redirect login;

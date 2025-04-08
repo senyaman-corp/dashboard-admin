@@ -248,7 +248,7 @@ const fetchRooms = async () => {
     console.log("API Response:", response);
     if (response.status === 1 && Array.isArray(response.data)) {
       roomOptions.value = response.data.map((room) => ({
-        label: `<div class="text-bold">${room.room_number} - ${room.name} - ${room.type}</div>`,
+        label: `<div class="text-bold">${room.room_number} - ${room.name} - ${room.type} - ${room.price}</div>`,
         value: String(room.id),
       }));
     } else {

@@ -8,20 +8,35 @@
           </NuxtLink>
         </div>
         <div class="col-lg-2">
-          <select
-            class="form-select form-select-lg"
-            :id="'year'"
-            @change="filterByType"
-            v-model="roomType"
-          >
-            <option value="">Pilih Type</option>
-            <option value="Studio">Studio</option>
-            <option value="2 BR-A">2 BR-A</option>
-            <option value="2 BR-B">2 BR-B</option>
-            <option value="2 BR-C">2 BR-C</option>
-            <option value="2 BR-D">2 BR-D</option>
-            <option value="Suite">Suite</option>
-          </select>
+          <client-only>
+            <InputWithCombobox
+              v-model="roomView"
+              :options="roomViewOptions"
+              class="mx-3"
+              id="room-view"
+              :placeholder="'Select Room View'"
+              @update:modelValue="filterByView"
+            />
+          </client-only>
+        </div>
+        <div class="col-lg-2">
+          <client-only>
+            <select
+              class="form-select form-select-lg"
+              :id="'year'"
+              @change="filterByType"
+              v-model="roomType"
+            >
+              <option value="" selected>Pilih Type</option>
+              <option
+                v-for="type in roomTypes"
+                :key="type.id"
+                :value="type.type"
+              >
+                {{ type.type }}
+              </option>
+            </select>
+          </client-only>
         </div>
         <div class="col-lg-2">
           <VueDatePicker
@@ -94,8 +109,7 @@ const date = ref({
   year: new Date().getFullYear(),
 });
 const roomType = ref();
-
-// Sample rooms data - Replace with actual API call
+const roomTypes = ref([]);
 const rooms = ref([]);
 const preservedRooms = ref([]);
 
@@ -127,6 +141,12 @@ const bulans = [
   "11",
   "12",
 ];
+const roomView = ref();
+const roomViewOptions = ref([
+  { value: "", label: "Select Room View" },
+  { value: "Mountain", label: "Mountain" },
+  { value: "City", label: "City" },
+]);
 const selectedMonth = ref(months[date.value.month]);
 const selectedYear = ref(date.value.year.toString());
 const daysInMonth = computed(() => {
@@ -148,11 +168,10 @@ const initData = async () => {
       },
     }
   );
-  console.log("Rooms", data);
   if (status == 1) {
-    rooms.value = data;
-    preservedRooms.value = data;
-    console.log("Rooms", rooms.value);
+    rooms.value = data.data;
+    preservedRooms.value = data.data;
+    roomTypes.value = data.room_type;
   } else {
     if (statusCode == 403) {
       //redirect login;
@@ -192,8 +211,24 @@ const filterByType = () => {
     rooms.value = filteredRooms;
   }
 };
+const filterByView = () => {
+  if (roomView.value == "") {
+    rooms.value = preservedRooms.value;
+    return;
+  }
+  if (preservedRooms.value.length > 0) {
+    const filteredRooms = preservedRooms.value.filter(
+      (room) => room.view === roomView.value
+    );
+    rooms.value = filteredRooms;
+  }
+};
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Price" });
+  $bus.$emit("pagechange", { page: "Room", subpage: "Index Price" });
+});
+
+definePageMeta({
+  middleware: ["auth"],
 });
 </script>

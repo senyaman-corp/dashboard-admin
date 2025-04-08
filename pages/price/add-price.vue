@@ -1,39 +1,32 @@
 <template>
-  <div>
-    <CardBaseCard title="Tambah Harga">
-      <FormBaseForm @submit="handleSubmit">
-        <div class="form-group">
-          <label class="t-bold">Tanggal</label>
-          <VueDatePicker
-            v-model="formData.date"
-            auto-apply
-            :format="'yyyy-MM-dd'"
-            class="mb-3"
-          ></VueDatePicker>
-        </div>
-        <InputWithCombobox
-          v-model="formData.room_type"
-          label="Type Room"
-          placeholder="Type Room"
-          :options="roomTypes"
-        />
-        <InputWithCombobox
-          v-model="formData.room_view"
-          label="Type Room"
-          placeholder="Type Room"
-          :options="roomView"
-        />
-        <InputAutonumeric
-          v-model="formData.price"
-          label="Harga Kamar"
-          placeholder="Masukkan Harga Kamar"
-        />
-        <ButtonBaseButton type="submit" variant="primary"
-          >Submit</ButtonBaseButton
-        >
-      </FormBaseForm>
-    </CardBaseCard>
-  </div>
+    <div>
+        <CardBaseCard title="Tambah Harga">
+            <FormBaseForm @submit="handleSubmit">
+                <div class="form-group">
+                  <label class="t-bold">Tanggal</label>
+                  <VueDatePicker v-model="formData.date" auto-apply :format="'yyyy-MM-dd'" class="mb-3"></VueDatePicker>
+                </div>
+                <InputSelect 
+                  v-model="formData.room_type" 
+                  label="Type Room" 
+                  placeholder="Type Room" 
+                  :options="roomTypes" 
+                />
+                <InputSelect 
+                  v-model="formData.room_view" 
+                  label="Type Room" 
+                  placeholder="Type Room" 
+                  :options="roomView" 
+                />
+                <InputAutonumeric
+                  v-model="formData.price"
+                  label="Harga Kamar"
+                  placeholder="Masukkan Harga Kamar"
+                />
+                <ButtonBaseButton type="submit" variant="primary">Submit</ButtonBaseButton>
+            </FormBaseForm>
+        </CardBaseCard>
+    </div>
 </template>
 
 <script setup>
@@ -44,8 +37,11 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
-const { $bus } = useNuxtApp();
-
+import { useNavigatorStore } from "~/stores/navigator";
+const navStore = useNavigatorStore();
+navStore.setPage("Room");
+navStore.setSubpage("Index Price");
+const { $bus,$swal } = useNuxtApp();
 const formData = ref({
   room_type: "",
   room_view: "",
@@ -54,24 +50,29 @@ const formData = ref({
 });
 
 const roomOptions = ref([]);
-const roomTypes = ref([
-  { value: "Studio", label: "Studio" },
-  { value: "2 BR-A", label: "2 BR-A" },
-  { value: "2 BR-B", label: "2 BR-B" },
-  { value: "2 BR-C", label: "2 BR-C" },
-  { value: "2 BR-D", label: "2 BR-D" },
-  { value: "Suite", label: "Suite" },
-]);
+const roomTypes = ref([]);
+const getTypes = async () => {
+  const res = await $fetch(`${config.public.baseUrl}rooms/list-room-type`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + authStore.getToken,
+    },
+  });
 
+  roomTypes.value = res.data.room_type.map((item) => ({
+    value: item.type,
+    label: item.type,
+  }));
+};
+getTypes();
 const roomView = ref([
   { value: "Mountain", label: "Mountain" },
   { value: "City", label: "City" },
 ]);
 
 const handleSubmit = async () => {
-  const formattedDate = formData.value.date
-    ? formData.value.date.toISOString().split("T")[0]
-    : "";
+  $bus.$emit('loading',true);
+  const formattedDate = formData.value.date ? formData.value.date.toISOString().split("T")[0] : "";
 
   const form = new FormData();
 
@@ -88,14 +89,16 @@ const handleSubmit = async () => {
       headers: {
         Authorization: "Bearer " + authStore.getToken,
       },
-    }).then((response) => {
-      if (response.status == 1) {
-        console.log("Success:", response);
-      } else {
-        console.error("Error:", response);
-      }
-    });
+    }).then(response=>{
+      $bus.$emit('loading',false);
+      if(response.status == 1){
+        navigateTo('/price');
+      }else{
+        $swal.fire(response.message);
+      }        
+    })
   } catch (error) {
+    $swal.fire(error);
     console.error("Request failed:", error);
   }
 };

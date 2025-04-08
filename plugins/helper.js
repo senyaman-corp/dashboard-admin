@@ -39,12 +39,58 @@ export default defineNuxtPlugin((nuxtApp) => {
                 return new Intl.DateTimeFormat('id', {
                  //weekday: 'long',
                   year: 'numeric',
-                  month: 'numeric',
+                  month: 'short',
                   day: 'numeric',
                 }).format(new Date(dateStr));
                 
                 
               },
+              formatDateTime(dateStr) {
+                return new Intl.DateTimeFormat('id', {
+                 //weekday: 'long',
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: "numeric",
+                  minute: "numeric",
+                }).format(new Date(dateStr));
+              },
+
+              formatUtcDateTime(dateStr) {
+                return new Intl.DateTimeFormat('id', {
+                 //weekday: 'long',
+                  year: 'numeric',
+                  month:'short',
+                  day: 'numeric',
+                  timeZone: "Asia/Jakarta",
+                  hour: "numeric",
+                  minute: "numeric",
+                }).format(new Date(dateStr));
+              },
+              dataTableOptions(url,token,body = null){
+                return {
+                  serverSide: true,
+                  processing: true,
+                  responsive: true,
+                  ajax: {
+                    url: url,
+                    type: 'POST',
+                    headers: {
+                      Authorization: "Bearer " + token,
+                    },
+                    data: (d) => {
+                      if (body !== null) {
+                        for (let key in body) {
+                          d[key] = body[key];
+                        }
+                      }
+                    },
+                    error: function (jqXHR, textStatus, error) {
+                      console.log("Error Status", jqXHR.status)
+                    }
+                  },
+                }
+              }
         }
     }
 });
