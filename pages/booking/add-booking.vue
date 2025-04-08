@@ -114,14 +114,26 @@
                 </div>
               </div>
             </div>
-            <InputWithCombobox
-              v-model="roomSelection.room_id"
-              label="Select Room"
-              placeholder="Select Room"
-              :options="roomOptions"
-              :searchable="true"
-              :multiple="false"
-            />
+            <div class="row">
+              <div class="col-md-6">
+                <InputWithCombobox
+                  v-model="roomSelection.room_id"
+                  label="Select Room"
+                  placeholder="Select Room"
+                  :options="roomOptions"
+                  :searchable="true"
+                  :multiple="false"
+                />
+              </div>
+              <div class="col-md-6">
+                <InputBaseInput
+                  type="number"
+                  v-model="roomSelection.discount"
+                  label="Discount"
+                  placeholder="Masukkan Harga Discount"
+                />
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
@@ -147,13 +159,31 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <InputBaseInput
+                  <label for="">Booking Package</label>
+                  <select
+                    class="form-select form-select-lg"
                     v-model="roomSelection.booking_package"
-                    label="Booking Package"
-                    placeholder="Masukkan Booking Package"
+                  >
+                    <option value="" selected>Pilih Booking Package</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Breakfast">Non Breakfast</option>
+                  </select>
+                </div>
+              </div>
+              <div
+                class="col-md-6"
+                v-if="roomSelection.booking_package == 'Breakfast'"
+              >
+                <div class="mb-3">
+                  <InputBaseInput
+                    v-model="roomSelection.price_booking_package"
+                    label="Price Booking Package"
+                    placeholder="Masukkan Price Booking Package"
                   />
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-6">
                 <InputBaseInput
                   v-model="formData.early_checkin"
@@ -161,7 +191,24 @@
                   placeholder="Masukkan Early Checkin"
                 />
               </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="">Preebuy?</label>
+                  <select
+                    class="form-select form-select-lg"
+                    v-model="roomSelection.preebuy"
+                  >
+                    <option value="" selected>Pilih Preebuy</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+              </div>
             </div>
+            <h5>
+              Sub Total = Rp
+              {{ calculateSubTotal(roomSelection).toLocaleString("id-ID") }}
+            </h5>
           </div>
         </div>
 
@@ -170,13 +217,16 @@
             Add Another Room
           </ButtonBaseButton>
 
-          <div class="text-right">
-            <div class="text-lg font-bold">
-              Total: {{ formatPrice(calculateTotal) }}
-            </div>
-            <div class="text-sm text-gray-600">
-              {{ getTotalNights }} night(s)
-            </div>
+          <div class="mt-3">
+            <h5>
+              Total: Rp {{ calculateTotal.toLocaleString("id-ID") }}
+            </h5>
+            <h5>
+              TAX 23% = Rp {{ calculateTax.toLocaleString("id-ID") }}
+            </h5>
+            <h5>
+              Final Price = Rp {{ calculateFinalPrice.toLocaleString("id-ID") }}
+            </h5>
           </div>
         </div>
 
@@ -215,7 +265,10 @@ const formData = ref({
       room_id: "",
       checkin_date: "",
       checkout_date: "",
-      booking_package: 0,
+      booking_package: "",
+      price_booking_package: 0,
+      preebuy: "",
+      discount: 0,
       noofadult: "",
       noofchildren: "",
       early_checkin: 0,
@@ -237,50 +290,8 @@ const handleFile = (file) => {
 
 const roomOptions = ref([]);
 
-const fetchRooms = async () => {
-  try {
-    const response = await $fetch(`${config.public.baseUrl}rooms/list`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + authStore.getToken,
-      },
-    });
-    console.log("API Response:", response);
-    if (response.status === 1 && Array.isArray(response.data)) {
-      roomOptions.value = response.data.map((room) => ({
-        label: `<div class="text-bold">${room.room_number} - ${room.name} - ${room.type} - ${room.price}</div>`,
-        value: String(room.id),
-      }));
-    } else {
-      console.error("Error fetching rooms:", response);
-    }
-  } catch (error) {
-    console.error("Request failed:", error);
-  }
-};
-
 const availableRooms = ref([]);
 const today = ref(new Date().toISOString().split("T")[0]);
-
-// Computed property for total nights
-const getTotalNights = computed(() => {
-  if (!formData.value.check_in || !formData.value.check_out) return 0;
-  const checkIn = new Date(formData.value.check_in);
-  const checkOut = new Date(formData.value.check_out);
-  return Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
-});
-
-// Computed property for total price
-const calculateTotal = computed(() => {
-  let total = 0;
-  formData.value.selectedRooms.forEach((selection) => {
-    const room = availableRooms.value.find((r) => r.id === selection.room_id);
-    if (room) {
-      total += room.default_price * getTotalNights.value;
-    }
-  });
-  return total;
-});
 
 // Format price with currency
 const formatPrice = (price) => {
@@ -332,7 +343,9 @@ const handleSubmit = async () => {
     form.append("room_id[]", room.room_id || "");
     form.append("checkin_date[]", checkinDate);
     form.append("checkout_date[]", checkoutDate);
-    form.append("booking_package[]", room.booking_package || 0);
+    form.append("booking_package[]", room.booking_package || "");
+    form.append("price_booking_package[]", room.booking_package || 0);
+    form.append("discount[]", room.discount || 0);
     form.append("early_checkin[]", room.early_checkin || 0);
     form.append("noofadult[]", room.noofadult || "");
     form.append("noofchildren[]", room.noofchildren || "");
@@ -380,15 +393,53 @@ const searchRoom = async (startDate, endDate) => {
 
     if (status === 1) {
       availableRooms.value = data;
-      roomOptions.value = data.map((room) => ({
-        label: `${room.room_number} - ${room.name} - ${room.type}`,
-        value: String(room.id),
-        name: room.name,
-        price: room.actual_prices,
-        type: room.type,
-        view: room.view,
-        default_price: room.default_price,
-      }));
+      const checkin = new Date(startDate);
+      const checkout = new Date(endDate);
+      checkin.setHours(0, 0, 0, 0);
+      checkout.setHours(0, 0, 0, 0);
+
+      const getStayDates = () => {
+        const dates = [];
+        let current = new Date(checkin);
+        while (current < checkout) {
+          const y = current.getFullYear();
+          const m = String(current.getMonth() + 1).padStart(2, "0");
+          const d = String(current.getDate()).padStart(2, "0");
+          dates.push(`${y}-${m}-${d}`);
+          current.setDate(current.getDate() + 1);
+        }
+        return dates;
+      };
+
+      const stayDates = getStayDates();
+
+      roomOptions.value = data.map((room) => {
+        const priceMap = {};
+        room.actual_prices.forEach((p) => {
+          console.log("Price Object:", p);
+          const date = p.tanggal;
+          const price = parseFloat(p.price || 0);
+          priceMap[date] = priceMap[date]
+            ? Math.max(priceMap[date], price)
+            : price;
+        });
+
+        const totalPrice = stayDates.reduce((sum, date) => {
+          return sum + (priceMap[date] || 0);
+        }, 0);
+
+        return {
+          label: `${room.room_number} - ${room.name} - ${
+            room.type
+          } - Rp ${totalPrice.toLocaleString("id-ID")}`,
+          value: String(room.id),
+          name: room.name,
+          price: room.actual_prices,
+          type: room.type,
+          view: room.view,
+          default_price: totalPrice,
+        };
+      });
     } else if (statusCode === 403) {
       window.location.href = "/login";
     }
@@ -396,6 +447,66 @@ const searchRoom = async (startDate, endDate) => {
     console.error("Error fetching available rooms:", error);
   }
 };
+
+const calculateSubTotal = (selection) => {
+  const room = roomOptions.value.find(
+    (r) => r.value === String(selection.room_id)
+  );
+  if (!room) return 0;
+
+  const checkin = new Date(selection.checkin_date);
+  const checkout = new Date(selection.checkout_date);
+  checkin.setHours(0, 0, 0, 0);
+  checkout.setHours(0, 0, 0, 0);
+
+  const stayDates = [];
+  const current = new Date(checkin);
+  while (current < checkout) {
+    const y = current.getFullYear();
+    const m = String(current.getMonth() + 1).padStart(2, "0");
+    const d = String(current.getDate()).padStart(2, "0");
+    stayDates.push(`${y}-${m}-${d}`);
+    current.setDate(current.getDate() + 1);
+  }
+
+  const priceMap = {};
+  room.price.forEach((p) => {
+    priceMap[p.tanggal] = parseFloat(p.price || 0);
+  });
+
+  const totalRoomPrice = stayDates.reduce((sum, date) => {
+    return sum + (priceMap[date] || 0);
+  }, 0);
+
+  const discount = parseFloat(selection.discount) || 0;
+  const bookingPackage = parseFloat(selection.price_booking_package) || 0;
+
+  return totalRoomPrice - discount + bookingPackage;
+};
+
+const calculateTotal = computed(() => {
+  return formData.value.selectedRooms.reduce((total, selection) => {
+    return total + calculateSubTotal(selection);
+  }, 0);
+});
+
+const calculateTax = computed(() => {
+  return Math.round(calculateTotal.value * 0.23);
+});
+
+const calculateFinalPrice = computed(() => {
+  return calculateTotal.value + calculateTax.value;
+});
+
+watch(
+  () => formData.value.selectedRooms,
+  (rooms) => {
+    rooms.forEach((roomSelection) => {
+      roomSelection.sub_total = calculateSubTotal(roomSelection);
+    });
+  },
+  { deep: true }
+);
 
 const handleStartDate = (index) => {};
 
