@@ -40,3 +40,22 @@
 .text-36{
     font-size: 36px;
 }
+
+.dropdown-toggle:after, .dropend .dropdown-toggle:after {
+    border: 1px solid;
+    border-left: 0;
+    border-top: 0;
+    height: .42em;
+    width: .42em;
+}
+.dropdown-toggle:after {
+    margin-top: -.28em;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.dropdown-toggle:after {
+    content: "";
+    display: inline-block;
+    margin-left: .5em;
+    vertical-align: middle;
+}

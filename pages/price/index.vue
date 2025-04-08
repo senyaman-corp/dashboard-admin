@@ -98,7 +98,6 @@ const initData = async()=>{
   if(status == 1){
     rooms.value = data;
     preservedRooms.value = data;
-    console.log("Rooms",rooms.value)  
   }else{
     if(statusCode == 403){
     //redirect login;

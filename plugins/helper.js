@@ -39,11 +39,33 @@ export default defineNuxtPlugin((nuxtApp) => {
                 return new Intl.DateTimeFormat('id', {
                  //weekday: 'long',
                   year: 'numeric',
-                  month: 'numeric',
+                  month: 'short',
                   day: 'numeric',
                 }).format(new Date(dateStr));
                 
                 
+              },
+              formatDateTime(dateStr) {
+                return new Intl.DateTimeFormat('id', {
+                 //weekday: 'long',
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: "numeric",
+                  minute: "numeric",
+                }).format(new Date(dateStr));
+              },
+
+              formatUtcDateTime(dateStr) {
+                return new Intl.DateTimeFormat('id', {
+                 //weekday: 'long',
+                  year: 'numeric',
+                  month:'short',
+                  day: 'numeric',
+                  timeZone: "Asia/Jakarta",
+                  hour: "numeric",
+                  minute: "numeric",
+                }).format(new Date(dateStr));
               },
               dataTableOptions(url,token,body = null){
                 return {

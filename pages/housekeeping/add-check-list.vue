@@ -70,7 +70,7 @@ import { useAuthStore } from "~/stores/auth";
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 const authStore = useAuthStore();
-const { $bus } = useNuxtApp();
+const { $bus,$swal } = useNuxtApp();
 navStore.setPage("Housekeeping");
 navStore.setSubpage("Checklist Room");
 const config = useRuntimeConfig();
@@ -103,7 +103,7 @@ if (status == 1) {
 const submit = async () => {
     const user = authStore.getUser;
     $bus.$emit('loading',true)
-    const { data, status } = await $fetch(`${config.public.baseUrl}housekeeping/create-checklist-room`, {
+    const { data, status,message } = await $fetch(`${config.public.baseUrl}housekeeping/create-checklist-room`, {
         method: "POST",
         headers: {
             Authorization: "Bearer " + authStore.getToken,
@@ -121,6 +121,8 @@ const submit = async () => {
         router.push({
               path: '/housekeeping/checklist-room'
         })
+    }else{
+        $swal.fire(message)
     }
 };
 
@@ -142,9 +144,7 @@ const toggleSelector = (e) => {
 </script>
 
 <style>
-.multiselect{
-    width:99%;
-}
+
 .bg-gray{
     background-color:#f4f4f4;
 }
