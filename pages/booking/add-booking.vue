@@ -9,11 +9,59 @@
           placeholder="Masukkan Nama Tamu"
         />
         <InputBaseInput
+          v-model="formData.age"
+          label="Usia"
+          placeholder="Masukkan Usia"
+        />
+        <InputBaseInput
           type="number"
           v-model="formData.no_telp"
           label="Nomor Telepon"
           placeholder="Masukkan No Telepon"
         />
+        <InputBaseInput
+          type="email"
+          v-model="formData.email"
+          label="Email"
+          placeholder="Masukkan Email"
+        />
+        <InputBaseTextArea
+          v-model="formData.address"
+          label="Alamat"
+          placeholder="Masukkan Alamat"
+        />
+        <InputBaseInput
+          v-model="formData.gender"
+          label="Jenis Kelamin"
+          placeholder="Masukkan Jenis Kelamin"
+        />
+        <InputBaseInput
+          v-model="formData.booking_type"
+          label="Booking Type"
+          placeholder="Masukkan Booking Type"
+        />
+
+        <InputBaseInput
+          v-model="formData.no_pol"
+          label="No Polisi Kendaraan"
+          placeholder="Masukkan No Polisi Kendaraan"
+        />
+        <InputBaseInput
+          v-model="formData.jenis"
+          label="Jenis Kendaraan"
+          placeholder="Masukkan Jenis Kendaraan"
+        />
+        <InputBaseInput
+          v-model="formData.merek"
+          label="Merek Kendaraan"
+          placeholder="Masukkan Merek Kendaraan"
+        />
+        <InputBaseInput
+          v-model="formData.total_price"
+          label="Total Harga"
+          placeholder="Masukkan Total Harga"
+        />
+
         <InputBaseUpload
           label="Foto KTP"
           id="fileUpload"
@@ -35,7 +83,8 @@
                 v-if="index > 0"
                 @click="removeRoom(index)"
                 variant="danger"
-                type="button" >
+                type="button"
+              >
                 Remove Room
               </ButtonBaseButton>
             </div>
@@ -72,7 +121,6 @@
               :options="roomOptions"
               :searchable="true"
               :multiple="false"
-             
             />
             <div class="row">
               <div class="col-md-6">
@@ -100,20 +148,18 @@
               <div class="col-md-6">
                 <div class="mb-3">
                   <InputBaseInput
-                    v-model="roomSelection.booking_type"
-                    label="Booking Type"
-                    placeholder="Masukkan Booking Type"
-                  />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <InputBaseInput
                     v-model="roomSelection.booking_package"
                     label="Booking Package"
                     placeholder="Masukkan Booking Package"
                   />
                 </div>
+              </div>
+              <div class="col-md-6">
+                <InputBaseInput
+                  v-model="formData.early_checkin"
+                  label="Early Checkin?"
+                  placeholder="Masukkan Early Checkin"
+                />
               </div>
             </div>
           </div>
@@ -150,31 +196,29 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
-const { $bus, $readInputFile,$formatDate } = useNuxtApp();
+const { $bus, $readInputFile, $formatDate } = useNuxtApp();
 const formData = ref({
   name: "",
+  age: "",
   no_telp: "",
-  ktp: null,
-  //   room_id:[],
-  //   checkin_date: [],
-  //   checkout_date: [],
-  //   current_price: [],
-  //   booking_package: [],
-  //   noofadult: [],
-  //   noofchildren: [],
-  //   booking_type: [],
+  email: "",
+  address: "",
   gender: "",
+  ktp: null,
   total_price: 0,
+  no_pol: "",
+  jenis: "",
+  merek: "",
+  booking_type: "",
   selectedRooms: [
     {
       room_id: "",
       checkin_date: "",
       checkout_date: "",
-      current_price: "",
-      booking_package: "",
+      booking_package: 0,
       noofadult: "",
       noofchildren: "",
-      booking_type: "",
+      early_checkin: 0,
     },
   ],
 });
@@ -206,7 +250,6 @@ const fetchRooms = async () => {
       roomOptions.value = response.data.map((room) => ({
         label: `<div class="text-bold">${room.room_number} - ${room.name} - ${room.type}</div>`,
         value: String(room.id),
-       
       }));
     } else {
       console.error("Error fetching rooms:", response);
@@ -261,36 +304,38 @@ const removeRoom = (index) => {
 // Update available rooms based on date selection
 const updateAvailableRooms = async () => {
   if (!formData.value.check_in || !formData.value.check_out) return;
-
-  
 };
 
 const handleSubmit = async () => {
   const form = new FormData();
   form.append("name", formData.value.name);
+  form.append("age", formData.value.age);
   form.append("no_telp", formData.value.no_telp);
-  //   form.append("room_id[]", formData.value.room_id);
-  //   form.append("checkin_date[]", formData.value.checkin_date);
-  //   form.append("checkout_date[]", formData.value.checkout_date);
-  //   form.append("current_price[]", formData.value.current_price);
-  //   form.append("booking_package[]", formData.value.booking_package);
-  //   form.append("noofadult[]", formData.value.noofadult);
-  //   form.append("noofchildren[]", formData.value.noofchildren);
-  //   form.append("booking_type[]", formData.value.booking_type);
+  form.append("email", formData.value.email);
+  form.append("address", formData.value.address);
   form.append("gender", formData.value.gender);
+  form.append("booking_type", formData.value.booking_type);
   form.append("total_price", formData.value.total_price);
 
+  form.append("no_pol[]", formData.value.no_pol);
+  form.append("jenis[]", formData.value.jenis);
+  form.append("merek[]", formData.value.merek);
+
   formData.value.selectedRooms.forEach((room) => {
-    const checkinDate = $formatDate(room.checkin_date);
-    const checkoutDate = $formatDate(room.checkout_date);
+    const checkinDate = room.checkin_date
+      ? room.checkin_date.toISOString().split("T")[0]
+      : "";
+    const checkoutDate = room.checkout_date
+      ? room.checkout_date.toISOString().split("T")[0]
+      : "";
+
     form.append("room_id[]", room.room_id || "");
     form.append("checkin_date[]", checkinDate);
     form.append("checkout_date[]", checkoutDate);
-    form.append("current_price[]", room.current_price || "");
-    form.append("booking_package[]", room.booking_package || "");
+    form.append("booking_package[]", room.booking_package || 0);
+    form.append("early_checkin[]", room.early_checkin || 0);
     form.append("noofadult[]", room.noofadult || "");
     form.append("noofchildren[]", room.noofchildren || "");
-    form.append("booking_type[]", room.booking_type || "");
   });
 
   if (formData.value.ktp) {
@@ -338,25 +383,21 @@ const searchRoom = async (startDate, endDate) => {
       roomOptions.value = data.map((room) => ({
         label: `${room.room_number} - ${room.name} - ${room.type}`,
         value: String(room.id),
-        name:room.name,
-        price:room.actual_prices,
-        type:room.type,
-        view:room.view,
-        default_price:room.default_price
+        name: room.name,
+        price: room.actual_prices,
+        type: room.type,
+        view: room.view,
+        default_price: room.default_price,
       }));
-    
     } else if (statusCode === 403) {
       window.location.href = "/login";
     }
   } catch (error) {
     console.error("Error fetching available rooms:", error);
   }
-
-}
-
-const handleStartDate = (index) => {
- 
 };
+
+const handleStartDate = (index) => {};
 
 const handleEndDate = (index) => {
   const startDate = formData.value.selectedRooms[index].checkin_date;
@@ -364,18 +405,11 @@ const handleEndDate = (index) => {
   if (startDate && endDate) {
     searchRoom(startDate, endDate);
   }
-}
-const selectRoom = (roomId,index) => {
+};
+const selectRoom = (roomId, index) => {
   formData.value.selectedRooms[index].id = roomId;
-}
-/*
-watch([roomSelection.room_id], (newValue) => {
-  console.log(newValue)
-});
-*/
+};
 onMounted(() => {
-  //updateAvailableRooms();
-  //fetchRooms();
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
 });
 
@@ -391,14 +425,14 @@ definePageMeta({
   margin-bottom: 1rem;
   border-radius: 0.5rem;
 }
-.max-vh-50{
+.max-vh-50 {
   max-height: 30vh;
   overflow-y: auto;
 }
-tr{
+tr {
   cursor: pointer;
 }
-tr.selected{
+tr.selected {
   background: linear-gradient(90deg, #b5e4b6, transparent);
 }
 </style>

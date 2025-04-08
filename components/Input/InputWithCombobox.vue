@@ -12,19 +12,9 @@
       track-by="value"
       label="label"
       class="form-control"
-      placeholder="Pilih opsi"
+      :placeholder="placeholder"
       @update:modelValue="updateValue"
-    >
-      <template #singleLabel="props">
-        <span class="option__desc"><span class="option__title">{{ props.option.label }}</span></span>
-      </template>
-      <template #option="props">
-        <div class="option__desc">
-          <div class="option__title t-bold">{{ props.option.name }}</div>
-          <div class="option__small">{{ props.option.view }}</div>
-        </div>
-      </template>
-    </Multiselect>
+    />
   </div>
 </template>
 
@@ -41,6 +31,7 @@ const props = defineProps({
   multiple: Boolean,
   searchable: { type: Boolean, default: true },
   required: { type: Boolean, default: false },
+  placeholder: { type: String, default: "Pilih opsi" },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -71,7 +62,6 @@ watch(
   },
   { immediate: true }
 );
-
 </script>
 <style>
 #multiselect-style .multiselect {
