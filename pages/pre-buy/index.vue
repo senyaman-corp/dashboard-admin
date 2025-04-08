@@ -19,7 +19,7 @@
                     :columns="columns"
                     style="width: 100%"
                     :options="options"
-                    
+                    ref="table"
                     >
                     <template #column-6="props">
                         <a class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-target="#dropdown" aria-haspopup="true" aria-expanded="false">Aksi</a>
@@ -85,8 +85,9 @@ const deletePrebuy = async (id) => {
         }
     });
     if(status == 1){
-        window.location.reload();
-        //prebuys.value = prebuys;
+        if(dt !== undefined){
+            dt.ajax.reload();
+        }
     }
 }
 
@@ -94,10 +95,14 @@ const viewDetail = async (id) => {
    router.push('/pre-buy/detail/'+id);
 }
 
+let dt;
+const table = ref();
+
 onMounted(() => {
   $bus.$emit("pagechange", { page: "PreBuy", subpage: "Index PreBuy" });
-
-  //dt = table.value.dt;
+  nextTick().then(() => {
+    dt = table.value.dt;
+  })
 });
 </script>
 

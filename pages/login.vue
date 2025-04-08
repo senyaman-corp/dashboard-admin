@@ -44,6 +44,7 @@
                     </a>
                   </div>
                 </div>
+                <div class="error">{{error}}</div>
                 <div class="pt-5 text-center">
                   <button
                     class="btn btn-primary w-xl waves-effect waves-light"
@@ -62,7 +63,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
 import { useAuthStore } from "~/stores/auth";
 
 const config = useRuntimeConfig();
@@ -74,8 +74,9 @@ const year = new Date().getFullYear();
 const error = ref("");
 const inputType = ref("password");
 const router = useRouter();
-
+const { $bus } = useNuxtApp();
 function signIn() {
+  $bus.$emit('loading',true)
   const formData = new FormData();
   formData.append("email", email.value);
   formData.append("password", password.value);
@@ -84,6 +85,7 @@ function signIn() {
     lazy: true,
     body: formData,
   }).then((response) => {
+    $bus.$emit('loading',false)
     if (response.status == 1) {
       authStore.setToken(response.data.token);
       authStore.setUser(response.data.user);
@@ -91,9 +93,9 @@ function signIn() {
      if(remember_me.value){
         authStore.setEmail(email.value);
         authStore.setPassword(password.value);
-        console.log(authStore.email);
+        
      }
-      router.push({
+     router.push({
         path: "/room",
       })
     } else {

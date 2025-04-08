@@ -102,6 +102,7 @@ if (status == 1) {
 
 const submit = async () => {
     const user = authStore.getUser;
+    $bus.$emit('loading',true)
     const { data, status } = await $fetch(`${config.public.baseUrl}housekeeping/create-checklist-room`, {
         method: "POST",
         headers: {
@@ -114,6 +115,7 @@ const submit = async () => {
             housekeeper_id: user.id,
         },
     });
+    $bus.$emit('loading',false)
     if(status == 1){
         console.log("Redirect to checklist room")
         router.push({

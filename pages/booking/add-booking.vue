@@ -72,7 +72,6 @@
               :options="roomOptions"
               :searchable="true"
               :multiple="false"
-             
             />
             <div class="row">
               <div class="col-md-6">
