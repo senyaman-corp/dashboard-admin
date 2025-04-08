@@ -97,6 +97,7 @@ const roomType = ref();
 
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);
+const preservedRooms = ref([]);
 
 const months = [
   "January",

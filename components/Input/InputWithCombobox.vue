@@ -83,4 +83,12 @@ watch(
 #multiselect-style span {
   margin-bottom: 0px !important;
 }
+.multiselect{
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+.multiselect__placeholder,.multiselect__input{
+  padding-left:.5rem !important;
+  padding-right:.5rem !important;
+}
 </style>

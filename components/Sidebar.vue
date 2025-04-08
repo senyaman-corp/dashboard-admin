@@ -22,7 +22,7 @@
               <li :class="{ active: subpage == 'Index Room' }">
                 <NuxtLink to="/room">Index</NuxtLink>
               </li>
-              <li :class="{ active: subpage == 'Price' }">
+              <li :class="{ active: subpage == 'Index Price' }">
                 <NuxtLink to="/price">Price</NuxtLink>
               </li>
               <li :class="{ active: subpage == 'Room Type' }">
@@ -80,6 +80,27 @@
               href="javascript:void(0);"
               class="nav-link has-arrow"
               data-bs-toggle="collapse"
+              data-bs-target="#menu-prebuy"
+              :aria-expanded="page == 'PreBuy'"
+            >
+              <i class="fas fa-address-book"></i>
+              <span>Pre Buy</span>
+            </a>
+            <ul
+              class="sub-menu collapse"
+              :class="{ show: page == 'PreBuy' }"
+              id="menu-prebuy"
+            >
+              <li :class="{ active: subpage == 'Index PreBuy' }">
+                <NuxtLink to="/pre-buy">List Pre Buy</NuxtLink>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a
+              href="javascript:void(0);"
+              class="nav-link has-arrow"
+              data-bs-toggle="collapse"
               data-bs-target="#menu-housekeeping"
               :aria-expanded="page == 'Housekeeping'"
             >
@@ -87,6 +108,8 @@
               <span>House Keeping</span>
             </a>
             <ul class="sub-menu collapse" :class="{ show: page == 'Housekeeping' }" id="menu-housekeeping">
+              <li :class="{ active: subpage == 'Rooms' }"><NuxtLink to="/housekeeping/rooms">Rooms</NuxtLink></li>
+              <li :class="{ active: subpage == 'Checklist Room' }"><NuxtLink to="/housekeeping/checklist-room">Checklist Room</NuxtLink></li>
               <li :class="{ active: subpage == 'Index Housekeeping' }"><NuxtLink to="/housekeeping">Housekeeping</NuxtLink></li>
             </ul>
           </li>
@@ -105,7 +128,6 @@
               <li :class="{ active: subpage == 'Index User' }"><NuxtLink to="/user-role">Users</NuxtLink></li>
             </ul>
           </li>
-
         </ul>
       </div>
     </div>

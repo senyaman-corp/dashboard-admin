@@ -339,12 +339,17 @@
 <script setup>
 import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
+const router = useRouter();
 const logout = () => {
   authStore.setLoggedin(false);
   authStore.setToken(null);
   authStore.setEmail(null);
   authStore.setPassword(null);
-  window.location.href = "/login";
+  authStore.setUser(null);
+  router.push({
+    path: "/login",
+  });
+  //window.location.href = "/login";
 };
 </script>
 

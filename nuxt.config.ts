@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '~/assets/libs/simplebar/simplebar.min.css',
     '~/assets/css/app.min.css',
     '~/assets/css/override.css',
+    'sweetalert2/dist/sweetalert2.min.css'
   ],
 
   plugins: [
