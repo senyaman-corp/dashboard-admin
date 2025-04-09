@@ -5,6 +5,16 @@
         <div class="col-lg-2">
           <select
             class="form-select form-select-lg"
+            @change="filterByView"
+            v-model="roomView"
+              >
+                <option value="">Pilih View</option>
+                <option v-for="view in ['Mountain', 'City']" :key="view" :value="view">{{ view }}</option>
+            </select>
+        </div>
+        <div class="col-lg-2">
+          <select
+            class="form-select form-select-lg"
             :id="'year'"
             @change="filterByType"
             v-model="roomType"
@@ -13,6 +23,7 @@
             <option v-for="type in roomTypes" :key="type.id" :value="type.type">{{ type.type }}</option>
           </select>
         </div>
+        
         <div class="col-lg-2">
           <VueDatePicker
             v-model="date"
@@ -132,6 +143,7 @@ navStore.setSubpage("Rooms");
 const config = useRuntimeConfig();
 const date = ref({ month:new Date().getMonth(), year:new Date().getFullYear()});
 const roomType = ref('');
+const roomView = ref('');
 const detail = ref({})
 // Sample rooms data - Replace with actual API call
 const rooms = ref([]);
@@ -254,7 +266,27 @@ const filterByType = ()=>{
     return;
   }
   if(preservedRooms.value.length > 0){
-    const filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value);
+    let filteredRooms = [];
+    if(roomView.value!== ''){
+      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value && room.view === roomView.value);
+    }else{
+      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value);
+    }
+    rooms.value = filteredRooms;
+  }
+}
+const filterByView = ()=>{
+  if(roomView.value == ""){
+    rooms.value = preservedRooms.value;
+    return;
+  }
+  if(preservedRooms.value.length > 0){
+    let filteredRooms = [];
+    if(roomType.value !== ''){
+      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value && room.view === roomView.value);
+    }else{
+      filteredRooms = preservedRooms.value.filter(room => room.view === roomView.value);
+    }
     rooms.value = filteredRooms;
   }
 }

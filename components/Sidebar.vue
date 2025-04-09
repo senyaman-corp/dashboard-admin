@@ -28,6 +28,9 @@
               <li :class="{ active: subpage == 'Room Type' }">
                 <NuxtLink to="/room/type">Room Type</NuxtLink>
               </li>
+              <li :class="{ active: subpage == 'Additional Charges' }">
+                <NuxtLink to="/room/additional-charges">Additional Charges</NuxtLink>
+              </li>
             </ul>
           </li>
           <li class="nav-item" :class="{ active: page == 'Guests' }">

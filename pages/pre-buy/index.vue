@@ -21,7 +21,7 @@
                     :options="options"
                     ref="table"
                     >
-                    <template #column-6="props">
+                    <template #column-7="props">
                         <a class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-target="#dropdown" aria-haspopup="true" aria-expanded="false">Aksi</a>
                         <ul id="dropdown" class="dropdown-menu p-2" aria-labelledby="dropdown">
                             <li class="dropdown-item">
@@ -55,7 +55,7 @@ const router = useRouter();
 const options = $dataTableOptions(config.public.baseUrl + 'pre-buy/list', authStore.getToken);
 options.columnDefs = [
   { targets:[0],className:'text-start'},
-  { targets:[6],className:'text-end'},
+  { targets:[7],className:'text-end'},
   { targets:[5],className:'text-end',render:(data,type)=>{
     if(type === 'sort'){
         return data;
@@ -71,6 +71,7 @@ const columns = ref([
   { title: "End Date", data: "end_date" },
   { title: "Quantity", data: "quantity" },
   { title: "Total Price", data: "total_price" },
+  { title: "Booking", data: "pre_buy_booking" },
   { title: "Action", data: "id" },
 ]);
 

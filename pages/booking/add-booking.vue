@@ -123,6 +123,7 @@
                   :options="roomOptions"
                   :searchable="true"
                   :multiple="false"
+                   @update:model-value="findPreBuyPrice(roomSelection)"
                 />
               </div>
               <div class="col-md-6">
@@ -199,8 +200,8 @@
                     v-model="roomSelection.preebuy"
                   >
                     <option value="" selected>Pilih Preebuy</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
+                    <option v-for="prebuy in preBuyData" :key="prebuy.id" :value="prebuy.id">{{prebuy.vendor}}</option>
+                 
                   </select>
                 </div>
               </div>
@@ -275,9 +276,7 @@ const formData = ref({
     },
   ],
 });
-
 const fotoKTP = ref(null);
-
 const handleFile = (file) => {
   formData.value.ktp = file;
   var reader = new FileReader();
@@ -289,18 +288,8 @@ const handleFile = (file) => {
 };
 
 const roomOptions = ref([]);
-
 const availableRooms = ref([]);
-const today = ref(new Date().toISOString().split("T")[0]);
-
-// Format price with currency
-const formatPrice = (price) => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(price);
-};
-
+const preBuyData = ref([]);
 // Add another room selection
 const addRoom = () => {
   console.log("Adding room");
@@ -313,9 +302,7 @@ const removeRoom = (index) => {
 };
 
 // Update available rooms based on date selection
-const updateAvailableRooms = async () => {
-  if (!formData.value.check_in || !formData.value.check_out) return;
-};
+
 
 const handleSubmit = async () => {
   const form = new FormData();
@@ -498,6 +485,52 @@ const calculateFinalPrice = computed(() => {
   return calculateTotal.value + calculateTax.value;
 });
 
+const handleStartDate = (index) => {};
+
+const handleEndDate = (index) => {
+  const startDate = formData.value.selectedRooms[index].checkin_date;
+  const endDate = formData.value.selectedRooms[index].checkout_date;
+  if (startDate && endDate) {
+    searchRoom(startDate, endDate);
+  }
+};
+
+const findPreBuyPrice = async (roomSelected) => {
+  const {data,status} = await $fetch(`${config.public.baseUrl}pre-buy/data-availability`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + authStore.getToken,
+    },
+    body: {
+      room_id: roomSelected.room_id,
+    },
+  });
+  if(status == 1){
+    preBuyData.value = data;
+  }
+};
+
+
+
+
+
+
+const today = ref(new Date().toISOString().split("T")[0]);
+const selectRoom = (roomId, index) => {
+  formData.value.selectedRooms[index].id = roomId;
+};
+const updateAvailableRooms = async () => {
+  if (!formData.value.check_in || !formData.value.check_out) return;
+};
+
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(price);
+};
+
+
 watch(
   () => formData.value.selectedRooms,
   (rooms) => {
@@ -508,18 +541,6 @@ watch(
   { deep: true }
 );
 
-const handleStartDate = (index) => {};
-
-const handleEndDate = (index) => {
-  const startDate = formData.value.selectedRooms[index].checkin_date;
-  const endDate = formData.value.selectedRooms[index].checkout_date;
-  if (startDate && endDate) {
-    searchRoom(startDate, endDate);
-  }
-};
-const selectRoom = (roomId, index) => {
-  formData.value.selectedRooms[index].id = roomId;
-};
 onMounted(() => {
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
 });

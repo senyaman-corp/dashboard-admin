@@ -1,7 +1,29 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-
+  app:{
+    head: {
+      htmlAttrs: {
+        lang: "id",
+        translate: "no",
+        "data-id": "Senyaman"
+      },
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1 shrink-to-fit=no" },
+        { "http-equiv": "X-UA-Compatible", content: "ie=edge" },
+        { name: "theme-color", content: "#38c66c"},
+        { name: "msapplication-TileColor", content: "#38c66c" },
+        { name: "description", content: "'Senyaman Corporation'" },
+       // { hid: "description", name: "description", content: "" },
+        { name: "format-detection", content: "telephone=no" }
+      ],
+      link: [
+        { rel: "icon", type: "image/x-icon", href: "/favicon.png" },
+        { rel: "sitemap", type: "application/xml", title: "Sitemap", href: "/sitemap.xml"},
+      ],
+    }
+  },
   css: [
     '~/assets/css/bootstrap.min.css',
     '~/assets/libs/simplebar/simplebar.min.css',

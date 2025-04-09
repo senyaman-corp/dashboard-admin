@@ -141,7 +141,7 @@ const bulans = [
   "11",
   "12",
 ];
-const roomView = ref();
+const roomView = ref('');
 const roomViewOptions = ref([
   { value: "", label: "Select Room View" },
   { value: "Mountain", label: "Mountain" },
@@ -205,9 +205,12 @@ const filterByType = () => {
     return;
   }
   if (preservedRooms.value.length > 0) {
-    const filteredRooms = preservedRooms.value.filter(
-      (room) => room.type === roomType.value
-    );
+    let filteredRooms = [];
+    if(roomView.value !== ''){
+      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value && room.view === roomView.value);
+    }else{
+      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value);
+    }
     rooms.value = filteredRooms;
   }
 };
@@ -217,9 +220,12 @@ const filterByView = () => {
     return;
   }
   if (preservedRooms.value.length > 0) {
-    const filteredRooms = preservedRooms.value.filter(
-      (room) => room.view === roomView.value
-    );
+    let filteredRooms = [];
+    if(roomType.value !== ''){
+      filteredRooms = preservedRooms.value.filter((room) => room.view === roomView.value && room.type === roomType.value);
+    }else{
+      filteredRooms = preservedRooms.value.filter((room) => room.view === roomView.value);
+    }
     rooms.value = filteredRooms;
   }
 };

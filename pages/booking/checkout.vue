@@ -3,7 +3,7 @@
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center">
         <h3>Checkout</h3>
-
+        
       </div>
     </div>
 </div>
@@ -19,7 +19,8 @@ navStore.setPage("Booking");
 navStore.setSubpage("Index Booking");
 const router = useRouter();
 const route = useRoute();
-const id = route.query.booking_id;
+const booking_id = route.query.booking_id;
+const room_id = route.query.room_id;
 const booking = ref();
 const initNookingData = async()=>{
   const res = await $fetch(config.public.baseUrl + 'bookings/booking-room-detail',{
@@ -29,7 +30,7 @@ const initNookingData = async()=>{
     },
     lazy:true,
     body:{
-      id:id
+      id:booking_id
     }
   });
   if(res.status == 1){

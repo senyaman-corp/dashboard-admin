@@ -121,9 +121,9 @@ const date = ref({
   month: new Date().getMonth(),
   year: new Date().getFullYear(),
 });
-const roomType = ref();
+const roomType = ref('');
 const roomTypes = ref([]);
-const roomView = ref();
+const roomView = ref('');
 const detail = ref({});
 const rooms = ref([]);
 const preservedRooms = ref([]);
@@ -265,9 +265,12 @@ const filterByType = () => {
     return;
   }
   if (preservedRooms.value.length > 0) {
-    const filteredRooms = preservedRooms.value.filter(
-      (room) => room.type === roomType.value
-    );
+    let filteredRooms = [];
+    if(roomView.value !== ''){
+      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value && room.view === roomView.value);
+    }else{
+      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value);
+    }
     rooms.value = filteredRooms;
   }
 };
@@ -278,9 +281,12 @@ const filterByView = () => {
     return;
   }
   if (preservedRooms.value.length > 0) {
-    const filteredRooms = preservedRooms.value.filter(
-      (room) => room.view === roomView.value
-    );
+    let filteredRooms = [];
+    if(roomType.value !== ''){
+      filteredRooms = preservedRooms.value.filter((room) => room.view === roomView.value && room.type === roomType.value);
+    }else{
+      filteredRooms = preservedRooms.value.filter((room) => room.view === roomView.value);
+    }
     rooms.value = filteredRooms;
   }
 };

@@ -11,14 +11,14 @@
               src="assets/icons/icon-512x512.png"
               alt="logo-sm-dark"
               height="20"
-            /><b class="text-18 text-default">Senyaman</b>
+            /><b class="text-18 text-default text-logo">Senyaman</b>
           </span>
           <span class="logo-lg">
             <img
               src="assets/icons/icon-512x512.png"
               alt="logo-dark"
               height="18"
-            /><b class="text-18 text-default">Senyaman</b>
+            /><b class="text-18 text-default text-logo">Senyaman</b>
           </span>
         </a>
 
@@ -260,9 +260,9 @@
                       </div>
                     </div>
                     <div class="rich-list-content">
-                      <h3 class="rich-list-title text-white">Charlie Stone</h3>
+                      <h3 class="rich-list-title text-white">{{ user ? user.name : '' }}</h3>
                       <span class="rich-list-subtitle text-white"
-                        >admin@codubucks.in</span
+                        >{{ user ? user.email : '' }}</span
                       >
                     </div>
                     <div class="rich-list-append">
@@ -275,12 +275,14 @@
                     class="grid-nav grid-nav-flush grid-nav-action grid-nav-no-rounded"
                   >
                     <div class="grid-nav-row">
+                      <!-- 
                       <a href="apps-contact.html" class="grid-nav-item">
                         <div class="grid-nav-icon">
                           <i class="far fa-address-card"></i>
                         </div>
                         <span class="grid-nav-content">Profile</span>
                       </a>
+                      
                       <a href="#!" class="grid-nav-item">
                         <div class="grid-nav-icon">
                           <i class="far fa-comments"></i>
@@ -313,6 +315,7 @@
                         </div>
                         <span class="grid-nav-content">Notification</span>
                       </a>
+                       -->
                     </div>
                   </div>
                 </div>
@@ -351,6 +354,7 @@ const logout = () => {
   });
   //window.location.href = "/login";
 };
+const user = ref(authStore.getUser)
 </script>
 
 <style></style>

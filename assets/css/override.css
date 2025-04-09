@@ -59,3 +59,6 @@
     margin-left: .5em;
     vertical-align: middle;
 }
+.sidebar-collpsed .text-logo{
+    display: none;
+}
