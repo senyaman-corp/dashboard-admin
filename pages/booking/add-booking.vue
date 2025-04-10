@@ -41,26 +41,44 @@
           placeholder="Masukkan Booking Type"
         />
 
-        <InputBaseInput
-          v-model="formData.no_pol"
-          label="No Polisi Kendaraan"
-          placeholder="Masukkan No Polisi Kendaraan"
-        />
-        <InputBaseInput
-          v-model="formData.jenis"
-          label="Jenis Kendaraan"
-          placeholder="Masukkan Jenis Kendaraan"
-        />
-        <InputBaseInput
-          v-model="formData.merek"
-          label="Merek Kendaraan"
-          placeholder="Masukkan Merek Kendaraan"
-        />
-        <InputBaseInput
-          v-model="formData.total_price"
-          label="Total Harga"
-          placeholder="Masukkan Total Harga"
-        />
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="">Membawa kendaraan?</label>
+              <select
+                class="form-select form-select-lg"
+                v-model="formData.with_vehicle"
+              >
+                <option value="" selected>Membawa kendaraan?</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6" v-if="formData.with_vehicle">
+            <InputBaseInput
+              v-model="formData.no_pol"
+              label="No Polisi Kendaraan"
+              placeholder="Masukkan No Polisi Kendaraan"
+            />
+          </div>
+        </div>
+        <div class="row" v-if="formData.with_vehicle">
+          <div class="col-md-6">
+            <InputBaseInput
+              v-model="formData.jenis"
+              label="Jenis Kendaraan"
+              placeholder="Masukkan Jenis Kendaraan"
+            />
+          </div>
+          <div class="col-md-6">
+            <InputBaseInput
+              v-model="formData.merek"
+              label="Merek Kendaraan"
+              placeholder="Masukkan Merek Kendaraan"
+            />
+          </div>
+        </div>
 
         <InputBaseUpload
           label="Foto KTP"
@@ -187,7 +205,7 @@
             <div class="row">
               <div class="col-md-6">
                 <InputBaseInput
-                  v-model="formData.early_checkin"
+                  v-model="roomSelection.early_checkin"
                   label="Early Checkin?"
                   placeholder="Masukkan Early Checkin"
                 />
@@ -200,7 +218,10 @@
                     v-model="roomSelection.preebuy"
                   >
                     <option value="" selected>Pilih Preebuy</option>
-                    <option v-for="prebuy in preBuyData" :key="prebuy.id" :value="prebuy.id">{{prebuy.vendor}}</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+
+                    <!-- <option v-for="prebuy in preBuyData" :key="prebuy.id" :value="prebuy.id">{{prebuy.vendor}}</option> -->
                  
                   </select>
                 </div>
@@ -257,6 +278,7 @@ const formData = ref({
   gender: "",
   ktp: null,
   total_price: 0,
+  with_vehicle: null,
   no_pol: "",
   jenis: "",
   merek: "",
@@ -321,18 +343,19 @@ const handleSubmit = async () => {
 
   formData.value.selectedRooms.forEach((room) => {
     const checkinDate = room.checkin_date
-      ? room.checkin_date.toISOString().split("T")[0]
+      ? `${room.checkin_date.toISOString().split("T")[0]} 14:00:00`
       : "";
     const checkoutDate = room.checkout_date
-      ? room.checkout_date.toISOString().split("T")[0]
+      ? `${room.checkout_date.toISOString().split("T")[0]} 12:00:00`
       : "";
 
     form.append("room_id[]", room.room_id || "");
     form.append("checkin_date[]", checkinDate);
     form.append("checkout_date[]", checkoutDate);
     form.append("booking_package[]", room.booking_package || "");
-    form.append("price_booking_package[]", room.booking_package || 0);
-    form.append("discount[]", room.discount || 0);
+    // form.append("price_booking_package[]", room.price_booking_package || 0);
+    // form.append("discount[]", room.discount || 0);
+    form.append("preebuy[]", room.preebuy || "");
     form.append("early_checkin[]", room.early_checkin || 0);
     form.append("noofadult[]", room.noofadult || "");
     form.append("noofchildren[]", room.noofchildren || "");
@@ -351,6 +374,7 @@ const handleSubmit = async () => {
         Authorization: "Bearer " + authStore.getToken,
       },
     }).then((response) => {
+      console.log("Response:", response);
       if (response.status == 1) {
         console.log("Success:", response);
       } else {
@@ -482,6 +506,8 @@ const calculateTax = computed(() => {
 });
 
 const calculateFinalPrice = computed(() => {
+  formData.value.total_price = calculateTotal.value + calculateTax.value;
+
   return calculateTotal.value + calculateTax.value;
 });
 
