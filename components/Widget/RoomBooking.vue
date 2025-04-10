@@ -86,10 +86,7 @@
       <div class="col-md-6">
         <div class="mb-3">
           <label for="" class="form-label">Booking Package</label>
-          <select
-            class="form-select form-select-lg"
-            v-model="booking_package"
-          >
+          <select class="form-select form-select-lg" v-model="booking_package">
             <option value="" selected>Pilih Booking Package</option>
             <option value="Breakfast">Breakfast</option>
             <option value="Non Breakfast">Non Breakfast</option>
@@ -117,24 +114,59 @@
       <div class="col-md-6">
         <div class="mb-3">
           <label for="" class="form-label">Preebuy?</label>
-          <select
-            class="form-select form-select-lg"
-            v-model="preebuy"
-          >
+          <select class="form-select form-select-lg" v-model="preebuy">
             <option value="" selected>Pilih Preebuy</option>
-            <option v-for="prebuy in preBuyData" :key="prebuy.id" :value="prebuy.id">{{prebuy.vendor}}</option>
+            <option
+              v-for="prebuy in preBuyData"
+              :key="prebuy.id"
+              :value="prebuy.id"
+            >
+              {{ prebuy.vendor }}
+            </option>
           </select>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <label class="form-label">Additional Charge</label>
+        <select class="form-select form-select-lg" v-model="additional_name">
+          <option value="" selected>Select Additional Charge</option>
+          <option value="Extra Bed">Extra Bed</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <InputBaseInput
+          type="number"
+          v-model="additional_qty"
+          label="Quantity"
+          placeholder="Input Quantity"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <InputBaseInput
+          type="number"
+          v-model="additional_base_price"
+          label="Price"
+          placeholder="Input Price"
+        />
+      </div>
+      <div class="col-6">
+        <InputBaseInput
+          type="number"
+          v-model="additional_discount"
+          label="Discount"
+          placeholder="Input Discount"
+        />
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
           <label for="" class="form-label">Membawa kendaraan?</label>
-          <select
-            class="form-select form-select-lg"
-            v-model="with_vehicle"
-          >
+          <select class="form-select form-select-lg" v-model="with_vehicle">
             <option value="" selected>Membawa kendaraan?</option>
             <option value="1">Yes</option>
             <option value="0">No</option>
@@ -178,9 +210,8 @@ const props = defineProps({
     type: Number,
     required: true,
   },
- 
- 
 });
+
 import { useAuthStore } from "~/stores/auth";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -188,23 +219,27 @@ const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const checkin_date = ref(new Date());
 const checkout_date = ref(new Date());
-const room_id = ref('');
-const discount = ref('0');
-const noofadult = ref('0');
-const noofchildren = ref('0');
+const room_id = ref("");
+const discount = ref("0");
+const noofadult = ref("0");
+const noofchildren = ref("0");
 const booking_package = ref("");
-const price_booking_package = ref('0');
-const early_checkin = ref('0');
+const price_booking_package = ref("0");
+const early_checkin = ref("0");
 const preebuy = ref("");
-// const roomOptions = ref([]);
 const availableRooms = ref([]);
+const additional_name = ref("");
+const additional_qty = ref(0);
+const additional_base_price = ref(0);
+const additional_discount = ref(0);
+const additional_total_price = ref(0);
 const with_vehicle = ref(0);
 const no_pol = ref("");
 const jenis = ref("");
 const merek = ref("");
 const subTotal = ref(0);
 const nextDay = ref(new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
-const emit = defineEmits(["update:modelValue","remove-room"]);
+const emit = defineEmits(["update:modelValue", "remove-room"]);
 const { $bus } = useNuxtApp();
 
 const preBuyData = ref([]);
@@ -213,12 +248,11 @@ const removeRoom = (index) => {
   emit("remove-room", index);
 };
 const calculateSubTotal = (selection) => {
-    return '';
-}
+  return "";
+};
 
 const handleStartDate = () => {
-    nextDay.value.setDate(new Date(checkin_date.value).getDate() + 1);
-  
+  nextDay.value.setDate(new Date(checkin_date.value).getDate() + 1);
 };
 
 const handleEndDate = () => {
@@ -244,18 +278,18 @@ const searchRoom = async (startDate, endDate) => {
     );
 
     if (status === 1) {
-        availableRooms.value = data.map((room) => {
-            return {
-                label: `${room.room_number} - ${room.name}`,
-                value: room.id,
-                room_number: room.room_number,
-                name: room.name,
-                price: room.actual_prices,
-                type: room.type,
-                view: room.view,
-                default_price: room.default_price,
-            }
-        });
+      availableRooms.value = data.map((room) => {
+        return {
+          label: `${room.room_number} - ${room.name}`,
+          value: room.id,
+          room_number: room.room_number,
+          name: room.name,
+          price: room.actual_prices,
+          type: room.type,
+          view: room.view,
+          default_price: room.default_price,
+        };
+      });
     } else if (statusCode === 403) {
       navigateTo("/login");
     }
@@ -265,64 +299,111 @@ const searchRoom = async (startDate, endDate) => {
 };
 
 const findPreBuyPrice = async (id) => {
-  const {data,status} = await $fetch(`${config.public.baseUrl}pre-buy/data-availability`, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + authStore.getToken,
-    },
-    body: {
-      room_id: id,
-    },
-  });
-  if(status == 1){
+  const { data, status } = await $fetch(
+    `${config.public.baseUrl}pre-buy/data-availability`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + authStore.getToken,
+      },
+      body: {
+        room_id: id,
+      },
+    }
+  );
+  if (status == 1) {
     preBuyData.value = data;
     console.log(preBuyData.value);
   }
 };
 const calculate = () => {
-    const result = availableRooms.value.find(room => room.value === room_id.value);
-    let jumlah =0;
-    if(result !== undefined){
-        let price = result.price;
-        price.forEach(item=>{
-            jumlah += parseInt(item.price);
-        })
-    }
-    let disc = discount.value ? parseInt(discount.value) : 0;
-    let breakfast = price_booking_package.value ? parseInt(price_booking_package.value) : 0;
-    let earlyCheck = early_checkin.value ? parseInt(early_checkin.value) : 0;
-    jumlah -= disc;
-    jumlah += breakfast;
-    jumlah += earlyCheck;
-    subTotal.value = jumlah;
-}
+  const result = availableRooms.value.find(
+    (room) => room.value === room_id.value
+  );
+  let jumlah = 0;
+  if (result !== undefined) {
+    let price = result.price;
+    price.forEach((item) => {
+      jumlah += parseInt(item.price);
+    });
+  }
+  let disc = discount.value ? parseInt(discount.value) : 0;
+  let breakfast = price_booking_package.value
+    ? parseInt(price_booking_package.value)
+    : 0;
+  let earlyCheck = early_checkin.value ? parseInt(early_checkin.value) : 0;
+  jumlah -= disc;
+  jumlah += breakfast;
+  jumlah += earlyCheck;
 
-watch([
-    checkin_date,checkout_date,room_id,discount,noofadult,noofchildren,
-    booking_package,price_booking_package,early_checkin,
-    preebuy,with_vehicle,no_pol,jenis,merek],(newValue)=>{
-        calculate();
-        $bus.$emit('update:model-value',{
-            index:props.index,
-            checkin_date: checkin_date.value,
-            checkout_date: checkout_date.value,
-            room_id: room_id.value,
-            discount: discount.value,
-            noofadult: noofadult.value,
-            noofchildren: noofchildren.value,
-            booking_package: booking_package.value,
-            price_booking_package: price_booking_package.value,
-            early_checkin: early_checkin.value,
-            preebuy: preebuy.value,
-            with_vehicle: with_vehicle.value,
-            no_pol: no_pol.value,
-            jenis: jenis.value,
-            merek: merek.value,
-            sub_total: subTotal.value
-        })
-    }
-)
+  let add_qty = additional_qty.value
+    ? parseInt(additional_qty.value)
+    : 0;
+  let add_price = additional_base_price.value
+    ? parseInt(additional_base_price.value)
+    : 0;
+  let add_disc = additional_discount.value
+    ? parseInt(additional_discount.value)
+    : 0;
 
+  additional_total_price.value = (add_qty * add_price) - add_disc;
+
+  let add_total = additional_total_price.value
+    ? parseInt(additional_total_price.value)
+    : 0;
+
+  subTotal.value = jumlah + add_total;
+};
+
+watch(
+  [
+    checkin_date,
+    checkout_date,
+    room_id,
+    discount,
+    noofadult,
+    noofchildren,
+    booking_package,
+    price_booking_package,
+    early_checkin,
+    preebuy,
+    additional_name,
+    additional_qty,
+    additional_base_price,
+    additional_discount,
+    additional_total_price,
+    with_vehicle,
+    no_pol,
+    jenis,
+    merek,
+  ],
+  (newValue) => {
+    calculate();
+    $bus.$emit("update:model-value", {
+      index: props.index,
+      checkin_date: checkin_date.value,
+      checkout_date: checkout_date.value,
+      room_id: room_id.value,
+      discount: discount.value,
+      noofadult: noofadult.value,
+      noofchildren: noofchildren.value,
+      booking_package: booking_package.value,
+      price_booking_package: price_booking_package.value,
+      early_checkin: early_checkin.value,
+      preebuy: preebuy.value,
+      additional_name: additional_name.value,
+      additional_qty: additional_qty.value,
+      additional_base_price: additional_base_price.value,
+      additional_discount: additional_discount.value,
+      additional_total_price: additional_total_price.value,
+      with_vehicle: with_vehicle.value,
+      no_pol: no_pol.value,
+      jenis: jenis.value,
+      merek: merek.value,
+      sub_total: subTotal.value,
+    });
+  }
+);
 </script>
 
 <style></style>

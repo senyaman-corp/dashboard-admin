@@ -3,42 +3,69 @@
     <CardBaseCard title="Tambah Booking">
       <FormBaseForm @submit="handleSubmit">
         <!-- Guest Information -->
-        <InputBaseInput
-          v-model="formData.name"
-          label="Nama Lengkap"
-          placeholder="Masukkan Nama Tamu"
-        />
-        <InputBaseInput
-          v-model="formData.age"
-          label="Usia"
-          placeholder="Masukkan Usia"
-        />
-        <InputBaseInput
-          type="number"
-          v-model="formData.no_telp"
-          label="Nomor Telepon"
-          placeholder="Masukkan No Telepon"
-        />
-        <InputBaseInput
-          type="email"
-          v-model="formData.email"
-          label="Email"
-          placeholder="Masukkan Email"
-        />
+        <div class="row">
+          <div class="col-6">
+            <InputBaseInput
+              v-model="formData.name"
+              label="Nama Lengkap"
+              placeholder="Masukkan Nama Tamu"
+            />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Jenis Kelamin</label>
+            <select
+              class="form-select form-select-lg"
+              v-model="formData.gender"
+            >
+              <option value="" selected>Pilih Jenis Kelamin</option>
+              <option value="Male">Laki-Laki</option>
+              <option value="Female">Perempuan</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <InputBaseInput
+              type="number"
+              v-model="formData.no_telp"
+              label="Nomor Telepon"
+              placeholder="Masukkan No Telepon"
+            />
+          </div>
+          <div class="col-6">
+            <InputBaseInput
+              v-model="formData.age"
+              label="Usia"
+              placeholder="Masukkan Usia"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <InputBaseInput
+              type="email"
+              v-model="formData.email"
+              label="Email"
+              placeholder="Masukkan Email"
+            />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Booking Type</label>
+            <select
+              class="form-select form-select-lg"
+              v-model="formData.booking_type"
+            >
+              <option value="" selected>Pilih Booking Type</option>
+              <option value="walk in">Walk In</option>
+              <option value="call">Call</option>
+              <option value="ota">OTA</option>
+            </select>
+          </div>
+        </div>
         <InputBaseTextArea
           v-model="formData.address"
           label="Alamat"
           placeholder="Masukkan Alamat"
-        />
-        <InputBaseInput
-          v-model="formData.gender"
-          label="Jenis Kelamin"
-          placeholder="Masukkan Jenis Kelamin"
-        />
-        <InputBaseInput
-          v-model="formData.booking_type"
-          label="Booking Type"
-          placeholder="Masukkan Booking Type"
         />
 
         <InputBaseUpload
@@ -56,184 +83,7 @@
             :key="index"
             class="border p-4 rounded-lg"
           >
-          <WidgetRoomBooking :index="index" @remove-room="removeRoom" />
-            <!-- 
-              <div class="flex justify-between items-center mb-2">
-                <h3 class="font-medium">Room {{ index + 1 }}</h3>
-                <ButtonBaseButton
-                  v-if="index > 0"
-                  @click="removeRoom(index)"
-                  variant="danger"
-                  type="button"
-                >
-                  Remove Room
-                </ButtonBaseButton>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label class="form-label">Tanggal Checkin</label>
-                    <VueDatePicker
-                      v-model="roomSelection.checkin_date"
-                      auto-apply
-                      :format="'yyyy-MM-dd'"
-                      placeholder="Tanggal Checkin"
-                      @update:model-value="handleStartDate(index)"
-                      :min-date="new Date()"
-                    ></VueDatePicker>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label class="form-label">Tanggal Checkout</label>
-                    <VueDatePicker
-                      v-model="roomSelection.checkout_date"
-                      auto-apply
-                      :format="'yyyy-MM-dd'"
-                      placeholder="Tanggal Checkout"
-                      @update:model-value="handleEndDate(index)"
-                      :min-date="roomSelection.checkin_date"
-                    ></VueDatePicker>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <InputWithCombobox
-                    v-model="roomSelection.room_id"
-                    label="Select Room"
-                    placeholder="Select Room"
-                    :options="roomOptions"
-                    :searchable="true"
-                    :multiple="false"
-                    @update:model-value="findPreBuyPrice(roomSelection)"
-                  />
-                </div>
-                <div class="col-md-6">
-                  <InputBaseInput
-                    type="number"
-                    v-model="roomSelection.discount"
-                    label="Discount"
-                    placeholder="Masukkan Harga Discount"
-                  />
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <InputBaseInput
-                      type="number"
-                      v-model="roomSelection.noofadult"
-                      label="Jumlah Dewasa"
-                      placeholder="Masukkan Jumlah Dewasa"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <InputBaseInput
-                      type="number"
-                      v-model="roomSelection.noofchildren"
-                      label="Jumlah Anak Anak"
-                      placeholder="Masukkan Jumlah Anak Anak"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label for="">Booking Package</label>
-                    <select
-                      class="form-select form-select-lg"
-                      v-model="roomSelection.booking_package"
-                    >
-                      <option value="" selected>Pilih Booking Package</option>
-                      <option value="Breakfast">Breakfast</option>
-                      <option value="Breakfast">Non Breakfast</option>
-                    </select>
-                  </div>
-                </div>
-                <div
-                  class="col-md-6"
-                  v-if="roomSelection.booking_package == 'Breakfast'"
-                >
-                  <div class="mb-3">
-                    <InputBaseInput
-                      v-model="roomSelection.price_booking_package"
-                      label="Price Booking Package"
-                      placeholder="Masukkan Price Booking Package"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <InputBaseInput
-                    v-model="roomSelection.early_checkin"
-                    label="Early Checkin?"
-                    placeholder="Masukkan Early Checkin"
-                  />
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label for="">Preebuy?</label>
-                    <select
-                      class="form-select form-select-lg"
-                      v-model="roomSelection.preebuy"
-                    >
-                      <option value="" selected>Pilih Preebuy</option>
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-
-                      
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label for="">Membawa kendaraan?</label>
-                    <select
-                      class="form-select form-select-lg"
-                      v-model="formData.with_vehicle"
-                    >
-                      <option value="" selected>Membawa kendaraan?</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-6" v-if="formData.with_vehicle">
-                  <InputBaseInput
-                    v-model="formData.no_pol"
-                    label="No Polisi Kendaraan"
-                    placeholder="Masukkan No Polisi Kendaraan"
-                  />
-                </div>
-              </div>
-              <div class="row" v-if="formData.with_vehicle">
-                <div class="col-md-6">
-                  <InputBaseInput
-                    v-model="formData.jenis"
-                    label="Jenis Kendaraan"
-                    placeholder="Masukkan Jenis Kendaraan"
-                  />
-                </div>
-                <div class="col-md-6">
-                  <InputBaseInput
-                    v-model="formData.merek"
-                    label="Merek Kendaraan"
-                    placeholder="Masukkan Merek Kendaraan"
-                  />
-                </div>
-              </div>
-              <h5>
-                Sub Total = Rp
-                {{ calculateSubTotal(roomSelection).toLocaleString("id-ID") }}
-              </h5>
-            -->   
+            <WidgetRoomBooking :index="index" @remove-room="removeRoom" />
           </div>
         </div>
 
@@ -243,12 +93,8 @@
           </ButtonBaseButton>
 
           <div class="mt-3">
-            <h5>
-              Total: Rp {{ calculateTotal.toLocaleString("id-ID") }}
-            </h5>
-            <h5>
-              TAX 23% = Rp {{ calculateTax.toLocaleString("id-ID") }}
-            </h5>
+            <h5>Total: Rp {{ calculateTotal.toLocaleString("id-ID") }}</h5>
+            <h5>TAX 23% = Rp {{ calculateTax.toLocaleString("id-ID") }}</h5>
             <h5>
               Final Price = Rp {{ calculateFinalPrice.toLocaleString("id-ID") }}
             </h5>
@@ -281,10 +127,6 @@ const formData = ref({
   gender: "",
   ktp: null,
   total_price: 0,
-  with_vehicle: null,
-  no_pol: "",
-  jenis: "",
-  merek: "",
   booking_type: "",
   selectedRooms: [
     {
@@ -298,6 +140,15 @@ const formData = ref({
       noofadult: "",
       noofchildren: "",
       early_checkin: 0,
+      additional_name: "",
+      additional_qty: 0,
+      additional_base_price: 0,
+      additional_discount: 0,
+      additional_total_price: 0,
+      with_vehicle: null,
+      no_pol: "",
+      jenis: "",
+      merek: "",
     },
   ],
 });
@@ -312,7 +163,6 @@ const handleFile = (file) => {
   reader.readAsDataURL(file);
 };
 
-
 // Add another room selection
 const addRoom = () => {
   formData.value.selectedRooms.push({ room_id: null });
@@ -323,7 +173,7 @@ const removeRoom = (index) => {
   formData.value.selectedRooms.splice(index, 1);
 };
 const handleSubmit = async () => {
-  $bus.$emit('loading',true);
+  $bus.$emit("loading", true);
   const form = new FormData();
   form.append("name", formData.value.name);
   form.append("age", formData.value.age);
@@ -351,9 +201,15 @@ const handleSubmit = async () => {
     form.append("early_checkin[]", room.early_checkin || 0);
     form.append("noofadult[]", room.noofadult || "");
     form.append("noofchildren[]", room.noofchildren || "");
-    form.append("no_pol[]", formData.value.no_pol);
-    form.append("jenis[]", formData.value.jenis);
-    form.append("merek[]", formData.value.merek);
+    form.append("additional_name[]", room.additional_name || "");
+    form.append("additional_qty[]", room.additional_qty || "");
+    form.append("additional_base_price[]", room.additional_base_price || "");
+    form.append("additional_discount[]", room.additional_discount || "");
+    form.append("additional_total_price[]", room.additional_total_price || 0);
+    form.append("with_vehicle[]", room.with_vehicle || null);
+    form.append("no_pol[]", room.no_pol || "");
+    form.append("jenis[]", room.jenis || "");
+    form.append("merek[]", room.merek || "");
   });
 
   if (formData.value.ktp) {
@@ -369,24 +225,26 @@ const handleSubmit = async () => {
         Authorization: "Bearer " + authStore.getToken,
       },
     }).then((response) => {
-      $bus.$emit('loading',false);
+      $bus.$emit("loading", false);
       if (response.status == 1) {
-        $swal.fire({
-          title:'Booking',
-          text:'Booking Berhasil',
-          icon:'success',
-          confirmButtonText:'OK'
-        }).then(result=>{
-          if(result.isConfirmed){
-            navigateTo("/booking");
-          }
-        })
+        $swal
+          .fire({
+            title: "Booking",
+            text: "Booking Berhasil",
+            icon: "success",
+            confirmButtonText: "OK",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              navigateTo("/booking");
+            }
+          });
       } else {
         console.error("Error:", response);
       }
     });
   } catch (error) {
-    $bus.$emit('loading',false);
+    $bus.$emit("loading", false);
     console.error("Request failed:", error);
   }
 };
@@ -397,197 +255,12 @@ const calculateTotal = computed(() => {
   }, 0);
 });
 const calculateTax = computed(() => {
-  return Math.round(calculateTotal.value * 0.23);
+  return Math.ceil(calculateTotal.value * 0.23 /1000) * 1000;
 });
 const calculateFinalPrice = computed(() => {
   formData.value.total_price = calculateTotal.value + calculateTax.value;
   return calculateTotal.value + calculateTax.value;
 });
-
-
-/*
-
-const roomOptions = ref([]);
-const availableRooms = ref([]);
-const preBuyData = ref([]);
-
-const updateResult = (value) => {
-  console.log(value);
-};
-
-const searchRoom = async (startDate, endDate) => {
-  try {
-    const { data, status, statusCode } = await $fetch(
-      `${config.public.baseUrl}rooms/check-available-room`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + authStore.getToken,
-        },
-        body: {
-          start_date: startDate,
-          end_date: endDate,
-        },
-      }
-    );
-
-    if (status === 1) {
-      availableRooms.value = data;
-      const checkin = new Date(startDate);
-      const checkout = new Date(endDate);
-      checkin.setHours(0, 0, 0, 0);
-      checkout.setHours(0, 0, 0, 0);
-
-      const getStayDates = () => {
-        const dates = [];
-        let current = new Date(checkin);
-        while (current < checkout) {
-          const y = current.getFullYear();
-          const m = String(current.getMonth() + 1).padStart(2, "0");
-          const d = String(current.getDate()).padStart(2, "0");
-          dates.push(`${y}-${m}-${d}`);
-          current.setDate(current.getDate() + 1);
-        }
-        return dates;
-      };
-
-      const stayDates = getStayDates();
-
-      roomOptions.value = data.map((room) => {
-        const priceMap = {};
-        room.actual_prices.forEach((p) => {
-          console.log("Price Object:", p);
-          const date = p.tanggal;
-          const price = parseFloat(p.price || 0);
-          priceMap[date] = priceMap[date]
-            ? Math.max(priceMap[date], price)
-            : price;
-        });
-
-        const totalPrice = stayDates.reduce((sum, date) => {
-          return sum + (priceMap[date] || 0);
-        }, 0);
-
-        return {
-          label: `${room.room_number} - ${room.name} - ${
-            room.type
-          } - Rp ${totalPrice.toLocaleString("id-ID")}`,
-          value: String(room.id),
-          name: room.name,
-          price: room.actual_prices,
-          type: room.type,
-          view: room.view,
-          default_price: totalPrice,
-        };
-      });
-    } else if (statusCode === 403) {
-      window.location.href = "/login";
-    }
-  } catch (error) {
-    console.error("Error fetching available rooms:", error);
-  }
-};
-
-const calculateSubTotal = (selection) => {
-  const room = roomOptions.value.find(
-    (r) => r.value === String(selection.room_id)
-  );
-  if (!room) return 0;
-
-  const checkin = new Date(selection.checkin_date);
-  const checkout = new Date(selection.checkout_date);
-  checkin.setHours(0, 0, 0, 0);
-  checkout.setHours(0, 0, 0, 0);
-
-  const stayDates = [];
-  const current = new Date(checkin);
-  while (current < checkout) {
-    const y = current.getFullYear();
-    const m = String(current.getMonth() + 1).padStart(2, "0");
-    const d = String(current.getDate()).padStart(2, "0");
-    stayDates.push(`${y}-${m}-${d}`);
-    current.setDate(current.getDate() + 1);
-  }
-
-  const priceMap = {};
-  room.price.forEach((p) => {
-    priceMap[p.tanggal] = parseFloat(p.price || 0);
-  });
-
-  const totalRoomPrice = stayDates.reduce((sum, date) => {
-    return sum + (priceMap[date] || 0);
-  }, 0);
-
-  const discount = parseFloat(selection.discount) || 0;
-  const bookingPackage = parseFloat(selection.price_booking_package) || 0;
-
-  return totalRoomPrice - discount + bookingPackage;
-};
-
-const calculateTotal = computed(() => {
-  return formData.value.selectedRooms.reduce((total, selection) => {
-    return total + calculateSubTotal(selection);
-  }, 0);
-});
-
-const calculateTax = computed(() => {
-  return Math.round(calculateTotal.value * 0.23);
-});
-
-
-
-const handleStartDate = (index) => {};
-
-const handleEndDate = (index) => {
-  const startDate = formData.value.selectedRooms[index].checkin_date;
-  const endDate = formData.value.selectedRooms[index].checkout_date;
-  if (startDate && endDate) {
-    searchRoom(startDate, endDate);
-  }
-};
-
-const findPreBuyPrice = async (roomSelected) => {
-  const {data,status} = await $fetch(`${config.public.baseUrl}pre-buy/data-availability`, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + authStore.getToken,
-    },
-    body: {
-      room_id: roomSelected.room_id,
-    },
-  });
-  if(status == 1){
-    preBuyData.value = data;
-  }
-};
-
-const today = ref(new Date().toISOString().split("T")[0]);
-const selectRoom = (roomId, index) => {
-  formData.value.selectedRooms[index].id = roomId;
-};
-const updateAvailableRooms = async () => {
-  if (!formData.value.check_in || !formData.value.check_out) return;
-};
-
-const formatPrice = (price) => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(price);
-};
-
-
-watch(
-  () => formData.value.selectedRooms,
-  (rooms) => {
-    rooms.forEach((roomSelection) => {
-      roomSelection.sub_total = calculateSubTotal(roomSelection);
-    });
-  },
-  { deep: true }
-);
-
-*/
 
 onMounted(() => {
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
