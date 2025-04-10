@@ -347,7 +347,7 @@ const handleSubmit = async () => {
     form.append("booking_package[]", room.booking_package || "");
     form.append("price_booking_package[]", room.price_booking_package || 0);
     form.append("discount[]", room.discount || 0);
-    form.append("preebuy[]", room.preebuy || "");
+    form.append("pre_buy[]", room.preebuy || "");
     form.append("early_checkin[]", room.early_checkin || 0);
     form.append("noofadult[]", room.noofadult || "");
     form.append("noofchildren[]", room.noofchildren || "");
@@ -593,6 +593,7 @@ onMounted(() => {
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
   $bus.$on("update:model-value", (value) => {
     formData.value.selectedRooms[value.index] = value;
+    console.log(value);
   });
 });
 

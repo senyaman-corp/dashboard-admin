@@ -93,7 +93,6 @@ function signIn() {
      if(remember_me.value){
         authStore.setEmail(email.value);
         authStore.setPassword(password.value);
-        
      }
      if(authStore.isAuthorized('Front Office')){
       navigateTo('/room');

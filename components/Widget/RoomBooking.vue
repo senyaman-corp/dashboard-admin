@@ -276,6 +276,7 @@ const findPreBuyPrice = async (id) => {
   });
   if(status == 1){
     preBuyData.value = data;
+    console.log(preBuyData.value);
   }
 };
 const calculate = () => {
