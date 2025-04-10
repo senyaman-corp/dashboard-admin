@@ -55,10 +55,10 @@
                             <div class="row justify-content-between">
                                 <div class="col-lg-8 t-bold flex-grow-1">Room Type</div>
                                 <div class="col-lg-2">Quantity</div>
-                                <div class="col-lg-2">Price</div>
+                                <div class="col-lg-2">Price Per Room</div>
                             </div>
                         </div>
-                        <div class="list-group-item" v-for="(item,index) in roomTypes" :key="index">
+                        <div class="list-group-item" v-for="(item,index) in roomTypes" :key="item.id">
                             <div class="row justify-content-between">
                                 <div class="col-lg-8 t-bold flex-grow-1">{{ item }}</div>
                                 <div class="col-lg-2">
@@ -117,13 +117,18 @@ const { data,status} = await $fetch(`${config.public.baseUrl}pre-buy/data`, {
     Authorization: "Bearer " + authStore.getToken,
   },
 });
-console.log(data);
+
 if(status == 1){
     vendors.value = data.vendors;
     roomTypes.value = data.room_types
+    roomTypes.value.map((item,index) => {
+        formData.value.quantity.push(0);
+        formData.value.price.push(0);
+    })
 }
 const handleSubmit = async () => {
     formData.value.room_types = roomTypes.value;
+  
     const { data, status,message } = await $fetch(`${config.public.baseUrl}pre-buy/create`, {
         method: "POST",
         headers: {

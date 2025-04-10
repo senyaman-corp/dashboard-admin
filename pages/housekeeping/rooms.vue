@@ -100,30 +100,27 @@
             <span class="text-muted fw-semibold">View:</span>
             <span class="fw-medium">{{ detail.view }}</span>
           </div>
-          <div class="col-12 d-flex justify-content-between">
-            <span class="text-muted fw-semibold">Price:</span>
-            <span class="fw-medium">
-              {{
-                detail.price !== undefined
-                  ? detail.price.length > 0
-                    ? "Rp." + $formatAngka(detail.price[0].price)
-                    : "Rp." + $formatAngka(detail.default_price)
-                  : "Rp." + $formatAngka(detail.default_price)
-              }}
-            </span>
+          <div class="col-12">
+            <div class="t-bold">Status</div>
+            <div  v-for="status in detail.status" :key="status.id">
+              <div class="d-flex justify-content-between">
+                <span>{{ status.status }}</span>
+                <span>{{ $formatDateTime(status.created_at)}}</span>
+              </div>
+              <div class="d-flex justify-content-between" v-if="status.created_by !== null">
+                <span>Petugas</span>
+                <span>{{ status.created_by.name }}</span>
+              </div>
+              <div v-if="status.booking_room !== null">
+                <div class="t-bold">Booking</div>
+                <div class="d-flex justify-content-between">
+                  <span>Guest</span>
+                  <span>{{ status.booking_room.guest}}</span>
+              </div>
+              </div>
+            </div>
           </div>
-          <div class="col-12 d-flex justify-content-between">
-            <span class="text-muted fw-semibold">Date:</span>
-            <span class="fw-medium">
-              {{
-                detail.price !== undefined
-                  ? detail.price.length > 0
-                    ? detail.price[0].tanggal
-                    : detail.date
-                  : detail.date
-              }}
-            </span>
-          </div>
+          
         </div>
       </div>
     </WidgetModalPad>
@@ -137,7 +134,7 @@ import { useAuthStore } from "~/stores/auth";
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 const authStore = useAuthStore();
-const { $bus } = useNuxtApp();
+const { $bus,$formatDateTime } = useNuxtApp();
 navStore.setPage("Housekeeping");
 navStore.setSubpage("Rooms");
 const config = useRuntimeConfig();
@@ -237,9 +234,9 @@ const viewDetail = async(id,index)=>{
     selectedDate =  new Date()
   }
   let tanggal = y + "-" + m + "-" + d;
-  console.log(tanggal)
 
-  const response = await $fetch(`${config.public.baseUrl}rooms/detail`,{
+
+  const response = await $fetch(`${config.public.baseUrl}rooms/status-detail`,{
           method:'POST',
           lazy: true,
           headers:{

@@ -130,7 +130,7 @@ const toggleSelector = (e) => {
     let checked = e.target.checked;
     if(checked){
         checklistItems.value.map((item)=>{
-            itemChecked.value.push(item.id);
+            itemChecked.value.push(item.value);
         })
     }else{
         itemChecked.value = [];

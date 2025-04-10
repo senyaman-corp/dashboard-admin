@@ -111,10 +111,14 @@
 <script setup>
 import { ref } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
+import { useNavigatorStore } from "~/stores/navigator";
 import { useAuthStore } from "~/stores/auth";
+const navStore = useNavigatorStore();
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const authStore = useAuthStore();
+navStore.setPage("Room");
+navStore.setSubpage("Index Room");
 const config = useRuntimeConfig();
 const { $bus } = useNuxtApp();
 const date = ref({
@@ -299,7 +303,7 @@ watch([selectedMonth, selectedYear], () => {
 
 onMounted(() => {
   initializePrices();
-  $bus.$emit("pagechange", { page: "Room", subpage: "Room" });
+  $bus.$emit("pagechange", { page: "Room", subpage: "Index Room" });
 });
 
 definePageMeta({

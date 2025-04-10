@@ -36,6 +36,11 @@
                       </a>
                     </li>
                     <li class="dropdown-item">
+                      <a type="button" class="btn btn-default" @click="addAdditionalCharge(props.rowData.id)">
+                          <i class="fas fa-plus me-2"></i>Additional Charge
+                      </a>
+                    </li>
+                    <li class="dropdown-item">
                       <button class="btn btn-default" target="_blank" @click="checkout(props.rowData.id_booking_room)">
                         <i class="fas fa-luggage-cart me-2"></i>Checkout
                       </button>
@@ -83,6 +88,9 @@ options.columnDefs = [
     return $formatDateTime(data);
   }}
 ];
+const addAdditionalCharge = async (id)=>{
+  //router.push('/booking/add-additional-charge?id='+id);
+}
 const checkout = async (id)=>{
   router.push('/booking/checkout?booking_id='+id);
 }
