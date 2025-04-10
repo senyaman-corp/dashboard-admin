@@ -98,6 +98,7 @@
                     :format="'yyyy-MM-dd'"
                     placeholder="Tanggal Checkin"
                     @update:model-value="handleStartDate(index)"
+                    :min-date="new Date()"
                   ></VueDatePicker>
                 </div>
               </div>
@@ -110,6 +111,7 @@
                     :format="'yyyy-MM-dd'"
                     placeholder="Tanggal Checkout"
                     @update:model-value="handleEndDate(index)"
+                    :min-date="roomSelection.checkin_date"
                   ></VueDatePicker>
                 </div>
               </div>
@@ -540,6 +542,8 @@ watch(
   },
   { deep: true }
 );
+
+
 
 onMounted(() => {
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });

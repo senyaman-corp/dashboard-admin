@@ -172,6 +172,7 @@ const daysInMonth = computed(() => {
   return new Date(year, monthIndex + 1, 0).getDate();
 });
 const initData = async () => {
+  $bus.$emit('loading',true)
   const { data, status, statusCode } = await $fetch(
     `${config.public.baseUrl}rooms/list`,
     {
@@ -185,6 +186,7 @@ const initData = async () => {
       },
     }
   );
+  $bus.$emit('loading',false)
   if (status == 1) {
     rooms.value = data.rooms;
     preservedRooms.value = data.rooms;
@@ -260,7 +262,7 @@ const viewDetail = async (id, index) => {
 };
 
 const filterByType = () => {
-  if (roomType.value == "") {
+  if (roomType.value == "" && roomView.value == "") {
     rooms.value = preservedRooms.value;
     return;
   }
@@ -276,7 +278,7 @@ const filterByType = () => {
 };
 
 const filterByView = () => {
-  if (roomView.value == "") {
+  if (roomView.value == "" && roomType.value == "") {
     rooms.value = preservedRooms.value;
     return;
   }

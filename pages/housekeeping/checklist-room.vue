@@ -17,13 +17,17 @@
           <a class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-target="#dropdown" aria-haspopup="true" aria-expanded="false">Aksi</a>
           <ul id="dropdown" class="dropdown-menu p-2" aria-labelledby="dropdown">
               <li class="dropdown-item">
-              <a type="button" class="btn btn-default" @click="deleteList(props.rowData.id)">
-                  <i class="fas fa-trash-alt me-2"></i>Delete</a>
+                <a type="button" class="btn btn-default" @click="editList(props.rowData.id)">
+                    <i class="fas fa-edit me-2"></i>Edit</a>
               </li>
               <li class="dropdown-item">
-              <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id)">
-                  <i class="fas fa-info-circle me-2"></i>Detail
-              </a>
+                <a type="button" class="btn btn-default" @click="deleteList(props.rowData.id)">
+                    <i class="fas fa-trash-alt me-2"></i>Delete</a>
+              </li>
+              <li class="dropdown-item" v-if="authStore.isSupervisor()">
+                <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id)">
+                    <i class="fas fa-info-circle me-2"></i>Detail
+                </a>
               </li>
           </ul>
       </template>
@@ -37,7 +41,7 @@ import { useAuthStore } from "~/stores/auth";
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 const authStore = useAuthStore();
-const { $bus,$dataTableOptions,$swal } = useNuxtApp();
+const { $bus,$dataTableOptions,$swal,$isAuthorized } = useNuxtApp();
 navStore.setPage("Housekeeping");
 navStore.setSubpage("Checklist Room");
 const config = useRuntimeConfig();
@@ -84,11 +88,16 @@ const deleteList = async (id) => {
 const viewDetail = async (id) => {
   router.push("/housekeeping/detail/" + id);
 };
+const editList = async (id) => {
+  navigateTo("/housekeeping/edit-check-list?checklist_id=" + id);
+};
 let dt;
 const table = ref();
 onMounted(() => {
   $bus.$emit("pagechange", { page: "Housekeeping", subpage: "Checklist Room" });
-  const user = authStore.getUser;
+  if(!authStore.isAuthorized('housekeeping')){
+    navigateTo('/login');
+  }
   nextTick().then(() => {
     dt = table.value.dt;
   })

@@ -90,6 +90,15 @@ export default defineNuxtPlugin((nuxtApp) => {
                     }
                   },
                 }
+              },
+              isAuthorized(user,page){
+                if(user.roles == null){
+                  return false;
+                }
+                if(user.roles == 'admin'){
+                  return true;
+                }
+                return user.roles.toLowerCase() == page.toLowerCase();
               }
         }
     }

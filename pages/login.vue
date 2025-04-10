@@ -95,9 +95,13 @@ function signIn() {
         authStore.setPassword(password.value);
         
      }
-     router.push({
-        path: "/room",
-      })
+     if(authStore.isAuthorized('Front Office')){
+      navigateTo('/room');
+     }else if(authStore.isAuthorized('Housekeeping')){
+        navigateTo('/housekeeping/rooms');
+     }else if(authStore.isAuthorized('Admin')){
+        navigateTo('/room');
+     }
     } else {
       error.value = response.message;
     }

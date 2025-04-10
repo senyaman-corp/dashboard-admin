@@ -2,8 +2,8 @@
   <div class="sidebar-left">
     <div data-simplebar class="h-100">
       <div id="sidebar-menu">
-        <ul class="left-menu list-unstyled" v-if="isAuthorized('front_office')">
-          <li class="nav-item">
+        <ul class="left-menu list-unstyled">
+          <li class="nav-item" v-if="isAuthorized('Front Office')">
             <a
               href="javascript:void(0);"
               class="nav-link has-arrow active"
@@ -33,10 +33,10 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item" :class="{ active: page == 'Guests' }">
+          <li class="nav-item" :class="{ active: page == 'Guests' }" v-if="isAuthorized('Front Office')">
             <NuxtLink to="/guests"><i class="fas fa-user-friends"></i> Guests</NuxtLink>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAuthorized('Front Office')">
             <a
               href="javascript:void(0);"
               class="nav-link has-arrow"
@@ -57,7 +57,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAuthorized('Front Office')">
             <a
               href="javascript:void(0);"
               class="nav-link has-arrow"
@@ -78,7 +78,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAuthorized('Front Office')">
             <a
               href="javascript:void(0);"
               class="nav-link has-arrow"
@@ -99,7 +99,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAuthorized('Housekeeping')">
             <a
               href="javascript:void(0);"
               class="nav-link has-arrow"
@@ -113,10 +113,10 @@
             <ul class="sub-menu collapse" :class="{ show: page == 'Housekeeping' }" id="menu-housekeeping">
               <li :class="{ active: subpage == 'Rooms' }"><NuxtLink to="/housekeeping/rooms">Rooms</NuxtLink></li>
               <li :class="{ active: subpage == 'Checklist Room' }"><NuxtLink to="/housekeeping/checklist-room">Checklist Room</NuxtLink></li>
-              <li :class="{ active: subpage == 'Index Housekeeping' }"><NuxtLink to="/housekeeping">Housekeeping</NuxtLink></li>
+              <li :class="{ active: subpage == 'Index Housekeeping' }"><NuxtLink to="/housekeeping" v-if="isSupervisor" >Housekeeping</NuxtLink></li>
             </ul>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAuthorized('Admin')">
             <a
               href="javascript:void(0);"
               class="nav-link has-arrow"
@@ -140,6 +140,7 @@
 const { $bus } = useNuxtApp();
 import { useNavigatorStore } from "~/stores/navigator";
 import { useAuthStore } from "~/stores/auth";
+const authStore = useAuthStore();
 const navStore = useNavigatorStore();
 const page = ref("");
 const subpage = ref("");
@@ -156,8 +157,8 @@ onMounted(() => {
 });
 
 const isAuthorized = (page) =>{
-  const authStore = useAuthStore();
   return authStore.isAuthorized(page);
 
 }
+const isSupervisor = authStore.isSupervisor();
 </script>

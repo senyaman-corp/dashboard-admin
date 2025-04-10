@@ -49,7 +49,7 @@
                 v-for="day in daysInMonth"
                 :key="day"
                 class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
-                :class="{ 'text-danger': isHoliday(day) }"
+                :class="{ 'text-danger': isHoliday(day),'current-day':new Date().getDate() == day }"
               >
                 {{ day }}
               </th>
@@ -70,7 +70,7 @@
                 v-for="(price, index) in room.actual_prices"
                 :key="index"
                 class="px-4 py-2 text-center border-bottom-1 border-gray-200"
-                :class="{ 'text-danger': isHoliday(index + 1) }"
+                :class="{ 'text-danger': isHoliday(index + 1),'current-day':new Date().getDate() == index + 1 }"
               >
                 <div class="room-item" @click="viewDetail(room.id, index)">
                   {{ price.status }}
@@ -189,6 +189,7 @@ const initData = async()=>{
     }
   }
 }
+
 initData();
 function isHoliday (day){
   if(date.value === undefined){
@@ -332,5 +333,12 @@ th {
 }
 .room-item {
   cursor: pointer;
+}
+.current-day{
+  background-color: #5b55ef;
+  color: #fff;
+  font-weight: bold;
+  /* font-size: 16px; */
+
 }
 </style>

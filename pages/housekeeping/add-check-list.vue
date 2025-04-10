@@ -48,7 +48,6 @@
                                 <input
                                     type="checkbox"
                                     v-model="itemChecked"
-                                    :value="item.id"
                                     />
                             </div>
                         </div>

@@ -59,14 +59,18 @@ export const useAuthStore = defineStore('auth', {
             this.user = value;
         },
         isAuthorized(page){
-            const { $parseJwt} = useNuxtApp();
-            let parseToken = $parseJwt(this.token);
-            if(!parseToken){
+            let user = this.getUser;
+            if(user.roles == null){
                 return false
             }
-            var roles = (parseToken.roles !== null && parseToken.roles !== undefined) ? JSON.parse(parseToken.roles) : [];
-            return true;
-            //return roles.includes(page);            
+            if(user.roles == 'Admin'){
+                return true
+            }
+            return user.roles.toLowerCase() == page.toLowerCase();    
+        },
+        isSupervisor(){
+            let user = this.getUser;
+            return user.jabatan.toLowerCase() == 'supervisor';
         }
 
     },

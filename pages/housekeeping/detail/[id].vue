@@ -41,8 +41,8 @@
             </div>
 
             <div class="d-flex justify-content-end my-4">
-                <button @click="outOfOrder" class="btn btn-danger btn-md mx-1">Out Of Order</button>
-                <button @click="verify" class="btn btn-primary btn-md mx-1">Verify</button>
+                <button @click="outOfOrder" class="btn btn-danger btn-md mx-1" v-if="checkListRoom.status != 1">Out Of Order</button>
+                <button @click="verify" class="btn btn-primary btn-md mx-1" v-if="checkListRoom.status != 2">Verify</button>
             </div>
           </div>
       </div>
@@ -92,12 +92,13 @@
                 },
                 body: {
                     id: route.params.id,
+                    supervisor_id: authStore.getUser.id,
                 },
             });
             if (res.status == 1) {
                 navigateTo("/housekeeping/checklist-room");
             } else {
-                
+                $swal.fire(res.message);
             }
         }
         
@@ -112,13 +113,14 @@
         showCancelButton:true
     }).then(async (result) => {
         if (result.isConfirmed) {
-            const res = await $fetch(`${config.public.baseUrl}housekeeping/verify`, {
+            const res = await $fetch(`${config.public.baseUrl}housekeeping/verify-checklist`, {
                 method: "POST",
                 headers: {
                     Authorization: "Bearer " + authStore.getToken,
                 },
                 body: {
                     id: route.params.id,
+                    supervisor_id: authStore.getUser.id,
                 },
             });
             if (res.status == 1) {
