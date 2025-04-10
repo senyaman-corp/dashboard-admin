@@ -61,7 +61,10 @@ options.columnDefs = [
         return data;
     }
     return new Intl.NumberFormat('ID').format(data);
-  }}
+  }},
+  {targets:[6],render:(data,type)=>{
+            return data.length;
+        }},
 ];
 
 const columns = ref([

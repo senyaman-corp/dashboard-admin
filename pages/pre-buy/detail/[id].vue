@@ -87,7 +87,7 @@ import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
-const { $bus ,$dataTableOptions} = useNuxtApp();
+const { $bus ,$formatDateTime} = useNuxtApp();
 navStore.setPage("PreBuy");
 navStore.setSubpage("Index PreBuy");
 const route = useRoute();
@@ -104,9 +104,24 @@ const { data,status} = await $fetch(config.public.baseUrl + 'pre-buy/detail',{
 if(status == 1){
   prebuy.value = data;
 }
+const columns = [
+  { title : 'Guest' ,data : 'guest'},
+  { title : 'Checkin' ,data : 'checkin_date'},
+  { title : 'Checkout' ,data : 'checkout_date'},
+  { title : 'Room' ,data : 'name'},
+  { title : 'Room Number' ,data : 'room_number'},
+  { title : 'Type' ,data : 'type'},
+  { title : 'View' ,data : 'view'},
+];
 const options = {
   columnDefs:[
     { targets:[0],className:'text-start'},
+    { targets:[1,2],render:(data,type)=>{
+      if(type ==='sort'){
+          return data;
+      }
+      return $formatDateTime(data);
+    }},
   ]
 }
 </script>
@@ -114,3 +129,4 @@ const options = {
 <style>
 
 </style>
+
