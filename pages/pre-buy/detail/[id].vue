@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
               <label class="t-bold">Total Price</label>
-              <div>{{prebuy.total_price}}</div>
+              <div>Rp.{{$formatAngka(prebuy.total_price)}}</div>
             </div>
           </div>
         </div>
@@ -36,18 +36,22 @@
           <div class="card-body">
             <div class="h6 t-bold">Details</div>
             <div class="list-group">
-              <div class="list-group-item bg-gray">
-                <div class="row justify-content-between">
-                    <div class="col-md-8 t-bold">Room Type</div>
-                    <div class="col-md-2 t-bold">Qty</div>
-                    <div class="col-md-2 t-bold">Price</div>
+              <div class="list-group-item bg-gray px-2">
+                <div class="d-flex justify-content-between">
+                    <div class="col-4 t-bold">Room Type</div>
+                    <div class="col-1 t-bold text-center">Qty</div>
+                    <div class="col-3 t-bold text-center">Booked</div>
+                    <div class="col-2 t-bold text-center">Saldo</div>
+                    <div class="col-2 t-bold text-end">Price</div>
                 </div>
               </div>
-              <div class="list-group-item" v-for="item in prebuy.details" :key="item.id">
-                <div class="row justify-content-between">
-                    <div class="col-md-8 flex-grow-1">{{ item.room_type }}</div>
-                    <div class="col-md-2">{{ item.quantity }}</div>
-                    <div class="col-md-2">{{ item.price }}</div>
+              <div class="list-group-item px-2" v-for="item in prebuy.details" :key="item.id">
+                <div class="d-flex justify-content-between">
+                    <div class="col-4 flex-grow-1">{{ item.room_type }}</div>
+                    <div class="col-1">{{ item.quantity }}</div>
+                    <div class="col-3 text-center">{{ findBooked(item) }}</div>
+                    <div class="col-2 text-center">{{ findSisa(item) }}</div>
+                    <div class="col-2 text-end">{{ $formatAngka(item.price) }}</div>
                 </div>
               </div>
             </div>
@@ -87,7 +91,7 @@ import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
-const { $bus ,$formatDateTime} = useNuxtApp();
+const { $bus ,$formatDateTime,$formatAngka} = useNuxtApp();
 navStore.setPage("PreBuy");
 navStore.setSubpage("Index PreBuy");
 const route = useRoute();
@@ -124,6 +128,22 @@ const options = {
     }},
   ]
 }
+
+const findBooked = (item) =>{
+  let booked = 0;
+  item.room_booking.forEach((booking) => {
+    console.log(item);
+    if(booking.type == item.room_type){
+      booked += booking.jumlah_booking;
+    }
+  });
+  return booked;
+}
+
+const findSisa = (item) =>{
+  return item.quantity - findBooked(item);
+}
+
 </script>
 
 <style>

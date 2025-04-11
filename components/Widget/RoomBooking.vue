@@ -22,6 +22,7 @@
             placeholder="Tanggal Checkin"
             @update:model-value="handleStartDate(checkin_date)"
             :min-date="new Date()"
+            locale="ID"
           ></VueDatePicker>
         </div>
       </div>
@@ -35,6 +36,7 @@
             placeholder="Tanggal Checkout"
             @update:model-value="handleEndDate(checkout_date)"
             :min-date="nextDay"
+            locale="ID"
           ></VueDatePicker>
         </div>
       </div>
@@ -220,12 +222,12 @@ const authStore = useAuthStore();
 const checkin_date = ref(new Date());
 const checkout_date = ref(new Date());
 const room_id = ref("");
-const discount = ref("0");
-const noofadult = ref("0");
-const noofchildren = ref("0");
+const discount = ref(0);
+const noofadult = ref(0);
+const noofchildren = ref(0);
 const booking_package = ref("");
-const price_booking_package = ref("0");
-const early_checkin = ref("0");
+const price_booking_package = ref(0);
+const early_checkin = ref(0);
 const preebuy = ref("");
 const availableRooms = ref([]);
 const additional_name = ref("");
@@ -240,15 +242,12 @@ const merek = ref("");
 const subTotal = ref(0);
 const nextDay = ref(new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
 const emit = defineEmits(["update:modelValue", "remove-room"]);
-const { $bus } = useNuxtApp();
+const { $bus,$formatUtcDateTime,$moment } = useNuxtApp();
 
 const preBuyData = ref([]);
 
 const removeRoom = (index) => {
   emit("remove-room", index);
-};
-const calculateSubTotal = (selection) => {
-  return "";
 };
 
 const handleStartDate = () => {
@@ -257,7 +256,7 @@ const handleStartDate = () => {
 
 const handleEndDate = () => {
   if (checkin_date.value && checkout_date.value) {
-    searchRoom(checkin_date.value, checkout_date.value);
+    searchRoom($moment(checkin_date.value).format('YYYY-MM-DD HH:mm'), $moment(checkout_date.value).format('YYYY-MM-DD HH:mm'));
   }
 };
 
@@ -325,34 +324,32 @@ const calculate = () => {
     let price = result.price;
     price.forEach((item) => {
       jumlah += parseInt(item.price);
+      let disc = discount.value ? parseInt(discount.value) : 0;
+      let breakfast = price_booking_package.value
+        ? parseInt(price_booking_package.value)
+        : 0;
+      let add_qty = additional_qty.value
+        ? parseInt(additional_qty.value)
+        : 0;
+      let add_price = additional_base_price.value
+        ? parseInt(additional_base_price.value)
+        : 0;
+      let add_disc = additional_discount.value
+        ? parseInt(additional_discount.value)
+        : 0;
+      let add_total = additional_total_price.value
+        ? parseInt(additional_total_price.value)
+        : 0;
+      jumlah -= disc;
+      jumlah += breakfast;
+      additional_total_price.value = (add_qty * add_price) - add_disc;
+      jumlah += additional_total_price.value;
     });
+    
   }
-  let disc = discount.value ? parseInt(discount.value) : 0;
-  let breakfast = price_booking_package.value
-    ? parseInt(price_booking_package.value)
-    : 0;
   let earlyCheck = early_checkin.value ? parseInt(early_checkin.value) : 0;
-  jumlah -= disc;
-  jumlah += breakfast;
   jumlah += earlyCheck;
-
-  let add_qty = additional_qty.value
-    ? parseInt(additional_qty.value)
-    : 0;
-  let add_price = additional_base_price.value
-    ? parseInt(additional_base_price.value)
-    : 0;
-  let add_disc = additional_discount.value
-    ? parseInt(additional_discount.value)
-    : 0;
-
-  additional_total_price.value = (add_qty * add_price) - add_disc;
-
-  let add_total = additional_total_price.value
-    ? parseInt(additional_total_price.value)
-    : 0;
-
-  subTotal.value = jumlah + add_total;
+  subTotal.value = jumlah;
 };
 
 watch(
@@ -376,9 +373,11 @@ watch(
     no_pol,
     jenis,
     merek,
+    subTotal,
   ],
   (newValue) => {
     calculate();
+    console.log("SUbTotal",subTotal.value)
     $bus.$emit("update:model-value", {
       index: props.index,
       checkin_date: checkin_date.value,
@@ -404,6 +403,8 @@ watch(
     });
   }
 );
+
+console.log($moment().format('YYYY-MM-DD HH:mm:ss'));
 </script>
 
 <style></style>

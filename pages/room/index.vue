@@ -102,6 +102,27 @@
               }}
             </span>
           </div>
+          <div  v-for="status in detail.status" :key="status.id">
+            <div v-if="status.booking_room !== null">
+                <div class="t-bold">Booking</div>
+                <div class="d-flex justify-content-between">
+                  <span>Guest</span>
+                  <span>{{ status.booking_room.guest}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Checkin</span>
+                  <span>{{ status.booking_room.checkin_date}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Checkout</span>
+                  <span>{{ status.booking_room.checkout_date}}</span>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <ButtonBaseButton @click="checkout(status.booking_room.id)" variant="primary" v-if="checkoutDay(status.booking_room.checkout_date)">Checkout</ButtonBaseButton>
+                </div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </WidgetModalPad>
@@ -246,7 +267,7 @@ const viewDetail = async (id, index) => {
     selectedDate = new Date();
   }
   let tanggal = y + "-" + m + "-" + d;
-  console.log(tanggal);
+
 
   const response = await $fetch(`${config.public.baseUrl}rooms/detail`, {
     method: "POST",
@@ -296,6 +317,21 @@ const filterByView = () => {
     rooms.value = filteredRooms;
   }
 };
+
+const checkoutDay = (date)=>{
+ let now = new Date().toLocaleDateString('ID');
+ let cDate = new Date(date).toLocaleDateString('ID');
+ if(now === cDate){
+    return true;
+ }else{
+  return false;
+ }
+}
+
+const checkout = async(id)=>{
+  navigateTo('/booking/checkout?booking_id='+id);
+}
+
 
 watch([selectedMonth, selectedYear], () => {
   initializePrices();

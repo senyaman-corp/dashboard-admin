@@ -1,10 +1,21 @@
 <template>
   <div class="card min-vh-65">
     <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center">
         <h3>Checkout</h3>
-        
-      </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="h4 t-bold">Guest</div>
+            <div class="form-group">
+              <label class="t-bold">Name</label>
+              <div>{{booking.booking ? booking.booking.guest ? booking.booking.guest.name : '' : ''}}</div>
+            </div>
+            <div class="form-group">
+              <label class="t-bold">Telp</label>
+              <div>{{booking.booking ? booking.booking.guest ? booking.booking.guest.no_telp : '' : ''}}</div>
+            </div>
+             
+          </div>
+        </div>
     </div>
 </div>
 </template>
@@ -20,6 +31,7 @@ navStore.setSubpage("Index Booking");
 const router = useRouter();
 const route = useRoute();
 const booking_id = route.query.booking_id;
+console.log(booking_id);
 const room_id = route.query.room_id;
 const booking = ref();
 const initNookingData = async()=>{
@@ -41,7 +53,10 @@ const initNookingData = async()=>{
 
 initNookingData();
 onMounted(() => {
-   
+  $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
+});
+definePageMeta({
+  middleware: ["auth"],
 });
 </script>
 

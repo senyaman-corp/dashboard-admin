@@ -60,7 +60,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 return new Intl.DateTimeFormat('id', {
                  //weekday: 'long',
                   year: 'numeric',
-                  month:'short',
+                  month:'numeric',
                   day: 'numeric',
                   timeZone: "Asia/Jakarta",
                   hour: "numeric",

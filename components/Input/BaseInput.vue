@@ -22,7 +22,7 @@
 
 <script setup>
 defineProps({
-  modelValue: String,
+  modelValue: [String, Number],
   label: String,
   id: String,
   type: { type: String, default: "text" },

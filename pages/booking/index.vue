@@ -75,9 +75,11 @@ const columns = ref([
   { title: "Checkout", data: "checkout_date" },
   { title: "Package", data: "booking_package" },
   { title: "Action", data: "id" },
+  
 
 ]);
 const options = $dataTableOptions(config.public.baseUrl + 'bookings/list', authStore.getToken);
+options.order = [[8,'DESC']];
 options.columnDefs = [
   { targets:[0],className:'text-start'},
   { targets:[8],className:'text-end'},

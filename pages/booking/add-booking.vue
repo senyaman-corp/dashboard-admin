@@ -251,7 +251,10 @@ const handleSubmit = async () => {
 
 const calculateTotal = computed(() => {
   return formData.value.selectedRooms.reduce((total, selection) => {
-    return total + selection.sub_total;
+    if(selection.sub_total){
+      return total + selection.sub_total;
+    }
+    return total;
   }, 0);
 });
 const calculateTax = computed(() => {
