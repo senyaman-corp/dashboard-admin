@@ -13,18 +13,18 @@
         style="width: 100%"
         ref="table"
       >
-      <template #column-6="props">
+      <template #column-7="props">
           <a class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-target="#dropdown" aria-haspopup="true" aria-expanded="false">Aksi</a>
           <ul id="dropdown" class="dropdown-menu p-2" aria-labelledby="dropdown">
-              <li class="dropdown-item">
+              <li class="dropdown-item" v-if="props.rowData.status < 2">
                 <a type="button" class="btn btn-default" @click="editList(props.rowData.id)">
                     <i class="fas fa-edit me-2"></i>Edit</a>
               </li>
-              <li class="dropdown-item">
+              <li class="dropdown-item" v-if="props.rowData.status < 2">
                 <a type="button" class="btn btn-default" @click="deleteList(props.rowData.id)">
                     <i class="fas fa-trash-alt me-2"></i>Delete</a>
               </li>
-              <li class="dropdown-item" v-if="authStore.isSupervisor()">
+              <li class="dropdown-item" v-if="authStore.isSupervisor() && props.rowData.status < 2">
                 <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id)">
                     <i class="fas fa-info-circle me-2"></i>Detail
                 </a>
@@ -52,13 +52,27 @@ const columns = ref([
   { title: "Tanggal", data: "tanggal" },
   { title: "Housekeeper", data: "housekeeper" },
   { title: "Supervisor", data: "supervisor" },
+  { title: "Status", data: "status" },
   { title: "Verified At", data: "verified_at" },
   { title: "Action", data: "id" },
 ]);
 const options = $dataTableOptions(config.public.baseUrl + 'housekeeping/checklist-room', authStore.getToken);
 options.columnDefs = [
   { targets:[0],className:'text-start'},
-  { targets:[6],className:'text-end'},
+  { targets:[5],render:(data,type)=>{
+    if(type ==='sort'){
+        return data;
+    }
+    if(data == 0){
+      return 'Pending';
+    }else if(data == 1){
+      return 'Out Of Order';
+    }else{
+      return 'Verified';
+    }
+    return '';
+  }},
+  { targets:[7],className:'text-end'},
 ];
 const deleteList = async (id) => {
   $swal.fire({
