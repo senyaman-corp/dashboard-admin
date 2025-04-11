@@ -2,12 +2,12 @@
   <div>
     <CardBaseCard title="Room Pricing Management">
       <div class="row justify-content-end">
-        <div class="col-lg-1 flex-grow-1">
+        <div class="col-lg-1 flex-grow-1 mb-1">
           <NuxtLink to="/room/add-room">
             <ButtonBaseButton variant="primary"> Add Room </ButtonBaseButton>
           </NuxtLink>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <client-only>
             <InputWithCombobox
               v-model="roomView"
@@ -19,7 +19,7 @@
             />
           </client-only>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <client-only>
             <select
               class="form-select form-select-lg"
@@ -38,7 +38,7 @@
             </select>
           </client-only>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <VueDatePicker
             v-model="date"
             month-picker
@@ -134,7 +134,9 @@ import { ref } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { useNavigatorStore } from "~/stores/navigator";
 import { useAuthStore } from "~/stores/auth";
+import { useRoomStore } from "~/stores/room";
 const navStore = useNavigatorStore();
+const roomStore = useRoomStore();
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const authStore = useAuthStore();
@@ -216,6 +218,7 @@ const initData = async () => {
     rooms.value = data.rooms;
     preservedRooms.value = data.rooms;
     roomTypes.value = data.room_type;
+    roomStore.setRoomTypes(data.room_type);
   } else {
     if (statusCode == 403) {
       //redirect login;

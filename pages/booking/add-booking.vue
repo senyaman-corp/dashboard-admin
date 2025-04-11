@@ -112,9 +112,6 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "~/stores/auth";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const { $bus, $swal, $formatDate } = useNuxtApp();

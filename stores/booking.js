@@ -5,7 +5,7 @@ export const useBookingStore = defineStore('booking', {
     return {
         bookings:[],
         hasNextPage:false,
-        currentPage:1
+        currentPage:1,
     };
   },
   getters: {
@@ -20,7 +20,8 @@ export const useBookingStore = defineStore('booking', {
     },
     getHasNextPage:(state)=>{
       return state.hasNextPage;
-    }
+    },
+   
   },
   actions: {
     setPrevState(value) {
@@ -49,7 +50,8 @@ export const useBookingStore = defineStore('booking', {
     },
     setCurrentPage(page){
         this.currentPage = page;
-    }
+    },
+   
   },
   persist:true
 

@@ -1,13 +1,40 @@
 <template>
   <div class="card ">
     <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center">
-        <h3>Data Booking</h3>
-        <div>
+      <div class="row justify-content-between align-items-center">
+        <h3 class="col-lg-3 flex-grow-1">Data Booking</h3>
+        <div class="col-lg-1 pe-sm-1">
+          <select class="form-select form-select-sm"
+              :id="'year'"
+              @change="filterByType"
+              v-model="roomType"
+            >
+              <option value="" selected>Pilih Type</option>
+              <option
+                v-for="type in roomTypes"
+                :key="type.id"
+                :value="type.type"
+              >
+                {{ type.type }}
+              </option>
+            </select>
+        </div>
+        <div class="col-lg-1 pe-sm-1">
+          <select class="form-select form-select-sm"
+              :id="'year'"
+              @change="filterByView"
+              v-model="roomView"
+            >
+              <option value="" selected>Pilih View</option>
+              <option value="Mountain">Mountain</option>
+              <option value="City">City</option>
+            </select>
+        </div>
+        <div class="col-lg-1 pe-sm-1">
           <ButtonBaseButton
             variant="primary"
             to="/booking/add-booking"
-            class="mx-3"
+            
             >Tambah Booking</ButtonBaseButton
           >
         </div>
@@ -51,17 +78,55 @@
           </client-only>
         </div>
       </div>
+      <div class="row justify-content-end align-items-center my-4">
+        <div class="col-lg-2 pe-sm-0">
+          <VueDatePicker
+            v-model="start_date"
+            auto-apply
+            :format="'yyyy-MM-dd'"
+            locale="ID"
+            uid="startDate"
+            :class="'form-control-sm'"
+          ></VueDatePicker>
+        </div>
+        <div class="col-lg-2 px-sm-0">
+          <VueDatePicker
+            v-model="end_date"
+            auto-apply
+            :format="'yyyy-MM-dd'"
+            uid="endDate"
+            locale="ID"
+            :class="'form-control-sm'"
+          ></VueDatePicker>
+        </div>
+        <div class="col-lg-1 ps-sm-0">
+          <ButtonBaseButton 
+            variant="primary" @click="exportBooking" class="btn-md" style="height:34px;">
+              <i class="fas fa-file-excel me-2"></i>Export
+            </ButtonBaseButton
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useBookingStore } from "@/stores/booking";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import { useAuthStore } from "~/stores/auth";
+import { useRoomStore } from "~/stores/room";
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const navStore = useNavigatorStore();
-const { $bus, $dataTableOptions,$formatDateTime } = useNuxtApp();
+const { $bus, $dataTableOptions,$formatDateTime,$moment } = useNuxtApp();
+const roomStore = useRoomStore();
+const roomTypes = roomStore.getRoomTypes;
+const roomType = ref('');
+const roomView = ref('');
+const start_date = ref(new Date());
+const end_date = ref(new Date());
 navStore.setPage("Booking");
 navStore.setSubpage("Index Booking");
 const router = useRouter();
@@ -75,10 +140,12 @@ const columns = ref([
   { title: "Checkout", data: "checkout_date" },
   { title: "Package", data: "booking_package" },
   { title: "Action", data: "id" },
-  
-
 ]);
-const options = $dataTableOptions(config.public.baseUrl + 'bookings/list', authStore.getToken);
+const body = ref({
+  type:'',
+  view:''
+})
+const options = $dataTableOptions(config.public.baseUrl + 'bookings/list', authStore.getToken,body.value);
 options.order = [[8,'DESC']];
 options.columnDefs = [
   { targets:[0],className:'text-start'},
@@ -97,6 +164,26 @@ const checkout = async (id)=>{
   router.push('/booking/checkout?booking_id='+id);
 }
 
+const filterByType = async()=>{
+  body.value.type = roomType.value;
+  dt.ajax.reload();
+}
+const filterByView = async()=>{
+  body.value.view = roomView.value;
+  dt.ajax.reload();
+}
+
+const exportBooking = async()=>{
+  let url = `${config.public.dashboardUrl}api/export-booking?token=${authStore.getToken}&start_date=${$moment(start_date.value).format('YYYY-MM-DD')}&end_date=${$moment(end_date.value).format('YYYY-MM-DD')}`;
+  console.log(url);
+  const link = document.createElement('a')
+      link.href = url;
+      link.download = 'booking.xlsx'
+      link.target = '_blank'
+      link.click() 
+}
+
+
 let dt;
 const table = ref();
 onMounted(() => {
@@ -110,3 +197,8 @@ definePageMeta({
   middleware: ["auth"],
 });
 </script>
+<style>
+  #dp-input-startDate, #dp-input-endDate{
+    padding:.2rem 2rem !important;
+  }
+</style>
