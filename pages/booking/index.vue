@@ -1,5 +1,5 @@
 <template>
-  <div class="card min-vh-65">
+  <div class="card ">
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-center">
         <h3>Data Booking</h3>
@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="mt-3">
-        <div class="table-responsive">
+        <div class="table-responsive min-vh-65">
           <client-only>
             <DataTable
               class="table table-striped table-bordered"

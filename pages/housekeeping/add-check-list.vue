@@ -48,6 +48,8 @@
                                 <input
                                     type="checkbox"
                                     v-model="itemChecked"
+                                    :value="item.id"
+                                    :checked="itemChecked.includes(item.id)"
                                     />
                             </div>
                         </div>
@@ -116,10 +118,7 @@ const submit = async () => {
     });
     $bus.$emit('loading',false)
     if(status == 1){
-        console.log("Redirect to checklist room")
-        router.push({
-              path: '/housekeeping/checklist-room'
-        })
+        navigateTo('/housekeeping/checklist-room')
     }else{
         $swal.fire(message)
     }
@@ -130,13 +129,17 @@ const toggleSelector = (e) => {
     let checked = e.target.checked;
     if(checked){
         checklistItems.value.map((item)=>{
-            itemChecked.value.push(item.value);
+            itemChecked.value.push(item.id);
         })
     }else{
         itemChecked.value = [];
     }
     //itemChecked.value = !itemChecked.value;
 };
+
+watch(itemChecked,(newValue)=>{
+    console.log(newValue)
+})
 
 
 
