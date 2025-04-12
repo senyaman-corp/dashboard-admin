@@ -59,7 +59,7 @@
                                     :close-on-select="true"
                                     :clear-on-select="false"
                                     track-by="value"
-                                    class="form-control"
+                                    class="form-control form-control-md"
                                     placeholder="Pilih opsi"
                                     required
                                 >
@@ -75,15 +75,14 @@
                                 </Multiselect>
                             </div>
                             <div class="col-lg-3">
-                                <div class="mb-3">
-                                    <InputBaseInput
+                                <InputBaseInput
                                         type="number"
                                         v-model="quantity"
                                         label="Quantity"
                                         placeholder="Insert Quantity"
                                         :required="true"
                                     />
-                                </div>
+                               
                             </div>
                             <div class="col-lg-1">
                                 <ButtonBaseButton type="submit" variant="primary" class="mt-2 min-h-100 btn-md">Tambah</ButtonBaseButton>

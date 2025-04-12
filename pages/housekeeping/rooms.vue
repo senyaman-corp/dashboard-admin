@@ -105,7 +105,7 @@
             <div  v-for="status in detail.status" :key="status.id">
               <div class="d-flex justify-content-between">
                 <span>{{ status.status }}</span>
-                <span>{{ $formatDateTime(status.created_at)}}</span>
+                <span>{{ $moment(status.created_at).format('DD MMMM YYYY HH:mm')}}</span>
               </div>
               <div class="d-flex justify-content-between" v-if="status.created_by !== null">
                 <span>Petugas</span>
@@ -116,7 +116,15 @@
                 <div class="d-flex justify-content-between">
                   <span>Guest</span>
                   <span>{{ status.booking_room.guest}}</span>
-              </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Checkin</span>
+                  <span>{{ $moment(status.booking_room.checkin_date).format('DD MMMM YYYY HH:mm')}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Checkout</span>
+                  <span>{{ $moment(status.booking_room.checkout_date).format('DD MMMM YYYY HH:mm')}}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -134,7 +142,7 @@ import { useAuthStore } from "~/stores/auth";
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 const authStore = useAuthStore();
-const { $bus,$formatDateTime } = useNuxtApp();
+const { $bus,$formatDateTime,$moment } = useNuxtApp();
 navStore.setPage("Housekeeping");
 navStore.setSubpage("Rooms");
 const config = useRuntimeConfig();

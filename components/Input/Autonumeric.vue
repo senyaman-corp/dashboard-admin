@@ -20,6 +20,7 @@ const props = defineProps({
   id: String,
   placeholder: String,
   options: Object,
+  currencySymbol: String,
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -30,8 +31,8 @@ onMounted(() => {
   autoNumericInstance = new AutoNumeric(input.value, props.modelValue || 0, {
     digitGroupSeparator: ".",
     decimalCharacter: ",",
-    decimalPlaces: 2,
-    currencySymbol: "Rp ",
+    decimalPlaces: 0,
+    currencySymbol: props.currencySymbol ? props.currencySymbol : "Rp ",
     currencySymbolPlacement: "p",
     watchExternalChanges: true,
     modifyValueOnWheel: false,

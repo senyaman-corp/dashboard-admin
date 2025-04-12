@@ -7,15 +7,15 @@
       <div class="navbar-logo-box">
         <a href="index.html" class="logo logo-dark">
           <span class="logo-sm">
-            <img
-              src="assets/icons/icon-512x512.png"
+            <NuxtImg
+              :src="'/assets/icons/icon-512x512.png'"
               alt="logo-sm-dark"
               height="20"
             /><b class="text-18 text-default text-logo">Senyaman</b>
           </span>
           <span class="logo-lg">
-            <img
-              src="assets/icons/icon-512x512.png"
+            <NuxtImg
+              :src="'/assets/icons/icon-512x512.png'"
               alt="logo-dark"
               height="18"
             /><b class="text-18 text-default text-logo">Senyaman</b>

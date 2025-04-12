@@ -62,14 +62,18 @@
                             <div class="row justify-content-between">
                                 <div class="col-lg-8 t-bold flex-grow-1">{{ item }}</div>
                                 <div class="col-lg-2">
-                                    <input type="number" class="form-control"
-                                        placeholder="Room Quantity" v-model="formData.quantity[index]"
-                                        inputmode="numeric"/>
+                                    <InputAutonumeric
+                                        v-model="formData.quantity[index]" :currencySymbol="' '"
+                                        placeholder="Room Quantity"
+                                        />
+                                    
                                 </div>
                                 <div class="col-lg-2">
-                                    <input type="number" class="form-control"
-                                        placeholder="Price Per Room" v-model="formData.price[index]"
-                                        inputmode="numeric"/>
+                                    <InputAutonumeric
+                                        v-model="formData.price[index]"
+                                        placeholder="Price Per Room"
+                                        />
+                                  
                                 </div>
                             </div>
                         </div>
@@ -128,7 +132,6 @@ if(status == 1){
 }
 const handleSubmit = async () => {
     formData.value.room_types = roomTypes.value;
-  
     const { data, status,message } = await $fetch(`${config.public.baseUrl}pre-buy/create`, {
         method: "POST",
         headers: {

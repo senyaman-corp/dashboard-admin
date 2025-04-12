@@ -108,7 +108,7 @@ const date = ref({
   month: new Date().getMonth(),
   year: new Date().getFullYear(),
 });
-const roomType = ref();
+const roomType = ref('');
 const roomTypes = ref([]);
 const rooms = ref([]);
 const preservedRooms = ref([]);

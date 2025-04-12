@@ -3,15 +3,21 @@
     <div data-simplebar class="h-100">
       <div id="sidebar-menu">
         <ul class="left-menu list-unstyled">
+          <li class="nav-item">
+           <p>&nbsp;</p>
+          </li>
+          <li class="nav-item" :class="{ active: page == 'Home' }" v-if="isAuthorized('Front Office')">
+            <NuxtLink to="/" class="nav-link"><i class="fas fa-home"></i><span>Home</span></NuxtLink>
+          </li>
           <li class="nav-item" v-if="isAuthorized('Front Office')">
             <a
               href="javascript:void(0);"
-              class="nav-link has-arrow active"
+              class="nav-link has-arrow"
               data-bs-toggle="collapse"
               data-bs-target="#menu-rooms"
               :aria-expanded="page == 'Room'"
             >
-              <i class="fas fa-house-user"></i>
+              <i class="fas fa-hotel"></i>
               <span>Rooms</span>
             </a>
             <ul
@@ -34,7 +40,7 @@
             </ul>
           </li>
           <li class="nav-item" :class="{ active: page == 'Guests' }" v-if="isAuthorized('Front Office')">
-            <NuxtLink to="/guests"><i class="fas fa-user-friends"></i> Guests</NuxtLink>
+            <NuxtLink to="/guests" class="nav-link"><i class="fas fa-user-friends"></i><span>Guests</span></NuxtLink>
           </li>
           <li class="nav-item" v-if="isAuthorized('Front Office')">
             <a

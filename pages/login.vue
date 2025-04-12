@@ -6,7 +6,9 @@
         <CardBaseCard>
           <template #default>
             <div class="text-center">
-              <h4 class="text-muted">Sign in to SENYAMAN</h4>
+              
+              <NuxtImg preload loading="lazy" :src="'/assets/images/logo_cordova.png'" alt="logo" class="w-50" />
+              <h4 class="text-muted">Sign In</h4>
             </div>
             <div class="p-2 mt-4">
               <FormBaseForm @submit="signIn">
@@ -94,13 +96,7 @@ function signIn() {
         authStore.setEmail(email.value);
         authStore.setPassword(password.value);
      }
-     if(authStore.isAuthorized('Front Office')){
-      navigateTo('/room');
-     }else if(authStore.isAuthorized('Housekeeping')){
-        navigateTo('/housekeeping/rooms');
-     }else if(authStore.isAuthorized('Admin')){
-        navigateTo('/room');
-     }
+     navigateTo('/');
     } else {
       error.value = response.message;
     }

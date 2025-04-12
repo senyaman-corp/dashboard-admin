@@ -1,28 +1,31 @@
 <template>
   <div>
-    <CardBaseCard title="Room Pricing Management">
-      <div class="row justify-content-end">
+    <CardBaseCard title="Room Management">
+      <div class="row justify-content-end align-items-center mb-3">
         <div class="col-lg-1 flex-grow-1 mb-1">
           <NuxtLink to="/room/add-room">
             <ButtonBaseButton variant="primary"> Add Room </ButtonBaseButton>
           </NuxtLink>
         </div>
         <div class="col-lg-2 mb-1">
-          <client-only>
-            <InputWithCombobox
+          
+            <select
               v-model="roomView"
-              :options="roomViewOptions"
-              class="mx-3"
               id="room-view"
-              :placeholder="'Select Room View'"
-              @update:modelValue="filterByView"
-            />
-          </client-only>
+              placeholder="'Select Room View'"
+              @change="filterByView"
+              class="form-select form-select-md"
+            >
+            <option value="" selected>Pilih View</option>
+            <option value="Mountain">Mountain</option>
+            <option value="City">City</option>
+            </select>
+          
         </div>
         <div class="col-lg-2 mb-1">
           <client-only>
             <select
-              class="form-select form-select-lg"
+              class="form-select form-select-md"
               :id="'year'"
               @change="filterByType"
               v-model="roomType"
@@ -45,7 +48,7 @@
             auto-apply
             :format="'yyyy-MM'"
             @closed="searchRoom"
-            class="mb-3"
+            uid="searchDate"
           ></VueDatePicker>
         </div>
       </div>
@@ -349,3 +352,8 @@ definePageMeta({
   middleware: ["auth"],
 });
 </script>
+<style>
+  #dp-input-searchDate{
+    padding: .2rem 2rem !important;
+  }
+</style>

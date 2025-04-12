@@ -17,8 +17,10 @@
                         <div class="form-group row align-items-center mb-2">
                             <label  class="col-sm-3 t-bold">Price</label>
                             <div class="col-lg-9">
-                                <input type="text" v-model="base_price"
-                                    placeholder="Insert base price" class="form-control" />
+                                <InputAutonumeric
+                                        v-model="base_price" 
+                                        placeholder="Insert base price"
+                                        />
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">
@@ -93,6 +95,8 @@
            if(dt !== undefined){
                 dt.ajax.reload();
             }
+            name.value = '';
+            base_price.value = '';
         }
     };
 

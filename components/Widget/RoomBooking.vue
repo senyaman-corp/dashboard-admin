@@ -97,17 +97,18 @@
       </div>
       <div class="col-md-6" v-if="booking_package == 'Breakfast'">
         <div class="mb-3">
-          <InputBaseInput
-            v-model="price_booking_package"
-            label="Price Booking Package"
-            placeholder="Masukkan Price Booking Package"
-          />
+          <InputAutonumeric
+              v-model="price_booking_package"
+              label="Price Booking Package"
+              placeholder="Masukkan Price Booking Package"
+              />
+         
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
-        <InputBaseInput
+        <InputAutonumeric
           v-model="early_checkin"
           label="Early Checkin?"
           placeholder="Masukkan Early Checkin"
@@ -148,7 +149,7 @@
     </div>
     <div class="row">
       <div class="col-6">
-        <InputBaseInput
+        <InputAutonumeric
           type="number"
           v-model="additional_base_price"
           label="Price"
@@ -156,7 +157,7 @@
         />
       </div>
       <div class="col-6">
-        <InputBaseInput
+        <InputAutonumeric
           type="number"
           v-model="additional_discount"
           label="Discount"
