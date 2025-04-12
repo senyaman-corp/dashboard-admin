@@ -274,7 +274,7 @@ const viewDetail = async (id, index) => {
   }
   let tanggal = y + "-" + m + "-" + d;
 
-
+  $bus.$emit('loading',true);
   const response = await $fetch(`${config.public.baseUrl}rooms/detail`, {
     method: "POST",
     lazy: true,
@@ -286,6 +286,7 @@ const viewDetail = async (id, index) => {
       date: tanggal,
     },
   });
+  $bus.$emit('loading',false);
   if (response.status == 1) {
     detail.value = response.data;
     $bus.$emit("openModal", {});

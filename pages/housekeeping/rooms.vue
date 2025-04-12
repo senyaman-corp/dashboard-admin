@@ -170,7 +170,7 @@ const daysInMonth = computed(() => {
   return new Date(year, monthIndex + 1, 0).getDate();
 });
 const initData = async()=>{
-  $bus.$emit('loading',true)
+  $bus.$emit('loading',true);
   const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/list`,{
           method:'POST',
           lazy: true,
@@ -188,10 +188,6 @@ const initData = async()=>{
     preservedRooms.value = data.rooms;
     roomTypes.value = data.room_type;
     console.log(data);
-  }else{
-    if(statusCode == 403){
-    //redirect login;
-    }
   }
 }
 
@@ -243,7 +239,7 @@ const viewDetail = async(id,index)=>{
   }
   let tanggal = y + "-" + m + "-" + d;
 
-
+  $bus.$emit('loading',true);
   const response = await $fetch(`${config.public.baseUrl}rooms/status-detail`,{
           method:'POST',
           lazy: true,
@@ -255,14 +251,13 @@ const viewDetail = async(id,index)=>{
             date:tanggal
           }
     })
-    console.log(response);
+    $bus.$emit('loading',false);
     if(response.status == 1){
       detail.value = response.data;
       $bus.$emit('openModal',{
        
       })
     }
-    console.log(response)
     
 }
 

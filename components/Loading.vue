@@ -14,6 +14,7 @@ const { $bus } = useNuxtApp();
 
 onMounted(() => {
   $bus.$on("loading", (value) => {
+    console.log("loading", value);
     showLoading.value = value;
   });
 });
