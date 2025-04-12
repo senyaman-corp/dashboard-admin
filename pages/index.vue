@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-content-center align-items-center min-vh-65">
     <div>
-      <NuxtImg preload loading="lazy" :src="'/assets/images/logo_cordova.png'" alt="logo" />
+      <NuxtImg class="w-100" preload loading="lazy" :src="'/assets/images/logo_cordova.png'" alt="logo" />
       <h2 class="mt-4 text-primary text-center">SELAMAT DATANG</h2>
     </div>
   </div>
