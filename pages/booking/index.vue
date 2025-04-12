@@ -120,7 +120,7 @@ import { useRoomStore } from "~/stores/room";
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const navStore = useNavigatorStore();
-const { $bus, $dataTableOptions,$formatDateTime,$moment } = useNuxtApp();
+const { $bus, $dataTableOptions,$formatDateTime,$moment,$swal } = useNuxtApp();
 const roomStore = useRoomStore();
 const roomTypes = roomStore.getRoomTypes;
 const roomType = ref('');
@@ -162,6 +162,43 @@ const addAdditionalCharge = async (id)=>{
 }
 const checkout = async (id)=>{
   router.push('/booking/checkout?booking_id='+id);
+}
+const deleteBooking = async (id)=>{
+  $swal.fire({
+    title:'Delete Booking',
+    text:'Yakin akan dihapus?',
+    icon:'warning',
+    showCancelButton:true,
+    confirmButtonText:'Ya',
+    cancelButtonText:'Tidak'
+  }).then(async(result)=>{
+    if(result.isConfirmed){
+      const response = await $fetch(`${config.public.baseUrl}bookings/cancel`,{
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer ' + authStore.getToken
+        },
+        body:{
+          id:id
+        }
+      })
+      if(response.status == 1){
+        $swal.fire({
+          icon:'success',
+          title:'Berhasil',
+          text:'Berhasil menghapus booking'
+        })
+        dt.ajax.reload();
+      }else{
+        $swal.fire({
+          icon:'error',
+          title:'Gagal',
+          text:'Gagal menghapus booking'
+        })
+      }
+    }
+  })
+   
 }
 
 const filterByType = async()=>{
