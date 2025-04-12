@@ -81,7 +81,7 @@
           <div
             v-for="(roomSelection, index) in formData.selectedRooms"
             :key="index"
-            class="border p-4 rounded-lg"
+            class="border p-2 p-sm-4 rounded-lg"
           >
             <WidgetRoomBooking :index="index" @remove-room="removeRoom" />
           </div>

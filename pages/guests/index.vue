@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="card">
+    <div class="card-body p-3 p-sm-4">
     <div class="d-flex justify-content-between align-items-center">
       <h3>Data Customer</h3>
       <div>
@@ -13,6 +14,7 @@
         :options="options"
         style="width: 100%"
       />
+    </div>
     </div>
   </div>
 </template>

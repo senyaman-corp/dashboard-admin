@@ -1,13 +1,14 @@
 <template>
-  <div>
+  <div class="card">
+  <div class="card-body p-3 p-sm-4">
     <div class="d-flex justify-content-between align-items-center">
       <h3>Data Reservasi</h3>
       <div>
         <ButtonBaseButton
           variant="primary"
           to="/reservation/add-reservation"
-          class="mx-3"
-          >Tambah Reservasi</ButtonBaseButton
+          class="btn-md"
+          >Tambah</ButtonBaseButton
         >
       </div>
     </div>
@@ -42,6 +43,7 @@
           </template>
         </DataTable>
       </client-only>
+    </div>
     </div>
   </div>
 </template>

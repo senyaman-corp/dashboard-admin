@@ -2,24 +2,24 @@
   <div>
     <CardBaseCard title="Room Pricing Management">
       <div class="row justify-content-between">
-        <div class="col-lg-1 flex-grow-1">
+        <div class="col-lg-1 flex-grow-1 mb-1">
           <NuxtLink to="/price/add-price">
             <ButtonBaseButton variant="primary"> Add Price </ButtonBaseButton>
           </NuxtLink>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <client-only>
             <InputWithCombobox
               v-model="roomView"
               :options="roomViewOptions"
-              class="mx-3"
+             
               id="room-view"
               :placeholder="'Select Room View'"
               @update:modelValue="filterByView"
             />
           </client-only>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <client-only>
             <select
               class="form-select form-select-lg"
@@ -38,7 +38,7 @@
             </select>
           </client-only>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <VueDatePicker
             v-model="date"
             month-picker

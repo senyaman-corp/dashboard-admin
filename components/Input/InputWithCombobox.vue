@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3" id="multiselect-style">
+  <div class="" id="multiselect-style">
     <label v-if="label" :for="id" class="form-label">{{ label }}</label>
     <Multiselect
       v-model="selectedValue"

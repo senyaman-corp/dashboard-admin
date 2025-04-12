@@ -2,7 +2,7 @@
   <div>
     <CardBaseCard title="Rooms">
       <div class="row justify-content-end">
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <select
             class="form-select form-select-lg"
             @change="filterByView"
@@ -12,7 +12,7 @@
                 <option v-for="view in ['Mountain', 'City']" :key="view" :value="view">{{ view }}</option>
             </select>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <select
             class="form-select form-select-lg"
             :id="'year'"
@@ -24,7 +24,7 @@
           </select>
         </div>
         
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-1">
           <VueDatePicker
             v-model="date"
             month-picker

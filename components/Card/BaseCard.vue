@@ -3,7 +3,7 @@
     <div v-if="title" class="card-header">
       <h4>{{ title }}</h4>
     </div>
-    <div class="card-body">
+    <div class="card-body p-3 p-sm-4">
       <slot />
     </div>
     <div v-if="$slots.footer" class="card-footer">

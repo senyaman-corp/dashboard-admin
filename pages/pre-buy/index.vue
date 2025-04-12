@@ -7,7 +7,6 @@
                 <ButtonBaseButton 
                 variant="primary"
                 to="/pre-buy/add"
-                class="mx-3"
                 >Tambah</ButtonBaseButton
                 >
             </div>

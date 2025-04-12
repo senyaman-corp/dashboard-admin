@@ -21,22 +21,24 @@
                         </div>  
                     </form>
                     <hr />
-                    <client-only>
-                        <DataTable
-                            class="table table-striped table-bordered"
-                            :columns="columns"
-                            :data="roomTypes"
-                            :options="options"
-                            style="width: 100%"
-                        >
-                        <template #column-1="props">
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary mx-1" @click="deleteRoomType(props.rowData)">Edit</button>
-                                <button type="button" class="btn btn-primary mx-1" @click="viewProperties(props.rowData)">Properties</button>
-                            </div>
-                        </template>
-                        </DataTable>
-                    </client-only>
+                    <div class="table-responsive">
+                        <client-only>
+                            <DataTable
+                                class="table table-striped table-bordered"
+                                :columns="columns"
+                                :data="roomTypes"
+                                :options="options"
+                                style="width: 100%"
+                            >
+                            <template #column-1="props">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary mx-1" @click="deleteRoomType(props.rowData)">Edit</button>
+                                    <button type="button" class="btn btn-primary mx-1" @click="viewProperties(props.rowData)">Properties</button>
+                                </div>
+                            </template>
+                            </DataTable>
+                        </client-only>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,20 +92,22 @@
                         </div>  
                     </form>
                     <hr />
-                    <client-only>
-                        <DataTable
-                            class="table table-striped table-bordered"
-                            :columns="roomPropertiesColumn"
-                            :data="roomProperties"
-                            style="width: 100%"
-                        >
-                        <template #column-3="props">
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-danger mx-1" @click="deleteProperties(props.rowData)">Hapus</button>
-                            </div>
-                        </template>
-                        </DataTable>
-                    </client-only>
+                    <div class="table-responsive">
+                        <client-only>
+                            <DataTable
+                                class="table table-striped table-bordered"
+                                :columns="roomPropertiesColumn"
+                                :data="roomProperties"
+                                style="width: 100%"
+                            >
+                            <template #column-3="props">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-danger mx-1" @click="deleteProperties(props.rowData)">Hapus</button>
+                                </div>
+                            </template>
+                            </DataTable>
+                        </client-only>
+                    </div>
                 </div>
             </div>
         </div>

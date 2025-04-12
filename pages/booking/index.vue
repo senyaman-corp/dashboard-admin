@@ -2,8 +2,8 @@
   <div class="card ">
     <div class="card-body">
       <div class="row justify-content-between align-items-center">
-        <h3 class="col-lg-3 flex-grow-1">Data Booking</h3>
-        <div class="col-lg-1 pe-sm-1">
+        <h3 class="col-lg-3 flex-grow-1 mb-1">Data Booking</h3>
+        <div class="col-lg-1 pe-sm-1 mb-1">
           <select class="form-select form-select-sm"
               :id="'year'"
               @change="filterByType"
@@ -19,7 +19,7 @@
               </option>
             </select>
         </div>
-        <div class="col-lg-1 pe-sm-1">
+        <div class="col-lg-1 pe-sm-1 mb-1">
           <select class="form-select form-select-sm"
               :id="'year'"
               @change="filterByView"
@@ -30,11 +30,11 @@
               <option value="City">City</option>
             </select>
         </div>
-        <div class="col-lg-1 pe-sm-1">
+        <div class="col-lg-1 pe-sm-1 mb-1">
           <ButtonBaseButton
             variant="primary"
             to="/booking/add-booking"
-            
+           
             >Tambah Booking</ButtonBaseButton
           >
         </div>
@@ -99,9 +99,9 @@
             :class="'form-control-sm'"
           ></VueDatePicker>
         </div>
-        <div class="col-lg-1 ps-sm-0">
+        <div class="col-lg-1 px-3 ps-sm-0">
           <ButtonBaseButton 
-            variant="primary" @click="exportBooking" class="btn-md" style="height:34px;">
+            variant="primary" @click="exportBooking" class="btn-md w-100" style="height:34px;">
               <i class="fas fa-file-excel me-2"></i>Export
             </ButtonBaseButton
           >

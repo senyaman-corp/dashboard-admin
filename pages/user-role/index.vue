@@ -7,7 +7,7 @@
         <ButtonBaseButton v-if="user !== null && user.jabatan == 'Superadmin'"
           variant="primary"
           to="/user-role/add-user-role"
-          class="mx-3"
+          class="btn-md"
           >Tambah User</ButtonBaseButton
         >
       </div>
