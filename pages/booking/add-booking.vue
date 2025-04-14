@@ -71,7 +71,7 @@
           @fileSelected="handleFile"
           accept=".jpg,.jpeg,.png"
         />
-        <NuxtImg :src="fotoKTP" class="foto-kamar"></NuxtImg>
+        <NuxtImg :src="fotoKTP" class="foto-kamar mb-3"></NuxtImg>
 
         <!-- Room Selection -->
         <div class="space-y-4">
@@ -297,6 +297,7 @@ const searchGuest = async (event) => {
   let phone = event.target.value;
   if(phone){
     phone = phone.replace(/\D/g, '');
+    $bus.$emit("loading", true);
     const { data,status} = await $fetch(`${config.public.baseUrl}guests/find-by-phone`,{
       method:'POST',
       headers:{
@@ -306,6 +307,7 @@ const searchGuest = async (event) => {
         no_telp:phone
       }
     });
+    $bus.$emit("loading", false);
     if(status == 1){
       formData.value.name = data.name || '';
       formData.value.email = data.email || '';
@@ -313,7 +315,8 @@ const searchGuest = async (event) => {
       formData.value.gender = data.gender || '';
       formData.value.address = data.address || '';
       formData.value.no_telp = data.no_telp || '';
-      fotoKTP.value = `${config.public.storageUrl}${data.ktp}`;
+     
+      fotoKTP.value = `${config.public.dashboardUrl}api/foto-ktp?token=${authStore.getToken}&id=${data.id}`;
       formData.value.countryCode = data.country_code || '';
       formData.value.guest_id = data.id || '';
     }
