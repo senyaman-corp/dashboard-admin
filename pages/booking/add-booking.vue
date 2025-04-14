@@ -89,18 +89,36 @@
             Add Another Room
           </ButtonBaseButton>
 
-          <div class="mt-3">
-            <h5>Total: Rp {{ calculateTotal.toLocaleString("id-ID") }}</h5>
-            <h5>TAX 23% = Rp {{ calculateTax.toLocaleString("id-ID") }}</h5>
-            <h5>
-              Final Price = Rp {{ calculateFinalPrice.toLocaleString("id-ID") }}
-            </h5>
+          <div class="row justify-content-end">
+            <div class="col-md-1">
+              <h5>Total</h5>
+              
+            </div>
+            <div class="col-md-1 text-end">
+              <h5>{{ calculateTotal.toLocaleString("id-ID") }}</h5>
+            </div>
+          </div>
+          <div class="row justify-content-end">
+            <div class="col-md-1">
+              <h5>TAX</h5>
+            </div>
+            <div class="col-md-1 text-end">
+              <h5>{{ calculateTax.toLocaleString("id-ID") }}</h5>
+            </div>
+          </div>
+          <div class="row justify-content-end">
+            <div class="col-md-1">
+              <h5>Grand Total</h5>
+              
+            </div>
+            <div class="col-md-1 text-end">
+              <h5>{{ calculateFinalPrice.toLocaleString("id-ID") }}</h5>
+            </div>
           </div>
         </div>
-
-        <ButtonBaseButton type="submit" variant="primary" class="mt-4"
-          >Submit Booking</ButtonBaseButton
-        >
+        <div class="d-flex justify-content-end">
+          <ButtonBaseButton type="submit" variant="primary" class="mt-4 btn-lg">Submit Booking</ButtonBaseButton>
+        </div>
       </FormBaseForm>
     </CardBaseCard>
   </div>
