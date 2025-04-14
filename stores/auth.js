@@ -66,11 +66,11 @@ export const useAuthStore = defineStore('auth', {
             if(user.roles == 'Admin'){
                 return true
             }
-            return user.roles.toLowerCase() == page.toLowerCase();    
+            return user.roles?.toLowerCase() == page.toLowerCase();    
         },
         isSupervisor(){
             let user = this.getUser;
-            return user.jabatan.toLowerCase() == 'supervisor';
+            return user.jabatan?.toLowerCase() == 'supervisor';
         }
 
     },

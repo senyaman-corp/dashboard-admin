@@ -52,7 +52,7 @@
             <template #column-8="props">
                 <a class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-target="#dropdown" aria-haspopup="true" aria-expanded="false">Aksi</a>
                 <ul id="dropdown" class="dropdown-menu p-2" aria-labelledby="dropdown">
-                    <li class="dropdown-item">
+                    <li class="dropdown-item" v-if="props.rowData.status !== 'Checkout'">
                       <a type="button" class="btn btn-default" @click="deleteBooking(props.rowData.id)">
                         <i class="fas fa-trash-alt me-2"></i>Delete
                       </a>
@@ -62,12 +62,12 @@
                           <i class="fas fa-info-circle me-2"></i>Detail
                       </a>
                     </li>
-                    <li class="dropdown-item">
+                    <li class="dropdown-item" v-if="props.rowData.status !== 'Checkout'">
                       <a type="button" class="btn btn-default" @click="addAdditionalCharge(props.rowData.id)">
                           <i class="fas fa-plus me-2"></i>Additional Charge
                       </a>
                     </li>
-                    <li class="dropdown-item">
+                    <li class="dropdown-item" v-if="props.rowData.status !== 'Checkout'">
                       <button class="btn btn-default" target="_blank" @click="checkout(props.rowData.id_booking_room)">
                         <i class="fas fa-luggage-cart me-2"></i>Checkout
                       </button>
