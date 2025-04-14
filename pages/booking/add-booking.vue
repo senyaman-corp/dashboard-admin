@@ -25,12 +25,9 @@
         </div>
         <div class="row">
           <div class="col-6">
-            <InputBaseInput
-              type="number"
-              v-model="formData.no_telp"
-              label="Nomor Telepon"
-              placeholder="Masukkan No Telepon" required
-            />
+            <label class="form-label">Nomor Telepon</label>
+            <vue-tel-input v-model="formData.no_telp" :inputOptions="inputOptions" :mode="'international'" @validate="onValidate" @blur="searchGuest" :required="true"></vue-tel-input>
+           
           </div>
           <div class="col-6">
             <InputBaseInput
@@ -116,9 +113,11 @@ const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const { $bus, $swal, $formatDate } = useNuxtApp();
 const formData = ref({
+  guest_id: "",
   name: "",
   age: "",
   no_telp: "",
+  countryCode:'',
   email: "",
   address: "",
   gender: "",
@@ -160,6 +159,12 @@ const handleFile = (file) => {
   reader.readAsDataURL(file);
 };
 
+const inputOptions = {
+    placeholder:'Masukan nomor telepon',
+    required:true,
+    showdialcode:true
+  }
+
 // Add another room selection
 const addRoom = () => {
   formData.value.selectedRooms.push({ room_id: null });
@@ -187,7 +192,7 @@ const handleSubmit = async () => {
     const checkoutDate = room.checkout_date
       ? `${room.checkout_date.toISOString().split("T")[0]} 12:00:00`
       : "";
-
+    form.append('guest_id',formData.value.guest_id || '');
     form.append("room_id[]", room.room_id || "");
     form.append("checkin_date[]", checkinDate);
     form.append("checkout_date[]", checkoutDate);
@@ -240,7 +245,7 @@ const handleSubmit = async () => {
         $swal.fire({
           position: "bottom-end",
           text: response.message,
-          showConfirmButton: false,
+          showConfirmButton: true,
         })
       }
     });
@@ -265,6 +270,37 @@ const calculateFinalPrice = computed(() => {
   formData.value.total_price = calculateTotal.value + calculateTax.value;
   return calculateTotal.value + calculateTax.value;
 });
+const onValidate = (phoneObject)=>{
+  formData.value.countryCode = phoneObject.country;
+}
+
+const searchGuest = async (event) => {
+  console.log(event.target.value);
+  let phone = event.target.value;
+  if(phone){
+    phone = phone.replace(/\D/g, '');
+    const { data,status} = await $fetch(`${config.public.baseUrl}guests/find-by-phone`,{
+      method:'POST',
+      headers:{
+        'Authorization':'Bearer ' + authStore.getToken
+      },
+      body:{
+        no_telp:phone
+      }
+    });
+    if(status == 1){
+      formData.value.name = data.name || '';
+      formData.value.email = data.email || '';
+      formData.value.age = data.age || '';
+      formData.value.gender = data.gender || '';
+      formData.value.address = data.address || '';
+      formData.value.no_telp = data.no_telp || '';
+      fotoKTP.value = `${config.public.storageUrl}${data.ktp}`;
+      formData.value.countryCode = data.country_code || '';
+      formData.value.guest_id = data.id || '';
+    }
+  }
+}
 
 onMounted(() => {
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
@@ -295,5 +331,8 @@ tr {
 }
 tr.selected {
   background: linear-gradient(90deg, #b5e4b6, transparent);
+}
+.vue-tel-input{
+  border:1px solid #f0f0f0;
 }
 </style>
