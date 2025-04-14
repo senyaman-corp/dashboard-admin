@@ -8,14 +8,14 @@
             <InputBaseInput
               v-model="formData.name"
               label="Nama Lengkap"
-              placeholder="Masukkan Nama Tamu"
+              placeholder="Masukkan Nama Tamu" required
             />
           </div>
           <div class="col-6">
             <label class="form-label">Jenis Kelamin</label>
             <select
               class="form-select form-select-lg"
-              v-model="formData.gender"
+              v-model="formData.gender" required
             >
               <option value="" selected>Pilih Jenis Kelamin</option>
               <option value="Male">Laki-Laki</option>
@@ -29,7 +29,7 @@
               type="number"
               v-model="formData.no_telp"
               label="Nomor Telepon"
-              placeholder="Masukkan No Telepon"
+              placeholder="Masukkan No Telepon" required
             />
           </div>
           <div class="col-6">
@@ -53,7 +53,7 @@
             <label class="form-label">Booking Type</label>
             <select
               class="form-select form-select-lg"
-              v-model="formData.booking_type"
+              v-model="formData.booking_type" required
             >
               <option value="" selected>Pilih Booking Type</option>
               <option value="walk in">Walk In</option>
@@ -65,7 +65,7 @@
         <InputBaseTextArea
           v-model="formData.address"
           label="Alamat"
-          placeholder="Masukkan Alamat"
+          placeholder="Masukkan Alamat" required
         />
 
         <InputBaseUpload
@@ -237,7 +237,11 @@ const handleSubmit = async () => {
             }
           });
       } else {
-        console.error("Error:", response);
+        $swal.fire({
+          position: "bottom-end",
+          text: response.message,
+          showConfirmButton: false,
+        })
       }
     });
   } catch (error) {

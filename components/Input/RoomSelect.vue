@@ -14,6 +14,7 @@
         class="form-control"
         :placeholder="placeholder"
         @update:modelValue="updateValue"
+        :required="required"
       >
       <template #singleLabel="props">
         <span class="option__desc"

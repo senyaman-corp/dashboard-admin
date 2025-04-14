@@ -22,7 +22,7 @@
             placeholder="Tanggal Checkin"
             @update:model-value="handleStartDate(checkin_date)"
             :min-date="new Date()"
-            locale="ID"
+            locale="ID" required
           ></VueDatePicker>
         </div>
       </div>
@@ -36,7 +36,7 @@
             placeholder="Tanggal Checkout"
             @update:model-value="handleEndDate(checkout_date)"
             :min-date="nextDay"
-            locale="ID"
+            locale="ID" required
           ></VueDatePicker>
         </div>
       </div>
@@ -51,6 +51,7 @@
           :searchable="true"
           :multiple="false"
           @update:model-value="findPreBuyPrice(room_id)"
+          :required="true"
         />
       </div>
       <div class="col-md-6">
@@ -58,7 +59,7 @@
           type="number"
           v-model="discount"
           label="Discount"
-          placeholder="Masukkan Harga Discount"
+          placeholder="Masukkan Harga Discount" required
         />
       </div>
     </div>
@@ -70,6 +71,7 @@
             v-model="noofadult"
             label="Jumlah Dewasa"
             placeholder="Masukkan Jumlah Dewasa"
+            :required="true"
           />
         </div>
       </div>
@@ -88,7 +90,7 @@
       <div class="col-md-6">
         <div class="mb-3">
           <label for="" class="form-label">Booking Package</label>
-          <select class="form-select form-select-lg" v-model="booking_package">
+          <select class="form-select form-select-lg" v-model="booking_package" required>
             <option value="" selected>Pilih Booking Package</option>
             <option value="Breakfast">Breakfast</option>
             <option value="Non Breakfast">Non Breakfast</option>
@@ -100,7 +102,7 @@
           <InputAutonumeric
               v-model="price_booking_package"
               label="Price Booking Package"
-              placeholder="Masukkan Price Booking Package"
+              placeholder="Masukkan Price Booking Package" 
               />
          
         </div>
@@ -224,8 +226,8 @@ const checkin_date = ref(new Date());
 const checkout_date = ref(new Date());
 const room_id = ref("");
 const discount = ref(0);
-const noofadult = ref(0);
-const noofchildren = ref(0);
+const noofadult = ref(null);
+const noofchildren = ref(null);
 const booking_package = ref("");
 const price_booking_package = ref(0);
 const early_checkin = ref(0);
