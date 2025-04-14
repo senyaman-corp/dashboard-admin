@@ -315,8 +315,8 @@ const searchGuest = async (event) => {
       formData.value.gender = data.gender || '';
       formData.value.address = data.address || '';
       formData.value.no_telp = data.no_telp || '';
-     
-      fotoKTP.value = `${config.public.dashboardUrl}api/foto-ktp?token=${authStore.getToken}&id=${data.id}`;
+      
+      fotoKTP.value = data.ktp ? `${config.public.dashboardUrl}api/foto-ktp?token=${authStore.getToken}&id=${data.id}` : '';
       formData.value.countryCode = data.country_code || '';
       formData.value.guest_id = data.id || '';
     }
