@@ -109,7 +109,7 @@
           <div  v-for="status in detail.status" :key="status.id">
             <div class="d-flex justify-content-between">
               <span>{{ status.status }}</span>
-              <span v-if="status.status == 'EC'">{{$moment(status.booking_room?.checkout_date).format('DD-MMMM-YYYY HH:mm')}}</span>
+              <span v-if="status.status == 'EC'">{{ $moment(status.booking_room?.checkout_date).format('DD-MMMM-YYYY HH:mm') }}</span>
               <span v-else>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
             </div>
             <div v-if="status.status == 'EC'">

@@ -105,25 +105,26 @@
             <div  v-for="status in detail.status" :key="status.id">
               <div class="d-flex justify-content-between">
                 <span>{{ status.status }}</span>
-                <span>{{ $moment(status.created_at).format('DD MMMM YYYY HH:mm')}}</span>
+                <span v-if="status.status == 'EC'">{{ $moment(status.booking_room?.checkout_date).format('DD-MMMM-YYYY HH:mm') }}</span>
+                <span v-else>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
               </div>
-              <div class="d-flex justify-content-between" v-if="status.created_by !== null">
+              <div class="d-flex justify-content-between" v-if="status.created_by !== null && status.created_by !== undefined">
                 <span>Petugas</span>
                 <span>{{ status.created_by.name }}</span>
               </div>
-              <div v-if="status.booking_room !== null">
+              <div v-if="status.status == 'EC'">
                 <div class="t-bold">Booking</div>
                 <div class="d-flex justify-content-between">
                   <span>Guest</span>
-                  <span>{{ status.booking_room.guest}}</span>
+                  <span>{{ status.booking_room?.guest}}</span>
                 </div>
                 <div class="d-flex justify-content-between">
                   <span>Checkin</span>
-                  <span>{{ $moment(status.booking_room.checkin_date).format('DD MMMM YYYY HH:mm')}}</span>
+                  <span>{{ $moment(status.booking_room?.checkin_date).format('DD MMMM YYYY HH:mm')}}</span>
                 </div>
                 <div class="d-flex justify-content-between">
                   <span>Checkout</span>
-                  <span>{{ $moment(status.booking_room.checkout_date).format('DD MMMM YYYY HH:mm')}}</span>
+                  <span>{{ $moment(status.booking_room?.checkout_date).format('DD MMMM YYYY HH:mm')}}</span>
                 </div>
               </div>
             </div>
