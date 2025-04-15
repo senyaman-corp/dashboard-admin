@@ -1,11 +1,12 @@
 <template>
   <div class="mb-3">
-    <label v-if="label" :for="id" class="form-label">{{ label }}</label>
+    <label v-if="label" :for="id" class="form-label" :class="{'t-required': required }">{{ label }}</label>
     <input
       ref="input"
       :id="id"
       :placeholder="placeholder"
       class="form-control"
+      :required="required"
     />
   </div>
 </template>
@@ -21,6 +22,7 @@ const props = defineProps({
   placeholder: String,
   options: Object,
   currencySymbol: String,
+  required: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["update:modelValue"]);

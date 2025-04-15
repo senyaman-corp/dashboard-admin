@@ -68,6 +68,11 @@
 .sidebar-collpsed .text-logo{
     display: none;
 }
+.t-required:after {
+    content: " *";
+    color: red;
+}
+
 
 *{
     border:1px solid transparent;

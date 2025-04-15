@@ -9,15 +9,16 @@
                 <div class="card-body">
                     <div class="my-3 t-bold h4">Room Type</div>
                     <form @submit.prevent="submit">
-                    <div class="d-flex align-items-center">
-                        <InputBaseInput
-                                type="text"
-                                v-model="type"
-                                label="Room Type"
-                                placeholder="Insert room type"
-                                :class="'flex-grow-1 me-2'"
-                            />
-                        <ButtonBaseButton type="submit" variant="primary" class="mt-2 min-h-100 btn-md">Tambah</ButtonBaseButton>
+                        <div class="d-flex align-items-center">
+                            <InputBaseInput
+                                    type="text"
+                                    v-model="type"
+                                    label="Room Type"
+                                    placeholder="Insert room type"
+                                    :class="'flex-grow-1 me-2'"
+                                    required
+                                />
+                            <ButtonBaseButton type="submit" variant="primary" class="mt-2 min-h-100 btn-md">Tambah</ButtonBaseButton>
                         </div>  
                     </form>
                     <hr />
@@ -52,7 +53,7 @@
                     <form @submit.prevent="addChecklistItem">
                         <div class="row align-items-center">
                             <div class="col-lg-8 mb-3 flex-grow-1 pe-4" id="multiselect-style">
-                                <label class="form-label">Nama Property</label>
+                                <label class="form-label t-required">Nama Property</label>
                                 <Multiselect
                                     v-model="propertyName"
                                     :options="properties"
@@ -121,8 +122,8 @@
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="mb-3">
-                                    <label class="form-label">Category</label>
-                                    <select class="form-select" v-model="category">
+                                    <label class="form-label t-required">Category</label>
+                                    <select class="form-select" v-model="category" required>
                                         <option value="">Select Category</option>
                                         <option v-for="option in categoryOptions" :key="option" :v-model="option">
                                             {{ option }}
@@ -137,6 +138,7 @@
                                     v-model="name"
                                     label="Nama Property"
                                     placeholder="Insert property name"
+                                    required
                                 />
                             </div>
                             <div class="col-lg-1">

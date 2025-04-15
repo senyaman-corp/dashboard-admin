@@ -1,6 +1,6 @@
 <template>
     <div class="mb-3" id="multiselect-style">
-      <label v-if="label" :for="id" class="form-label">{{ label }}</label>
+      <label v-if="label" :for="id" class="form-label" :class="{'t-required': required }">{{ label }}</label>
       <Multiselect
         v-model="selectedValue"
         :options="options"

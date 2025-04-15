@@ -51,7 +51,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "~/stores/auth";
-const { $bus,$dataTableOptions } = useNuxtApp();
+const { $bus,$dataTableOptions,$moment } = useNuxtApp();
 const navStore = useNavigatorStore();
 navStore.setPage("Reservation");
 navStore.setSubpage("Index Reservation");
@@ -62,7 +62,10 @@ const options = $dataTableOptions(config.public.baseUrl + 'reservations/list', a
 options.columnDefs = [
   { targets:[6], render: (data, type, row, meta) =>{
     return '';
-  },className: 'text-end'}
+  },className: 'text-end'},
+  { targets:[5], render: (data, type, row, meta) =>{
+    return $moment(data).format('DD MMMM YYYY');
+  }},
 ]
 const columns = ref([
   { title: "Guest Name", data: "customer_name" },

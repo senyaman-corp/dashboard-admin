@@ -12,7 +12,7 @@
             />
           </div>
           <div class="col-6">
-            <label class="form-label">Jenis Kelamin</label>
+            <label class="form-label t-required">Jenis Kelamin</label>
             <select
               class="form-select form-select-lg"
               v-model="formData.gender" required
@@ -25,7 +25,7 @@
         </div>
         <div class="row">
           <div class="col-6">
-            <label class="form-label">Nomor Telepon</label>
+            <label class="form-label t-required">Nomor Telepon</label>
             <vue-tel-input v-model="formData.no_telp" :inputOptions="inputOptions" :mode="'international'" @validate="onValidate" @blur="searchGuest" :required="true"></vue-tel-input>
            
           </div>
@@ -47,7 +47,7 @@
             />
           </div>
           <div class="col-6">
-            <label class="form-label">Booking Type</label>
+            <label class="form-label t-required">Booking Type</label>
             <select
               class="form-select form-select-lg"
               v-model="formData.booking_type" required

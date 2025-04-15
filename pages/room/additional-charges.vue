@@ -8,18 +8,18 @@
                     </div>
                     <form @submit.prevent="submit">
                         <div class="form-group row align-items-center mb-2">
-                            <label  class="col-sm-3 t-bold">Name</label>
+                            <label  class="col-sm-3 t-bold t-required">Name</label>
                             <div class="col-lg-9">
-                                <input type="text" v-model="name"
+                                <input type="text" v-model="name" required
                                     placeholder="Insert cherge name" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group row align-items-center mb-2">
-                            <label  class="col-sm-3 t-bold">Price</label>
+                            <label  class="col-sm-3 t-bold t-required">Price</label>
                             <div class="col-lg-9">
                                 <InputAutonumeric
                                         v-model="base_price" 
-                                        placeholder="Insert base price"
+                                        placeholder="Insert base price" required
                                         />
                             </div>
                         </div>

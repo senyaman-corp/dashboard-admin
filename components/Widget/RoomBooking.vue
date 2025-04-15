@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
-          <label class="form-label">Tanggal Checkin</label>
+          <label class="form-label t-required">Tanggal Checkin</label>
           <VueDatePicker
             v-model="checkin_date"
             auto-apply
@@ -28,7 +28,7 @@
       </div>
       <div class="col-md-6">
         <div class="mb-3">
-          <label class="form-label">Tanggal Checkout</label>
+          <label class="form-label t-required">Tanggal Checkout</label>
           <VueDatePicker
             v-model="checkout_date"
             auto-apply
@@ -59,7 +59,7 @@
           type="number"
           v-model="discount"
           label="Discount"
-          placeholder="Masukkan Harga Discount" required
+          placeholder="Masukkan Harga Discount"
         />
       </div>
     </div>
@@ -89,7 +89,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
-          <label for="" class="form-label">Booking Package</label>
+          <label for="" class="form-label t-required">Booking Package</label>
           <select class="form-select form-select-lg" v-model="booking_package" required>
             <option value="" selected>Pilih Booking Package</option>
             <option value="Breakfast">Breakfast</option>

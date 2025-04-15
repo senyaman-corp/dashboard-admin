@@ -3,25 +3,31 @@
         <CardBaseCard title="Tambah Harga">
             <FormBaseForm @submit="handleSubmit">
                 <div class="form-group">
-                  <label class="t-bold">Tanggal</label>
-                  <VueDatePicker v-model="formData.date" :format="'yyyy-MM-dd'" multi-dates :id="'date-picker-1'" class="mb-3"></VueDatePicker>
+                  <label class="t-bold t-required">Tanggal</label>
+                  <VueDatePicker v-model="formData.date" :format="'yyyy-MM-dd'" multi-dates 
+                  :enable-time-picker="false"
+                  :id="'date-picker-1'" :min-date="new Date()" class="mb-3" 
+                  placeholder="Pilih tanggal, klik multiple untuk memilih beberapa tanggal sekaligus"></VueDatePicker>
                 </div>
                 <InputSelect 
                   v-model="formData.room_type" 
                   label="Type Room" 
                   placeholder="Type Room" 
                   :options="roomTypes" 
+                  required
                 />
                 <InputSelect 
                   v-model="formData.room_view" 
-                  label="Type Room" 
+                  label="View" 
                   placeholder="Type Room" 
                   :options="roomView" 
+                  required
                 />
                 <InputAutonumeric
                   v-model="formData.price"
                   label="Harga Kamar"
                   placeholder="Masukkan Harga Kamar"
+                  required
                 />
                 <ButtonBaseButton type="submit" variant="primary">Submit</ButtonBaseButton>
             </FormBaseForm>
@@ -74,9 +80,11 @@ const roomView = ref([
 const handleSubmit = async () => {
   //$bus.$emit('loading',true);
   const selectedDate = [];
-  formData.value.date.forEach(dt=>{
-    selectedDate.push($moment(dt).format("YYYY-MM-DD"));
-  }) 
+  if(formData.value.date !== null){
+    formData.value.date.forEach(dt=>{
+      selectedDate.push($moment(dt).format("YYYY-MM-DD"));
+    }) 
+  }
 
   const form = new FormData();
   form.append("room_type", formData.value.room_type);
@@ -96,7 +104,7 @@ const handleSubmit = async () => {
       if(response.status == 1){
         navigateTo('/price');
       }else{
-        $swal.fire(response.message);
+        $swal.fire({ text: response.message , position: "bottom-end",});
       }        
     })
   } catch (error) {
