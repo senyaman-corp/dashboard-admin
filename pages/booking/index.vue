@@ -172,6 +172,7 @@ const deleteBooking = async (id)=>{
     confirmButtonText:'Ya',
     cancelButtonText:'Tidak'
   }).then(async(result)=>{
+    $bus.$emit('loading',false);
     if(result.isConfirmed){
       const response = await $fetch(`${config.public.baseUrl}bookings/cancel`,{
         method:'POST',
@@ -181,6 +182,8 @@ const deleteBooking = async (id)=>{
         body:{
           id:id
         }
+      }).catch(err=>{
+        $bus.$emit('loading',false);
       })
       if(response.status == 1){
         $swal.fire({

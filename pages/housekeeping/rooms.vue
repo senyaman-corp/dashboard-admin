@@ -250,6 +250,8 @@ const viewDetail = async(id,index)=>{
             id:id,
             date:tanggal
           }
+    }).catch(err=>{
+      $bus.$emit('loading',false);
     })
     $bus.$emit('loading',false);
     if(response.status == 1){

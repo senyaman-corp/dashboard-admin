@@ -20,6 +20,7 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: "icon", type: "image/x-icon", href: "/favicon.png" },
+        { rel: 'mask-icon', href:"/safari-pinned-tab.svg", color:"#0ed3cf"},
         { rel: "sitemap", type: "application/xml", title: "Sitemap", href: "/sitemap.xml"},
       ],
     }

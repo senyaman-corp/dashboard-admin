@@ -33,6 +33,8 @@
             class="px-4 py-2 text-center border-bottom-1 border-gray-200"
             :class="[
               'room-item',
+              't-bold',
+              'text-16',
               {
                 'badge-success p-2': price.status === 'VR',
                 'badge-info p-2': price.status === 'VC',
