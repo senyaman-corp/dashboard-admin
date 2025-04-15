@@ -4,7 +4,7 @@
             <FormBaseForm @submit="handleSubmit">
                 <div class="form-group">
                   <label class="t-bold">Tanggal</label>
-                  <VueDatePicker v-model="formData.date" auto-apply :format="'yyyy-MM-dd'" class="mb-3"></VueDatePicker>
+                  <VueDatePicker v-model="formData.date" :format="'yyyy-MM-dd'" multi-dates :id="'date-picker-1'" class="mb-3"></VueDatePicker>
                 </div>
                 <InputSelect 
                   v-model="formData.room_type" 
@@ -30,6 +30,7 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted, computed } from "vue";
 import { useAuthStore } from "~/stores/auth";
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -41,7 +42,7 @@ import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 navStore.setPage("Room");
 navStore.setSubpage("Index Price");
-const { $bus,$swal } = useNuxtApp();
+const { $bus,$swal,$moment } = useNuxtApp();
 const formData = ref({
   room_type: "",
   room_view: "",
@@ -71,16 +72,17 @@ const roomView = ref([
 ]);
 
 const handleSubmit = async () => {
-  $bus.$emit('loading',true);
-  const formattedDate = formData.value.date ? formData.value.date.toISOString().split("T")[0] : "";
+  //$bus.$emit('loading',true);
+  const selectedDate = [];
+  formData.value.date.forEach(dt=>{
+    selectedDate.push($moment(dt).format("YYYY-MM-DD"));
+  }) 
 
   const form = new FormData();
-
   form.append("room_type", formData.value.room_type);
   form.append("view", formData.value.room_view);
-  form.append("date", formattedDate);
+  form.append("date", selectedDate);
   form.append("price", formData.value.price);
-
   try {
     $fetch(`${config.public.baseUrl}prices/create`, {
       method: "POST",
@@ -111,3 +113,8 @@ definePageMeta({
   middleware: ["auth"],
 });
 </script>
+<style>
+  #date-picker-1 .dp--tp-wrap{
+    display:none;
+  }
+</style>
