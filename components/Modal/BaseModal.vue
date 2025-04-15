@@ -12,7 +12,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <slot />
+          <slot name="body"/>
         </div>
         <div class="modal-footer">
           <slot name="footer">

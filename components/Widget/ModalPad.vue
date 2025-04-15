@@ -6,11 +6,11 @@
     v-if="isWarningVisible"
     @click.self="closeModal"
   >
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" :class="size" role="document">
       <div class="modal-content border-0 shadow-lg rounded-4">
         <div class="modal-header bg-light border-0 rounded-top-4">
           <h5 class="modal-title fw-bold text-success">
-            <i class="bi bi-info-circle-fill me-2"></i> Room Detail
+            <i class="bi bi-info-circle-fill me-2"></i> {{ title || 'Room Detail' }}
           </h5>
           <button type="button" class="btn-close" @click="closeModal" />
         </div>
@@ -23,6 +23,16 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  title: {
+    type: String,
+    default: "",
+  },
+  size: {
+    type: String,
+    default: "modal-md",
+  },
+})
 const isWarningVisible = ref(false);
 const { $bus } = useNuxtApp();
 
@@ -33,6 +43,9 @@ const closeModal = () => {
 onMounted(() => {
   $bus.$on("openModal", () => {
     isWarningVisible.value = true;
+  });
+  $bus.$on("closeModal", () => {
+    isWarningVisible.value = false;
   });
 });
 </script>

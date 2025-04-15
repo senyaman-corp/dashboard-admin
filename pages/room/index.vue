@@ -62,7 +62,7 @@
         />
       </div>
     </CardBaseCard>
-    <WidgetModalPad>
+    <WidgetModalPad :title="'Room Detail'">
       <div class="container-fluid px-1">
         <div class="row gy-2">
           <div class="col-12 d-flex justify-content-between">
@@ -359,6 +359,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 </script>
+
 <style>
   #dp-input-searchDate{
     padding: .2rem 2rem !important;

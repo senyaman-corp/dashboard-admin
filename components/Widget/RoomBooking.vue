@@ -85,7 +85,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <label for="" class="form-label t-required">Booking Package</label>
-          <select class="form-select form-select-lg mb-3" v-model="booking_package">
+          <select class="form-select form-select-lg mb-3" v-model="booking_package" required>
             <option value="" selected>Select Package</option>
             <option value="Breakfast">Breakfast</option>
             <option value="Non Breakfast">Non Breakfast</option>

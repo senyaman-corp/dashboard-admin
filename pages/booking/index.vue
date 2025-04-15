@@ -3,8 +3,8 @@
     <div class="card-body">
       <div class="row justify-content-between align-items-center">
         <h3 class="col-lg-3 flex-grow-1 mb-1">Data Booking</h3>
-        <div class="col-lg-1 pe-sm-1 mb-1">
-          <select class="form-select form-select-sm"
+        <div class="col-lg-2 pe-sm-1 mb-1">
+          <select class="form-select form-select-md"
               :id="'year'"
               @change="filterByType"
               v-model="roomType"
@@ -19,8 +19,8 @@
               </option>
             </select>
         </div>
-        <div class="col-lg-1 pe-sm-1 mb-1">
-          <select class="form-select form-select-sm"
+        <div class="col-lg-2 pe-sm-1 mb-1">
+          <select class="form-select form-select-md"
               :id="'year'"
               @change="filterByView"
               v-model="roomView"
@@ -30,11 +30,11 @@
               <option value="City">City</option>
             </select>
         </div>
-        <div class="col-lg-1 pe-sm-1 mb-1">
+        <div class="col-lg-2 pe-sm-1 mb-1">
           <ButtonBaseButton
             variant="primary"
             to="/booking/add-booking"
-           
+            class="w-100"
             >Tambah Booking</ButtonBaseButton
           >
         </div>
@@ -63,8 +63,13 @@
                       </a>
                     </li>
                     <li class="dropdown-item" v-if="props.rowData.status !== 'Checkout'">
-                      <a type="button" class="btn btn-default" @click="addAdditionalCharge(props.rowData.id)">
+                      <a type="button" class="btn btn-default" @click="addAdditionalCharge(props.rowData.id_booking_room)">
                           <i class="fas fa-plus me-2"></i>Additional Charge
+                      </a>
+                    </li>
+                    <li class="dropdown-item" v-if="props.rowData.status !== 'Checkout'">
+                      <a type="button" class="btn btn-default" @click="extendsBooking(props.rowData.id_booking_room)">
+                          <i class="fas fa-plus me-2"></i>Extends
                       </a>
                     </li>
                     <li class="dropdown-item" v-if="props.rowData.status !== 'Checkout'">
@@ -108,6 +113,14 @@
         </div>
       </div>
     </div>
+    <WidgetModalPad :title="'Additional Charges'" :size="'modal-lg'">
+      <form @submit.prevent="handleAddAdditionalCharge">
+        <WidgetAdditionalCharge :addChargesData="addChargesData" @update:additionalCharges="updateAdditionalCharges" />
+        <div class="d-flex justify-content-end">
+          <ButtonBaseButton type="submit" variant="primary" class="mt-4 btn-lg">Tambah</ButtonBaseButton>
+        </div>
+      </form>
+    </WidgetModalPad>
   </div>
 </template>
 
@@ -127,6 +140,8 @@ const roomType = ref('');
 const roomView = ref('');
 const start_date = ref(new Date());
 const end_date = ref(new Date());
+const addChargesData = ref([]);
+const additionalCharges = ref([]);
 navStore.setPage("Booking");
 navStore.setSubpage("Index Booking");
 const router = useRouter();
@@ -157,7 +172,19 @@ options.columnDefs = [
     return $formatDateTime(data);
   }}
 ];
+const selectedId = ref('');
 const addAdditionalCharge = async (id)=>{
+  const { data,status} = await $fetch(`${config.public.baseUrl}bookings/additional-charges`,{
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + authStore.getToken,
+    },
+  });
+  if(status == 1){
+    addChargesData.value = data;
+    selectedId.value = id;
+    $bus.$emit("openModal", {});
+  }
   //router.push('/booking/add-additional-charge?id='+id);
 }
 const checkout = async (id)=>{
@@ -221,6 +248,60 @@ const exportBooking = async()=>{
       link.download = 'booking.xlsx'
       link.target = '_blank'
       link.click() 
+}
+
+const handleAddAdditionalCharge = async () => {
+  const form = new FormData();
+  form.append('booking_id',selectedId.value);
+  additionalCharges.value.forEach(charge=>{
+    form.append('name[]',charge.name);
+    form.append('price[]',charge.price);
+    form.append('quantity[]',charge.qty);
+    form.append('discount[]',charge.discount);
+  });
+  const { data,status} = await $fetch(`${config.public.baseUrl}bookings/add-additional-charges`,{
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + authStore.getToken,
+    },
+    body:form
+  });
+  if(status == 1){
+    //addChargesData.value = data;
+    dt.ajax.reload();
+    $bus.$emit("closeModal", {});
+  }
+
+}
+
+const updateAdditionalCharges = (data)=>{
+  console.log("Additional Charges",data); 
+  additionalCharges.value = data;
+}
+
+const viewDetail = async (id)=>{
+  router.push('/booking/detail/'+id);
+}
+
+const extendsBooking = async (id)=>{
+  $swal.fire({
+    title:'Extends Booking',
+    text:'Yakin akan diperpanjang?',
+    icon:'warning',
+    showCancelButton:true
+  }).then(async result=>{
+    if(result.isConfirmed){
+      const { data,status} = await $fetch(`${config.public.baseUrl}bookings/extends`,{
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer ' + authStore.getToken
+        },
+        body:{
+          id:id
+        }
+      })
+    }
+  })
 }
 
 
