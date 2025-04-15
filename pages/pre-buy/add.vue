@@ -15,23 +15,23 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Start Date</label>
+                                <label class="form-label t-required">Start Date</label>
                                 <VueDatePicker
                                     v-model="formData.start_date"
                                     auto-apply
                                     :format="'yyyy-MM-dd'"
-                                    class="mb-3"
+                                    class="mb-3" required
                                 />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">End Date</label>
+                                <label class="form-label t-required">End Date</label>
                                 <VueDatePicker
                                     v-model="formData.end_date"
                                     auto-apply
                                     :format="'yyyy-MM-dd'"
-                                    class="mb-3"
+                                    class="mb-3" required
                                 />
                             </div>
                         </div>

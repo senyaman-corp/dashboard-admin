@@ -7,6 +7,7 @@
       :placeholder="placeholder"
       class="form-control"
       :required="required"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -23,6 +24,8 @@ const props = defineProps({
   options: Object,
   currencySymbol: String,
   required: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  flex: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["update:modelValue"]);

@@ -16,7 +16,9 @@
           </div>
           <div class="col-md-12">
             <div class="table-responsive w-100">
-              <DataTable class="table table-striped table-bordered" :data="data" :columns="columns" :options="options" />
+              <client-only>
+                <DataTable class="table table-striped table-bordered" :data="data" :columns="columns" :options="options" />
+              </client-only>
             </div>
             <div class="row justify-content-end">
               <div class="col-md-1">
@@ -43,7 +45,7 @@
               </div>
             </div>
             <div class="d-flex justify-content-end my-4">
-              <ButtonBaseButton :variant="primary" @click="prosesCheckout" class="btn-lg">Checkout</ButtonBaseButton>
+              <ButtonBaseButton variant="primary" @click="prosesCheckout" class="btn-lg">Checkout</ButtonBaseButton>
             </div>
           </div>
         </div>

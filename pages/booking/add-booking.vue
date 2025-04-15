@@ -154,11 +154,14 @@ const formData = ref({
       noofadult: "",
       noofchildren: "",
       early_checkin: 0,
+      additional_charges:[],
+      /*
       additional_name: "",
       additional_qty: 0,
       additional_base_price: 0,
       additional_discount: 0,
       additional_total_price: 0,
+      */
       with_vehicle: null,
       no_pol: "",
       jenis: "",
@@ -221,12 +224,14 @@ const handleSubmit = async () => {
     form.append("early_checkin[]", room.early_checkin || 0);
     form.append("noofadult[]", room.noofadult || "");
     form.append("noofchildren[]", room.noofchildren || "");
-    form.append("additional_name[]", room.additional_name || "");
+    form.append("additional_charges[]", room.additional_charges || []);
+    /*
     form.append("additional_qty[]", room.additional_qty || "");
     form.append("additional_base_price[]", room.additional_base_price || "");
     form.append("additional_discount[]", room.additional_discount || "");
     form.append("additional_total_price[]", room.additional_total_price || 0);
-    form.append("with_vehicle[]", room.with_vehicle || null);
+    */
+    form.append("with_vehicle[]", room.with_vehicle);
     form.append("no_pol[]", room.no_pol || "");
     form.append("jenis[]", room.jenis || "");
     form.append("merek[]", room.merek || "");
@@ -327,7 +332,6 @@ onMounted(() => {
   $bus.$emit("pagechange", { page: "Booking", subpage: "Index Booking" });
   $bus.$on("update:model-value", (value) => {
     formData.value.selectedRooms[value.index] = value;
-    console.log(value);
   });
 });
 
