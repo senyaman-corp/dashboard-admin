@@ -112,25 +112,24 @@
               <span v-if="status.status == 'EC'">{{ $moment(status.booking_room?.checkout_date).format('DD-MMMM-YYYY HH:mm') }}</span>
               <span v-else>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
             </div>
-            <div>
-                <div class="t-bold">Booking</div>
-                <div class="d-flex justify-content-between">
-                  <span>Guest</span>
-                  <span>{{ status.booking_room.guest}}</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <span>Checkin</span>
-                  <span>{{ status.booking_room.checkin_date}}</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <span>Checkout</span>
-                  <span>{{ status.booking_room.checkout_date}}</span>
-                </div>
-                <div v-if="status.status == 'EC'" class="d-flex justify-content-end">
-                  <ButtonBaseButton @click="checkout(status.booking_room.id)" variant="primary" v-if="checkoutDay(status.booking_room.checkout_date)">Checkout</ButtonBaseButton>
-                </div>
-            </div>
-
+          </div>
+          <div v-if="bookingAvailable(detail.status)">
+              <div class="t-bold">Booking</div>
+              <div class="d-flex justify-content-between">
+                <span>Guest</span>
+                <span>{{ bookingRoom.guest}}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Checkin</span>
+                <span>{{ bookingRoom.checkin_date}}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Checkout</span>
+                <span>{{ bookingRoom.checkout_date}}</span>
+              </div>
+              <div v-if="statusEC(detail.status)" class="d-flex justify-content-end">
+                <ButtonBaseButton @click="checkout(bookingRoom.id)" variant="primary" v-if="checkoutDay(bookingRoom.checkout_date)">Checkout</ButtonBaseButton>
+              </div>
           </div>
           
         </div>
@@ -164,6 +163,7 @@ const roomView = ref('');
 const detail = ref({});
 const rooms = ref([]);
 const preservedRooms = ref([]);
+const bookingRoom = ref(null);
 const months = [
   "January",
   "February",
@@ -346,6 +346,23 @@ const checkout = async(id)=>{
   navigateTo('/booking/checkout?booking_id='+id);
 }
 
+const bookingAvailable = (status)=>{
+  status.forEach(s=>{
+    if(s.booking_room !== null){
+      bookingRoom.value = s.booking_room;
+    }
+  });
+  return bookingRoom.value !== null;
+}
+
+const statusEC = (status)=>{
+  status.forEach(s=>{
+    if(s.status == 'EC'){
+      return true;
+    }
+  });
+  return false;
+}
 
 watch([selectedMonth, selectedYear], () => {
   initializePrices();
