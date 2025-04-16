@@ -431,6 +431,7 @@
         jenis: jenis.value,
         merek: merek.value,
         sub_total: subTotal.value,
+        booking_period: booking_period.value
       };
       $bus.$emit("update:model-value", modelValue);
   },
