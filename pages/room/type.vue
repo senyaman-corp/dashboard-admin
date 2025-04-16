@@ -172,7 +172,7 @@
     const navStore = useNavigatorStore();
     const authStore = useAuthStore();
     const { $bus } = useNuxtApp();
-    navStore.setPage("Room");
+    navStore.setPage("Setting");
     navStore.setSubpage("Room Type");
     const columns = ref([
         { title: "Type", data: "type" },
@@ -323,7 +323,7 @@
         }
     };
     onMounted(() => {
-        $bus.$emit("pagechange", { page: "Room", subpage: "Room Type" });
+        $bus.$emit("pagechange", { page: "Setting", subpage: "Room Type" });
     });
 </script>
 

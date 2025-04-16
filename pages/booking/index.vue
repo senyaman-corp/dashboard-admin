@@ -3,6 +3,11 @@
     <div class="card-body">
       <div class="row justify-content-between align-items-center">
         <h3 class="col-lg-3 flex-grow-1 mb-1">Data Booking</h3>
+        <div class="col-lg pe-sm-1 mb-1">
+          <label class="">
+            <input type="checkbox" class="form-check-input me-2" v-model="isChecked" @change="showExpectedCheckout"> Expected Checkout
+          </label>
+        </div>
         <div class="col-lg-2 pe-sm-1 mb-1">
           <select class="form-select form-select-md"
               :id="'year'"
@@ -19,6 +24,7 @@
               </option>
             </select>
         </div>
+       
         <div class="col-lg-2 pe-sm-1 mb-1">
           <select class="form-select form-select-md"
               :id="'year'"
@@ -142,6 +148,8 @@ const start_date = ref(new Date());
 const end_date = ref(new Date());
 const addChargesData = ref([]);
 const additionalCharges = ref([]);
+const isChecked = ref(false);
+
 navStore.setPage("Booking");
 navStore.setSubpage("Index Booking");
 const router = useRouter();
@@ -158,7 +166,8 @@ const columns = ref([
 ]);
 const body = ref({
   type:'',
-  view:''
+  view:'',
+  expected_checkout:0,
 })
 const options = $dataTableOptions(config.public.baseUrl + 'bookings/list', authStore.getToken,body.value);
 options.order = [[8,'DESC']];
@@ -283,6 +292,16 @@ const viewDetail = async (id)=>{
   router.push('/booking/detail/'+id);
 }
 
+const showExpectedCheckout = (e)=>{
+  if(e.target.checked){
+    body.value.expected_checkout = 1;
+  }else{
+    body.value.expected_checkout = 0;
+  }
+  dt.ajax.reload();
+}
+
+
 const extendsBooking = async (id)=>{
   $swal.fire({
     title:'Extends Booking',
@@ -303,6 +322,7 @@ const extendsBooking = async (id)=>{
     }
   })
 }
+
 
 
 let dt;

@@ -46,7 +46,7 @@ const config = useRuntimeConfig();
 const authStore = useAuthStore();
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
-navStore.setPage("Room");
+navStore.setPage("Setting");
 navStore.setSubpage("Index Price");
 const { $bus,$swal,$moment } = useNuxtApp();
 const formData = ref({
@@ -114,7 +114,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Price" });
+  $bus.$emit("pagechange", { page: "Setting", subpage: "Index Price" });
 });
 
 definePageMeta({

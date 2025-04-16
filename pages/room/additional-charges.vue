@@ -59,7 +59,7 @@
     const navStore = useNavigatorStore();
     const authStore = useAuthStore();
     const { $bus,$dataTableOptions,$swal } = useNuxtApp();
-    navStore.setPage("Room");
+    navStore.setPage("Setting");
     navStore.setSubpage("Additional Charges");
     const name = ref('');
     const base_price = ref('');
@@ -136,7 +136,7 @@
     let dt;
     const table = ref();
     onMounted(() => {
-        $bus.$emit("pagechange", { page: "Room", subpage: "Additional Charges" });
+        $bus.$emit("pagechange", { page: "Setting", subpage: "Additional Charges" });
         nextTick().then(() => {
             dt = table.value.dt;
         });

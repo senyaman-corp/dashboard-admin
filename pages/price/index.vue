@@ -98,7 +98,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
-navStore.setPage("Room");
+navStore.setPage("Setting");
 navStore.setSubpage("Index Price");
 import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
@@ -231,7 +231,7 @@ const filterByView = () => {
 };
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Index Price" });
+  $bus.$emit("pagechange", { page: "Setting", subpage: "Index Price" });
 });
 
 definePageMeta({

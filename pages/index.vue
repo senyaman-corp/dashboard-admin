@@ -1,8 +1,13 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center min-vh-65">
-    <div>
-      <NuxtImg class="w-100" preload loading="lazy" :src="'/assets/images/logo_cordova.png'" alt="logo" />
-      <h2 class="mt-4 text-primary text-center">SELAMAT DATANG</h2>
+  <div>
+    <div v-if="user && user.roles === 'Direksi'">
+      <WidgetDashboard />
+    </div>
+    <div v-else class="d-flex justify-content-center align-items-center min-vh-65">
+      <div>
+        <NuxtImg class="w-100" preload loading="lazy" :src="'/assets/images/logo_cordova.png'" alt="logo" />
+        <h2 class="mt-4 text-primary text-center">SELAMAT DATANG</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -22,7 +27,7 @@ const formData = ref({
   dropdown: "",
   items: [""],
 });
-
+const user = authStore.getUser;
 const submit = () => {
   console.log("Submitted:", formData.value);
 };
