@@ -83,39 +83,52 @@
             <WidgetRoomBooking :index="index" @remove-room="removeRoom" />
           </div>
         </div>
-
+        
         <div class="flex justify-between items-center mt-4">
           <ButtonBaseButton @click="addRoom" variant="secondary" type="button">
             Add Another Room
           </ButtonBaseButton>
-
-          <div class="row justify-content-end">
-            <div class="col-md-1">
-              <h5>Total</h5>
-              
-            </div>
-            <div class="col-md-1 text-end">
-              <h5>{{ calculateTotal.toLocaleString("id-ID") }}</h5>
-            </div>
+        </div>
+        
+        <div class="row justify-content-end">
+          <div class="col-md-1">
+            <h5>Total</h5>
+            
           </div>
-          <div class="row justify-content-end">
-            <div class="col-md-1">
-              <h5>TAX</h5>
-            </div>
-            <div class="col-md-1 text-end">
-              <h5>{{ calculateTax.toLocaleString("id-ID") }}</h5>
-            </div>
-          </div>
-          <div class="row justify-content-end">
-            <div class="col-md-1">
-              <h5>Grand Total</h5>
-              
-            </div>
-            <div class="col-md-1 text-end">
-              <h5>{{ calculateFinalPrice.toLocaleString("id-ID") }}</h5>
-            </div>
+          <div class="col-md-1 text-end">
+            <h5>{{ calculateTotal.toLocaleString("id-ID") }}</h5>
           </div>
         </div>
+        <div class="row justify-content-end">
+          <div class="col-md-2 d-flex justify-content-between">
+            <label class="text-18 form-check-label">
+              Include Tax
+            </label>
+            <input
+                type="checkbox"
+                class="form-check-input"
+                v-model="includeTax"
+              />
+          </div>
+        </div>
+        <div class="row justify-content-end" v-if="includeTax">
+          <div class="col-md-1">
+            <h5>TAX</h5>
+          </div>
+          <div class="col-md-1 text-end">
+            <h5>{{ calculateTax.toLocaleString("id-ID") }}</h5>
+          </div>
+        </div>
+        <div class="row justify-content-end">
+          <div class="col-md-1">
+            <h5>Grand Total</h5>
+            
+          </div>
+          <div class="col-md-1 text-end">
+            <h5>{{ calculateFinalPrice.toLocaleString("id-ID") }}</h5>
+          </div>
+        </div>
+        
         <div class="d-flex justify-content-end">
           <ButtonBaseButton type="submit" variant="primary" class="mt-4 btn-lg">Submit Booking</ButtonBaseButton>
         </div>
@@ -130,6 +143,7 @@ import { useAuthStore } from "~/stores/auth";
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const { $bus, $swal, $formatDate } = useNuxtApp();
+const includeTax = ref(false);
 const formData = ref({
   guest_id: "",
   name: "",
@@ -225,6 +239,7 @@ const handleSubmit = async () => {
     form.append("noofadult[]", room.noofadult || "");
     form.append("noofchildren[]", room.noofchildren || "");
     form.append("additional_charges[]", room.additional_charges || []);
+    
     /*
     form.append("additional_qty[]", room.additional_qty || "");
     form.append("additional_base_price[]", room.additional_base_price || "");
@@ -235,6 +250,7 @@ const handleSubmit = async () => {
     form.append("no_pol[]", room.no_pol || "");
     form.append("jenis[]", room.jenis || "");
     form.append("merek[]", room.merek || "");
+    form.append('include_tax',includeTax.value ? 1 : 0)
   });
 
   if (formData.value.ktp) {
@@ -287,7 +303,7 @@ const calculateTotal = computed(() => {
   }, 0);
 });
 const calculateTax = computed(() => {
-  return Math.ceil(calculateTotal.value * 0.23 /1000) * 1000;
+  return includeTax.value ? Math.ceil(calculateTotal.value * 0.23 /1000) * 1000 : 0;
 });
 const calculateFinalPrice = computed(() => {
   formData.value.total_price = calculateTotal.value + calculateTax.value;
@@ -359,5 +375,8 @@ tr.selected {
 }
 .vue-tel-input{
   border:1px solid #f0f0f0;
+}
+.form-check-input{
+  border:1px solid #a5aeb1 !important;
 }
 </style>

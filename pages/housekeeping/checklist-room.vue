@@ -7,32 +7,34 @@
         </div>
     
         <div class="table-responsive mt-3 min-vh-65">
-          <DataTable
-            class="table table-striped table-bordered"
-            :columns="columns"
-            :options="options"
-            style="width: 100%"
-            ref="table"
-            >
-            <template #column-7="props">
-                <a class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-target="#dropdown" aria-haspopup="true" aria-expanded="false">Aksi</a>
-                <ul id="dropdown" class="dropdown-menu p-2" aria-labelledby="dropdown">
-                    <li class="dropdown-item" v-if="props.rowData.status < 2">
-                      <a type="button" class="btn btn-default" @click="editList(props.rowData.id)">
-                          <i class="fas fa-edit me-2"></i>Edit</a>
-                    </li>
-                    <li class="dropdown-item" v-if="props.rowData.status < 2">
-                      <a type="button" class="btn btn-default" @click="deleteList(props.rowData.id)">
-                          <i class="fas fa-trash-alt me-2"></i>Delete</a>
-                    </li>
-                    <li class="dropdown-item" v-if="authStore.isSupervisor() && props.rowData.status < 2">
-                      <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id)">
-                          <i class="fas fa-info-circle me-2"></i>Detail
-                      </a>
-                    </li>
-                </ul>
-            </template>
-          </DataTable>
+          <client-only>
+            <DataTable
+              class="table table-striped table-bordered"
+              :columns="columns"
+              :options="options"
+              style="width: 100%"
+              ref="table"
+              >
+              <template #column-7="props">
+                  <a class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-target="#dropdown" aria-haspopup="true" aria-expanded="false">Aksi</a>
+                  <ul id="dropdown" class="dropdown-menu p-2" aria-labelledby="dropdown">
+                      <li class="dropdown-item" v-if="props.rowData.status < 2">
+                        <a type="button" class="btn btn-default" @click="editList(props.rowData.id)">
+                            <i class="fas fa-edit me-2"></i>Edit</a>
+                      </li>
+                      <li class="dropdown-item" v-if="props.rowData.status < 2">
+                        <a type="button" class="btn btn-default" @click="deleteList(props.rowData.id)">
+                            <i class="fas fa-trash-alt me-2"></i>Delete</a>
+                      </li>
+                      <li class="dropdown-item" v-if="authStore.isSupervisor() && props.rowData.status < 2">
+                        <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id)">
+                            <i class="fas fa-info-circle me-2"></i>Detail
+                        </a>
+                      </li>
+                  </ul>
+              </template>
+            </DataTable>
+          </client-only>
         </div>
       </div>
   </div>

@@ -11,6 +11,7 @@
                             auto-apply
                             :format="'yyyy-MM-dd'"
                             class="mb-3"
+                            :min-date="new Date()"
                         />
                     </div>
                 </div>
@@ -92,11 +93,11 @@ const { data, status } = await $fetch(`${config.public.baseUrl}housekeeping/dirt
 });
 if (status == 1) {
     roomOptions.value = data.rooms.map((room) => ({
-        label: `${room.room_number} - ${room.name}`,
-        value: room.id,
-        type: room.type,
-        view: room.view,
-        name: room.name,
+        label: `${room.room?.room_number} - ${room.room?.name}`,
+        value: room.room?.id,
+        type: room.room?.type,
+        view: room.room?.view,
+        name: room.room?.name,
     }));
     checklistItems.value = data.items
 }

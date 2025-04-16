@@ -51,8 +51,8 @@
           :required="true" />
       </div>
       <div class="col-md-6">
-        <InputBaseInput
-          type="number"
+        <InputAutonumeric
+         
           v-model="discount"
           label="Discount"
           placeholder="Masukkan Harga Discount" />
@@ -90,13 +90,13 @@
             <option value="Breakfast">Breakfast</option>
             <option value="Non Breakfast">Non Breakfast</option>
           </select>
-          <div class="mb-3">
+          <div class="mb-3" v-if="booking_package === 'Breakfast'">
             <InputAutonumeric
               v-model="price_booking_package"
               label="Kupon Breakfast @2 Orang"
               :disabled="booking_package !== 'Breakfast'"
               :required="booking_package === 'Breakfast'"
-              placeholder="Masukkan Price Booking Package" />
+              placeholder="Harga Breakfast" />
           </div>
         </div>
       </div>
@@ -152,12 +152,8 @@
           <label for="" class="form-label">Preebuy?</label>
           <select class="form-select form-select-lg" v-model="preebuy">
             <option value="" selected>Pilih Preebuy</option>
-            <option
-              v-for="prebuy in preBuyData"
-              :key="prebuy.id"
-              :value="prebuy.id">
-              {{ prebuy.vendor }}
-            </option>
+            <option value="1">Ya</option>
+            <option value="0">Tidak</option>
           </select>
         </div>
       </div>
@@ -166,41 +162,47 @@
           <label for="" class="form-label">Membawa kendaraan?</label>
           <select class="form-select form-select-lg" v-model="with_vehicle">
             <option value="" selected>Membawa kendaraan?</option>
-            <option value="1">Yes</option>
-            <option value="0">No</option>
+            <option value="1">Ya</option>
+            <option value="0">Tidak</option>
           </select>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-
-      </div>
-      <div class="col-md-6" v-if="with_vehicle == 1">
-        <InputBaseInput
-          v-model="no_pol"
-          label="No Polisi Kendaraan"
-          placeholder="Masukkan No Polisi Kendaraan" />
       </div>
     </div>
     <div class="row" v-if="with_vehicle == 1">
       <div class="col-md-6">
         <InputBaseInput
+          v-model="no_pol"
+          label="No Polisi Kendaraan"
+          placeholder="Masukkan No Polisi Kendaraan" />
+      </div>
+      <div class="col-md-6" >
+        <InputBaseInput
           v-model="jenis"
           label="Jenis Kendaraan"
           placeholder="Masukkan Jenis Kendaraan" />
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-6">
-        <InputBaseInput
-          v-model="merek"
-          label="Merek Kendaraan"
-          placeholder="Masukkan Merek Kendaraan" />
+        <div class="mb-3">
+          <label class="form-label">Periode</label>
+          <select class="form-select form-select-lg" v-model="booking_period">
+            <option value="harian">Harian</option>
+            <option value="mingguan">Mingguan</option>
+            <option value="bulanan">Bulanan</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="text-end mt-5">
+          <h5 class="text-end">
+            Sub Total = Rp
+            {{ subTotal.toLocaleString("id-ID") }}
+          </h5>
+        </div>
       </div>
     </div>
-    <h5>
-      Sub Total = Rp
-      {{ subTotal.toLocaleString("id-ID") }}
-    </h5>
+    
   </div>
 </template>
 
@@ -228,27 +230,22 @@
   const booking_package = ref("");
   const price_booking_package = ref(0);
   const early_checkin = ref(0);
-  const preebuy = ref("");
+  const preebuy = ref(0);
   const availableRooms = ref([]);
   const additional_name = ref("");
-  /*
-  const additional_qty = ref();
-  const additional_base_price = ref();
-  const additional_discount = ref();
-  const additional_total_price = ref();
-  */
   const with_vehicle = ref('');
   const no_pol = ref("");
   const jenis = ref("");
   const merek = ref("");
   const subTotal = ref(0);
+  const booking_period = ref("harian");
   const nextDay = ref(new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
   const emit = defineEmits(["update:modelValue", "remove-room"]);
   const additionalCharges = ref([]);
   const addChargesData = ref([]);
+
   const {
     $bus,
-    $formatUtcDateTime,
     $moment
   } = useNuxtApp();
 
@@ -261,6 +258,7 @@
   });
   if(status == 1){
     addChargesData.value = data;
+    
   }
   const removeRoom = (index) => {
     emit("remove-room", index);
@@ -328,6 +326,8 @@
         },
         body: {
           room_id: id,
+          start_date: $moment(checkin_date.value).format('YYYY-MM-DD'),
+          end_date: $moment(checkout_date.value).format('YYYY-MM-DD'),
         },
       }
     );
@@ -380,6 +380,17 @@
   const removeAdditionalCharge = (index) => {
     additionalCharges.value.splice(index, 1);
   };
+  watch(booking_package, (newValue) => {
+      if(newValue == 'Breakfast'){
+        addChargesData.value.forEach(itm=>{
+          if(itm.name == 'Breakfast'){
+            price_booking_package.value = itm.base_price;
+          }
+        });
+      }else{
+        price_booking_package.value = 0;
+      }
+  });
   watch(
   () =>  [
       checkin_date,
@@ -401,17 +412,7 @@
     ],
   (newValue, oldValue) => {
     calculate();
-    /*
-      let addCharges = [];
-      additionalCharges.value.forEach((item, index) => {
-          addCharges.push({
-            name: item.name,
-            price: item.price,
-            qty: item.qty,
-            discount: item.discount
-          })
-      });
-      */
+    
       const modelValue = {
         index: props.index,
         checkin_date: checkin_date.value,

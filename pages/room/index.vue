@@ -109,27 +109,27 @@
           <div  v-for="status in detail.status" :key="status.id">
             <div class="d-flex justify-content-between">
               <span>{{ status.status }}</span>
-              <span v-if="status.status == 'EC'">{{ $moment(status.booking_room?.checkout_date).format('DD-MMMM-YYYY HH:mm') }}</span>
-              <span v-else>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
+              <span>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
             </div>
           </div>
-          <div v-if="bookingAvailable(detail.status)">
-              <div class="t-bold">Booking</div>
+          <div v-if="detail.booking_room_price !== null">
+              <div class="d-flex justify-content-between">
+                <div class="t-bold">Booking</div>
+                <div>ID : {{ detail.booking_room_price?.booking_id }}</div>
+              </div>
               <div class="d-flex justify-content-between">
                 <span>Guest</span>
-                <span>{{ bookingRoom.guest}}</span>
+                <span>{{ detail.booking_room_price?.booking_room?.booking?.guest?.name}}</span>
               </div>
               <div class="d-flex justify-content-between">
                 <span>Checkin</span>
-                <span>{{ bookingRoom.checkin_date}}</span>
+                <span>{{ detail.booking_room_price?.booking_room?.checkin_date}}</span>
               </div>
               <div class="d-flex justify-content-between">
                 <span>Checkout</span>
-                <span>{{ bookingRoom.checkout_date}}</span>
+                <span>{{ detail.booking_room_price?.booking_room?.checkout_date}}</span>
               </div>
-              <div v-if="statusEC(detail.status)" class="d-flex justify-content-end">
-                <ButtonBaseButton @click="checkout(bookingRoom.id)" variant="primary" v-if="checkoutDay(bookingRoom.checkout_date)">Checkout</ButtonBaseButton>
-              </div>
+             
           </div>
           
         </div>
