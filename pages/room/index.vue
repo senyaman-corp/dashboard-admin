@@ -112,7 +112,7 @@
               <span v-if="status.status == 'EC'">{{ $moment(status.booking_room?.checkout_date).format('DD-MMMM-YYYY HH:mm') }}</span>
               <span v-else>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
             </div>
-            <div v-if="status.status == 'EC'">
+            <div>
                 <div class="t-bold">Booking</div>
                 <div class="d-flex justify-content-between">
                   <span>Guest</span>
@@ -126,10 +126,11 @@
                   <span>Checkout</span>
                   <span>{{ status.booking_room.checkout_date}}</span>
                 </div>
-                <div class="d-flex justify-content-end">
+                <div v-if="status.status == 'EC'" class="d-flex justify-content-end">
                   <ButtonBaseButton @click="checkout(status.booking_room.id)" variant="primary" v-if="checkoutDay(status.booking_room.checkout_date)">Checkout</ButtonBaseButton>
                 </div>
             </div>
+
           </div>
           
         </div>
