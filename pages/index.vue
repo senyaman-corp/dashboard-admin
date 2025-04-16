@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="user && user.roles === 'Direksi'">
+    <div v-if="user && (user.roles === 'Direksi' || user.roles === 'Admin')">
       <WidgetDashboard />
     </div>
     <div v-else class="d-flex justify-content-center align-items-center min-vh-65">
