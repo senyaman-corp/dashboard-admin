@@ -250,6 +250,7 @@ const handleSubmit = async () => {
     form.append("no_pol[]", room.no_pol || "");
     form.append("jenis[]", room.jenis || "");
     form.append("merek[]", room.merek || "");
+    form.append("booking_period[]", room.booking_period || "");
     form.append('include_tax',includeTax.value ? 1 : 0)
   });
 
