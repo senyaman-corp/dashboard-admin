@@ -142,7 +142,6 @@
   const authStore = useAuthStore();
   const {
     $bus,
-    $formatDateTime,
     $moment
   } = useNuxtApp();
   navStore.setPage("Housekeeping");
@@ -192,6 +191,8 @@
         month: date.value.year + "-" + bulans[date.value.month],
       }
 
+    }).catch(err=>{
+      $bus.$emit('loading', false)
     });
     $bus.$emit('loading', false)
     if (status == 1) {
@@ -329,6 +330,7 @@
       subpage: "Rooms"
     });
   });
+
 </script>
 
 <style scoped>

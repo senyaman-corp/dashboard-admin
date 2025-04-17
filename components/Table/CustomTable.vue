@@ -19,7 +19,7 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <tr v-for="room in rooms" :key="room.id">
           <td
-            class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200 td-room-name">
+            class="px-4 whitespace-nowrap border-bottom-1 border-gray-200 td-room-name">
             <div class="t-bold">{{ room.room_number }} - {{ room.name }}</div>
             <div class="small">{{ room.type }}({{ room.view }})</div>
           </td>
@@ -27,7 +27,7 @@
           <td
             v-for="(price, index) in room.actual_prices"
             :key="index"
-            class="px-4 py-2 text-center border-bottom-1 border-gray-200"
+            class="px-4 text-center border-bottom-1 border-gray-200"
             :class="[
               'room-item',
               't-bold',
@@ -45,18 +45,39 @@
             </div>
           </td>
         </tr>
+       
       </tbody>
+      <tfoot class="summary-footer">
+        <tr>
+            <td class="px-4 whitespace-nowrap border-bottom-1 border-gray-200 td-room-name">
+              <div class="w-100 text-16 text-center t-bold">Bulanan</div>
+              <div class="w-100 text-16 text-center">Ocupancies</div>
+              <div class="w-100 text-16 text-center">Procent</div>
+              </td>
+            <td
+              v-for="(sum, index) in summary"
+              :key="index"
+              class="text-center border-bottom-1 border-gray-200">
+              <div class="w-100 text-16 text-center t-bold bg-label-info text-primary">{{ parseInt(sum.bulanan) > 0 ? sum.bulanan : '-' }}</div>
+              <div class="w-100 text-16 text-center bg-label-danger text-hitem">{{ parseInt(sum.total) > 0 ? sum.total : '-' }}</div>
+              <div class="w-100 text-16 text-center text-info">{{ (sum.total / rooms.length * 100).toFixed(1) }} %</div>
+            </td>
+          </tr>
+      </tfoot>
     </table>
   </div>
 </template>
 
 <script setup>
-  defineProps({
+ const props =  defineProps({
     rooms: Array,
     daysInMonth: Number,
     isHoliday: Function,
+    summary:Array
   });
-
+ 
+ 
+ 
   defineEmits(["view-detail"]);
 </script>
 
@@ -101,5 +122,13 @@
 
   .th-room-name {
     z-index: 3;
+  }
+  .summary-footer{
+    position:sticky;
+    bottom:0;
+    background-color: #fff;
+  }
+  .text-hitem{
+  color:#000 !important;
   }
 </style>

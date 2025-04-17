@@ -59,6 +59,7 @@
           :days-in-month="daysInMonth"
           :is-holiday="isHoliday"
           @view-detail="viewDetail"
+          :summary="summary"
         />
       </div>
     </CardBaseCard>
@@ -164,6 +165,7 @@ const detail = ref({});
 const rooms = ref([]);
 const preservedRooms = ref([]);
 const bookingRoom = ref(null);
+const summary = ref([]);
 const months = [
   "January",
   "February",
@@ -222,19 +224,39 @@ const initData = async () => {
         month: date.value.year + "-" + bulans[date.value.month],
       },
     }
-  );
+  ).catch(err=>{
+    $bus.$emit('loading',false)
+  });
   $bus.$emit('loading',false)
   if (status == 1) {
     rooms.value = data.rooms;
     preservedRooms.value = data.rooms;
+    //summary.value = data.summary;
     roomTypes.value = data.room_type;
     roomStore.setRoomTypes(data.room_type);
+    calculatePercentage(rooms.value);
   } else {
     if (statusCode == 403) {
       //redirect login;
     }
   }
 };
+const calculatePercentage = (rooms) => {
+    summary.value = [];
+    rooms.forEach((room) => {
+      room.actual_prices.forEach((price, index) => {
+        if (summary.value[index]) {
+          summary.value[index].bulanan += price.periode === "bulanan" ? 1 : 0;
+          summary.value[index].total += price.status == "O" ? 1 : 0;
+        } else {
+          summary.value[index] = {
+            bulanan: price.periode === "bulanan" ? 1 : 0,
+            total: price.status == "O" ? 1 : 0,
+          };
+        }
+      });
+    });
+  };
 
 function isHoliday(day) {
   if (date.value === undefined) {
@@ -303,6 +325,7 @@ const viewDetail = async (id, index) => {
 const filterByType = () => {
   if (roomType.value == "" && roomView.value == "") {
     rooms.value = preservedRooms.value;
+    calculatePercentage(rooms.value);
     return;
   }
   if (preservedRooms.value.length > 0) {
@@ -313,6 +336,7 @@ const filterByType = () => {
       filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value);
     }
     rooms.value = filteredRooms;
+    calculatePercentage(rooms.value);
   }
 };
 
@@ -329,6 +353,7 @@ const filterByView = () => {
       filteredRooms = preservedRooms.value.filter((room) => room.view === roomView.value);
     }
     rooms.value = filteredRooms;
+    calculatePercentage(rooms.value);
   }
 };
 

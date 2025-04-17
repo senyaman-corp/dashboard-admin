@@ -20,7 +20,7 @@ const navStore = useNavigatorStore();
 const authStore = useAuthStore();
 navStore.setPage("Home");
 navStore.setSubpage("Home");
-const { $bus } = useNuxtApp();
+const { $bus,$swal } = useNuxtApp();
 const formData = ref({
   date: "",
   combo: "",
@@ -33,6 +33,7 @@ const submit = () => {
 };
 onMounted(() => {
   $bus.$emit("pagechange", { page: "Home", subpage: "Home" });
+  
 });
 definePageMeta({
   middleware: ["auth"],
