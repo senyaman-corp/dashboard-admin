@@ -29,7 +29,7 @@
         <div class="mb-3">
           <label  class="form-label">Roles</label>
           <select class="form-select" v-model="formData.roles">
-            <option v-for="option in ['Admin', 'Housekeeping', 'Front Office', 'Accounting', 'Technical','Direksi']" :key="option" :value="option">
+            <option v-for="option in ['Admin', 'Housekeeping', 'Front Office', 'Accounting', 'Technical','Direksi','Co Working']" :key="option" :value="option">
               {{ option }}
             </option>
           </select>

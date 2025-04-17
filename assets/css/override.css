@@ -76,6 +76,22 @@
     color: red;
 }
 
+.td-room-name {
+  left: 0px;
+  position: sticky;
+  background-color: #fff;
+  ;
+}
+
+.th-sticky {
+  left: 0px;
+  position: sticky;
+}
+
+.th-room-name {
+  z-index: 3;
+}
+
 
 *{
     border:1px solid transparent;

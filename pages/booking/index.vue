@@ -181,6 +181,7 @@ options.columnDefs = [
     return $formatDateTime(data);
   }}
 ];
+
 const selectedId = ref('');
 const addAdditionalCharge = async (id)=>{
   const { data,status} = await $fetch(`${config.public.baseUrl}bookings/additional-charges`,{

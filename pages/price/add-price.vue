@@ -29,7 +29,7 @@
                   placeholder="Masukkan Harga Kamar"
                   required
                 />
-                <ButtonBaseButton type="submit" variant="primary">Submit</ButtonBaseButton>
+                <ButtonBaseButton type="submit" variant="primary" class="btn-lg">Submit</ButtonBaseButton>
             </FormBaseForm>
         </CardBaseCard>
     </div>

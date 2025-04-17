@@ -53,7 +53,7 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="room in rooms" :key="room.id">
               <td
-                class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200 td-room-name">
+                class="px-4  whitespace-nowrap border-bottom-1 border-gray-200 td-room-name">
                 <div class="t-bold">
                   {{ room.room_number }} - {{ room.name }}
                 </div>
@@ -63,8 +63,8 @@
               <td
                 v-for="(price, index) in room.actual_prices"
                 :key="index"
-                class="px-4 py-2 text-center border-bottom-1 border-gray-200 t-bold text-16"
-                :class="{ 'text-danger': isHoliday(index + 1),'current-day':new Date().getDate() == index + 1 }">
+                class="px-4  text-center border-bottom-1 border-gray-200"
+                :class="{ 'text-danger': isHoliday(index + 1),'current-day':new Date().getDate() == index + 1,'t-bold':price.status !== 'VR','text-16':price.status !== 'VR' }">
                 <div class="room-item" @click="viewDetail(room.id, index)">
                   {{ price.status }}
                 </div>
@@ -105,6 +105,7 @@
                 <span>Petugas</span>
                 <span>{{ status.created_by.name }}</span>
               </div>
+              
               <!-- 
               <div v-if="status.status == 'EC'">
                 <div class="t-bold">Booking</div>
@@ -121,6 +122,16 @@
                   <span>{{ $moment(status.booking_room?.checkout_date).format('DD MMMM YYYY HH:mm')}}</span>
                 </div>
                  -->
+            </div>
+            <div v-if="shouldShowButton(detail.status)" class="d-flex justify-content-end my-3">
+                  <ButtonBaseButton @click="verifyList(detail)">
+                    Verify
+                  </ButtonBaseButton>
+            </div>
+            <div v-if="shouldShowChecklistButton(detail.status)" class="d-flex justify-content-end my-3">
+                  <ButtonBaseButton @click="checkListRoom(detail)">
+                    Checklist Room
+                  </ButtonBaseButton>
             </div>
           </div>
         </div>
@@ -307,6 +318,64 @@
     }
   }
 
+  const shouldShowButton = (status) => {
+    const user = authStore.getUser;
+    let lastStatus = status[status.length - 1];
+    if(lastStatus !== undefined) {
+      if(lastStatus.status === 'VC' && user.jabatan == 'Supervisor') {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const shouldShowChecklistButton = (status) => {
+    let lastStatus = status[status.length - 1];
+    if(lastStatus !== undefined) {
+      if(lastStatus.status === 'CO') {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const verifyList = async (detail) => {
+    let status = detail.status[0];
+    if(status !== undefined) {
+      $fetch(`${config.public.baseUrl}housekeeping/find-checklist-room`, {
+        method: 'POST',
+        lazy: true,
+        headers: {
+          'Authorization': 'Bearer '+ authStore.getToken
+        },
+        body: {
+          id: status.room_id,
+          date:status.tanggal
+        }
+      }).then(response => {
+        if(response.status == 1) {
+          navigateTo(`/housekeeping/detail/${response.data.id}`);
+        } else {
+          $bus.$emit('alert', {
+            type: 'danger',
+            message: 'Checklist Room belum dibuat'
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
+    }
+    //navigateTo(`/housekeeping/detail/${detail.id}`);
+  };
+
+  const checkListRoom = async (detail) => {
+    navigateTo(`/housekeeping/add-check-list?id=${detail.id}`);
+    
+  };
+
+  
   // Watch for month/year changes
   watch([selectedMonth, selectedYear], () => {
     initializePrices();
