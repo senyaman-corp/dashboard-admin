@@ -2,6 +2,11 @@
   <div>
     <div class="d-flex justify-content-between align-items-center">
       <h3>Pre Buy Detail</h3>
+      <ButtonBaseButton 
+                variant="primary"
+                @click="updatePrebuy"
+                >Tambah</ButtonBaseButton
+                >
     </div>
     <div class="row">
       <div class="col-md-6 mb-3">
@@ -95,6 +100,7 @@ const { $bus ,$formatDateTime,$formatAngka} = useNuxtApp();
 navStore.setPage("PreBuy");
 navStore.setSubpage("Index PreBuy");
 const route = useRoute();
+const router = useRouter();
 const prebuy = ref();
 const { data,status} = await $fetch(config.public.baseUrl + 'pre-buy/detail',{
     method: "POST",
@@ -142,6 +148,10 @@ const findBooked = (item) =>{
 
 const findSisa = (item) =>{
   return item.quantity - findBooked(item);
+}
+
+const updatePrebuy = ()=>{
+  router.push('/pre-buy/add?vendor='+prebuy.value.vendor);
 }
 
 </script>

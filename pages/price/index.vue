@@ -55,7 +55,7 @@
           <thead class="bg-gray-50">
             <tr>
               <th
-                class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
+                class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase th-room-name th-sticky"
               >
                 Room
               </th>
@@ -72,7 +72,7 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="(room, index) in rooms" :key="index">
               <td
-                class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200"
+                class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200 td-room-name"
               >
                 <div class="t-bold">{{ room.type }}</div>
                 <div class="small">{{ room.view }}</div>
@@ -99,7 +99,7 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
-navStore.setPage("Room");
+navStore.setPage("Setting");
 navStore.setSubpage("Index Price");
 
 import { useAuthStore } from "~/stores/auth";
@@ -233,7 +233,7 @@ const filterByView = () => {
 };
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Index Price" });
+  $bus.$emit("pagechange", { page: "Setting", subpage: "Index Price" });
 });
 
 definePageMeta({

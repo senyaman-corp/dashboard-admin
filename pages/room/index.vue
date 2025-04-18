@@ -4,16 +4,16 @@
       <div class="row justify-content-end align-items-center mb-3">
         <div class="col-lg-1 flex-grow-1 mb-1">
           <NuxtLink to="/room/add-room">
-            <ButtonBaseButton variant="primary"> Add Room </ButtonBaseButton>
+            <ButtonBaseButton variant="primary" class="btn-md"> Add Room </ButtonBaseButton>
           </NuxtLink>
         </div>
-        <div class="col-lg-3 mb-1">
+        <div class="col-lg-2 mb-1">
           <input
             v-model="searchQuery"
             @input="filterBySearch"
             type="text"
             class="form-control"
-            placeholder="Search Room Number / Name / Type"
+            placeholder="Search Room"
           />
         </div>
         <div class="col-lg-2 mb-1">
@@ -67,6 +67,7 @@
           :rooms="rooms"
           :days-in-month="daysInMonth"
           :is-holiday="isHoliday"
+          :summary="summary"
           @view-detail="viewDetail"
         />
       </div>
@@ -118,27 +119,27 @@
           <div  v-for="status in detail.status" :key="status.id">
             <div class="d-flex justify-content-between">
               <span>{{ status.status }}</span>
-              <span v-if="status.status == 'EC'">{{ $moment(status.booking_room?.checkout_date).format('DD-MMMM-YYYY HH:mm') }}</span>
-              <span v-else>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
+              <span>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
             </div>
-            <div v-if="status.status == 'EC'">
+          </div>
+          <div v-if="detail.booking_room_price !== null">
+              <div class="d-flex justify-content-between">
                 <div class="t-bold">Booking</div>
-                <div class="d-flex justify-content-between">
-                  <span>Guest</span>
-                  <span>{{ status.booking_room.guest}}</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <span>Checkin</span>
-                  <span>{{ status.booking_room.checkin_date}}</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <span>Checkout</span>
-                  <span>{{ status.booking_room.checkout_date}}</span>
-                </div>
-                <div class="d-flex justify-content-end">
-                  <ButtonBaseButton @click="checkout(status.booking_room.id)" variant="primary" v-if="checkoutDay(status.booking_room.checkout_date)">Checkout</ButtonBaseButton>
-                </div>
-            </div>
+                <div>ID : {{ detail.booking_room_price?.booking_id }}</div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Guest</span>
+                <span>{{ detail.booking_room_price?.booking_room?.booking?.guest?.name}}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Checkin</span>
+                <span>{{ detail.booking_room_price?.booking_room?.checkin_date}}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Checkout</span>
+                <span>{{ detail.booking_room_price?.booking_room?.checkout_date}}</span>
+              </div>
+             
           </div>
           
         </div>
@@ -172,6 +173,8 @@ const roomView = ref('');
 const detail = ref({});
 const rooms = ref([]);
 const preservedRooms = ref([]);
+const bookingRoom = ref(null);
+const summary = ref([]);
 const months = [
   "January",
   "February",
@@ -230,19 +233,38 @@ const initData = async () => {
         month: date.value.year + "-" + bulans[date.value.month],
       },
     }
-  );
+  ).catch(err=>{
+    $bus.$emit('loading',false)
+  });
   $bus.$emit('loading',false)
   if (status == 1) {
     rooms.value = data.rooms;
     preservedRooms.value = data.rooms;
     roomTypes.value = data.room_type;
     roomStore.setRoomTypes(data.room_type);
+    calculatePercentage(rooms.value);
   } else {
     if (statusCode == 403) {
       //redirect login;
     }
   }
 };
+const calculatePercentage = (rooms) => {
+    summary.value = [];
+    rooms.forEach((room) => {
+      room.actual_prices.forEach((price, index) => {
+        if (summary.value[index]) {
+          summary.value[index].bulanan += price.periode === "bulanan" ? 1 : 0;
+          summary.value[index].total += price.status == "O" ? 1 : 0;
+        } else {
+          summary.value[index] = {
+            bulanan: price.periode === "bulanan" ? 1 : 0,
+            total: price.status == "O" ? 1 : 0,
+          };
+        }
+      });
+    });
+  };
 
 function isHoliday(day) {
   if (date.value === undefined) {
@@ -252,6 +274,7 @@ function isHoliday(day) {
   tanggal.setFullYear(date.value.year, date.value.month, day);
   return tanggal.getDay() === 0 || tanggal.getDay() === 6;
 }
+
 const roomPrices = ref({});
 initData();
 const initializePrices = () => {
@@ -334,13 +357,13 @@ const applyFilters = () => {
 const filterByType = applyFilters;
 const filterByView = applyFilters;
 
-
 const searchQuery = ref('');
+
 const filterBySearch = () => {
   const query = searchQuery.value.trim().toLowerCase();
 
   if (query === '') {
-    applyFilters(); // fallback to type/view filters
+    applyFilters(); 
     return;
   }
 
@@ -365,6 +388,24 @@ const checkoutDay = (date)=>{
 
 const checkout = async(id)=>{
   navigateTo('/booking/checkout?booking_id='+id);
+}
+
+const bookingAvailable = (status)=>{
+  status.forEach(s=>{
+    if(s.booking_room !== null){
+      bookingRoom.value = s.booking_room;
+    }
+  });
+  return bookingRoom.value !== null;
+}
+
+const statusEC = (status)=>{
+  status.forEach(s=>{
+    if(s.status == 'EC'){
+      return true;
+    }
+  });
+  return false;
 }
 
 watch([selectedMonth, selectedYear], () => {

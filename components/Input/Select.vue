@@ -11,7 +11,6 @@
       :allow-empty="!required"
       track-by="value"
       label="label"
-      class="form-control"
       placeholder="Pilih opsi"
       @update:modelValue="updateValue"
     >
@@ -21,8 +20,8 @@
         >
       </template>
       <template #option="props">
-        <div class="option__desc">
-          <div class="option__title t-bold">{{ props.option.value }}</div>
+        <div class="">
+          <div class="option__title mb-2 t-bold">{{ props.option.room_number + '-' + props.option.name }}</div>
         </div>
       </template>
     </Multiselect>
@@ -43,34 +42,33 @@ const props = defineProps({
   searchable: { type: Boolean, default: true },
   required: { type: Boolean, default: false },
 });
-
 const emit = defineEmits(["update:modelValue"]);
-
-const selectedValue = ref(
-  props.multiple
-    ? props.options.filter((opt) => props.modelValue.includes(opt.value))
-    : props.options.find((opt) => opt.value === props.modelValue) || null
-);
-
-const updateValue = (value) => {
-  if (Array.isArray(value)) {
-    emit(
-      "update:modelValue",
-      value.map((item) => item.value)
-    );
-  } else {
-    emit("update:modelValue", value?.value || "");
-  }
-};
-
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    selectedValue.value = props.multiple
-      ? props.options.filter((opt) => newValue.includes(opt.value))
-      : props.options.find((opt) => opt.value === newValue) || null;
-  },
-  { immediate: true }
-);
+  
+  const selectedValue = ref(
+    props.options.find((opt) => opt.value === props.modelValue) || null
+  );
+  
+  const updateValue = (value) => {
+    if (Array.isArray(value)) {
+      emit(
+        "update:modelValue",
+        value.map((item) => item.value)
+      );
+    } else {
+      emit("update:modelValue", value?.value || "");
+    }
+  };
+  
+  watch(
+    () => props.modelValue,
+    (newValue) => {
+      selectedValue.value = props.options.find((opt) => opt.value === newValue) || null;
+    },
+    { immediate: true }
+  );
 </script>
-<style></style>
+<style>
+.multiselect{
+  font-size:14px !important;
+}
+</style>

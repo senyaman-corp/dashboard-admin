@@ -70,11 +70,16 @@
       body: {
           id: route.params.id,
       },
+  }).catch(err=>{
+    $bus.$emit('loading',false)
   });
   if (status == 1) {
     checkListRoom.value = data.data;
     checklistItems.value = data.items
-    itemChecked.value = JSON.parse(checkListRoom.value.checklist_items);
+    if(checkListRoom.value){
+        itemChecked.value = JSON.parse(checkListRoom.value.checklist_items);
+    }
+    //itemChecked.value = JSON.parse(checkListRoom.value.checklist_items);
   }
 
   const outOfOrder = async () => {

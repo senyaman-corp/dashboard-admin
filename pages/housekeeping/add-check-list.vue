@@ -11,6 +11,7 @@
                             auto-apply
                             :format="'yyyy-MM-dd'"
                             class="mb-3"
+                            :min-date="new Date()"
                         />
                     </div>
                 </div>
@@ -78,9 +79,10 @@ const config = useRuntimeConfig();
 const roomOptions = ref([]);
 const checklistItems = ref([]);
 const itemChecked = ref([]);
-const date = ref('');
+const date = ref(new Date());
 const roomId = ref('');
 const router = useRouter();
+const route = useRoute();
 const { data, status } = await $fetch(`${config.public.baseUrl}housekeeping/dirty-room`, {
     method: "POST",
     headers: {
@@ -92,11 +94,13 @@ const { data, status } = await $fetch(`${config.public.baseUrl}housekeeping/dirt
 });
 if (status == 1) {
     roomOptions.value = data.rooms.map((room) => ({
-        label: `${room.room_number} - ${room.name}`,
-        value: room.id,
-        type: room.type,
-        view: room.view,
-        name: room.name,
+        id: room.room?.id,
+        label: `${room.room?.room_number} - ${room.room?.name}`,
+        value: room.room?.id,
+        type: room.room?.type,
+        view: room.room?.view,
+        name: room.room?.name,
+        selected:false
     }));
     checklistItems.value = data.items
 }
@@ -125,7 +129,6 @@ const submit = async () => {
 };
 
 const toggleSelector = (e) => {
-    console.log(e.target.checked);
     let checked = e.target.checked;
     if(checked){
         checklistItems.value.map((item)=>{
@@ -141,7 +144,20 @@ watch(itemChecked,(newValue)=>{
     console.log(newValue)
 })
 
+onMounted(() => {
+    $bus.$emit("pagechange", { page: "Housekeeping", subpage: "Checklist Room" });
+    const id = route.query.id;
+    roomOptions.value.map((room)=>{
+        if(room.id == id){
+            room.selected = true;
+            roomId.value = room.id;
+        }
+    })
+});
 
+definePageMeta({
+    middleware: ["auth"],
+});
 
 </script>
 

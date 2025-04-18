@@ -80,6 +80,7 @@
   <style>
   #multiselect-style .multiselect {
     min-height: 18px !important;
+    font-size: 14px !important;
   }
   #multiselect-style .multiselect__tags {
     min-height: 18px !important;

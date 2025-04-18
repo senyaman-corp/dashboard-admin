@@ -4,14 +4,13 @@
       <thead class="bg-gray-50">
         <tr>
           <th
-            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase"
-          >
+            class="px-3 py-3 text-left font-medium text-gray-500 uppercase th-room-name th-sticky">
             Room
           </th>
           <th
             v-for="day in daysInMonth"
             :key="day"
-            class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
+            class="px-3 py-3 text-center font-medium text-gray-500 uppercase"
             :class="{ 'bg-danger': isHoliday(day),'current-day':new Date().getDate() == day }"
           >
             {{ day }}
@@ -21,16 +20,16 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <tr v-for="room in rooms" :key="room.id">
           <td
-            class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200"
+            class="px-3 py-1 whitespace-nowrap border-bottom-1 border-gray-200"
           >
-            <div class="text-16 t-bold">{{ room.room_number }} - {{ room.name }}</div>
+            <div class="t-bold">{{ room.room_number }} - {{ room.name }}</div>
             <div class="small">{{ room.type }}({{ room.view }})</div>
           </td>
 
           <td
             v-for="(price, index) in room.actual_prices"
             :key="index"
-            class="px-4 py-2 text-center border-bottom-1 border-gray-200"
+            class="px-3 text-center border-bottom-1 border-gray-200"
             :class="[
               'room-item',
               't-bold',
@@ -43,26 +42,43 @@
                 'text-danger': isHoliday(index + 1),
                 'current-day':new Date().getDate() == index + 1 
               },
-            ]"
-          >
+            ]">
             <div @click="$emit('view-detail', room.id, index)">
               {{ price.status }}
             </div>
           </td>
         </tr>
+       
       </tbody>
+      <tfoot class="summary-footer" v-if="summary != null">
+        <tr>
+            <td class="px-4 whitespace-nowrap border-bottom-1 border-gray-200 td-room-name">
+              <div class="w-100 text-16 text-center t-bold">Bulanan</div>
+              <div class="w-100 text-16 text-center">Ocupancies</div>
+              <div class="w-100 text-16 text-center">Procent</div>
+              </td>
+            <td
+              v-for="(sum, index) in summary"
+              :key="index"
+              class="text-center border-bottom-1 border-gray-200">
+              <div class="w-100 text-16 text-center t-bold bg-label-info text-primary">{{ parseInt(sum.bulanan) > 0 ? sum.bulanan : '-' }}</div>
+              <div class="w-100 text-16 text-center bg-label-danger text-hitem">{{ parseInt(sum.total) > 0 ? sum.total : '-' }}</div>
+              <div class="w-100 text-16 text-center text-info">{{ (sum.total / rooms.length * 100).toFixed(1) }} %</div>
+            </td>
+          </tr>
+      </tfoot>
     </table>
   </div>
 </template>
 
 <script setup>
-defineProps({
-  rooms: Array,
-  daysInMonth: Number,
-  isHoliday: Function,
-});
-
-defineEmits(["view-detail"]);
+ const props =  defineProps({
+    rooms: Array,
+    daysInMonth: Number,
+    isHoliday: Function,
+    summary:Array
+  });
+  defineEmits(["view-detail"]);
 </script>
 
 <style scoped>
@@ -91,5 +107,28 @@ th {
 .current-day{
   font-weight: bold;
   border: 2px solid #1e1e1e;
+}
+
+.td-room-name {
+  left: 0px;
+  position: sticky;
+  background-color: #e5e5e5;
+}
+
+.th-sticky {
+  left: 0px;
+  position: sticky;
+}
+
+.th-room-name {
+  z-index: 3;
+}
+.summary-footer{
+  position:sticky;
+  bottom:0;
+  background-color: #e5e5e5;
+}
+.text-hitem{
+  color:#000 !important;
 }
 </style>

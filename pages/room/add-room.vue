@@ -82,7 +82,7 @@ import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 navStore.setPage("Room");
 navStore.setSubpage("Add Room");
-const { $bus, $readInputFile } = useNuxtApp();
+const { $bus, $swal } = useNuxtApp();
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
 const roomTypes = ref([]);
@@ -94,7 +94,6 @@ const { data, status, statusCode} = await $fetch(`${config.public.baseUrl}rooms/
           },
       });
 if(status == 1){
- 
   data.room_type.map((item) => {
     item.value = item.type
     item.label= item.type;
@@ -131,6 +130,7 @@ const handleFile = (file) => {
 };
 
 const handleSubmit = async () => {
+  
   const form = new FormData();
   form.append("room_number", formData.value.room_number);
   form.append("name", formData.value.name);
@@ -144,7 +144,7 @@ const handleSubmit = async () => {
   if (formData.value.file) {
     form.append("file", formData.value.file);
   }
-
+  $bus.$emit('loading', true)
   try {
     $fetch(`${config.public.baseUrl}rooms/create`, {
       method: "POST",
@@ -154,13 +154,21 @@ const handleSubmit = async () => {
         Authorization: "Bearer " + authStore.getToken,
       },
     }).then((response) => {
+      $bus.$emit('loading', false);
       if (response.status == 1) {
-        console.log("Success:", response);
+        $bus.$emit("alert", {
+          type: "success",
+          message: "Berhasil menambahkan kamar",
+        });
+        setTimeout(() => {
+          navigateTo("/room");
+        }, 1000);
       } else {
         console.error("Error:", response);
       }
     });
   } catch (error) {
+    $bus.$emit('loading', false)
     console.error("Request failed:", error);
   }
 };

@@ -60,13 +60,16 @@ export const useAuthStore = defineStore('auth', {
         },
         isAuthorized(page){
             let user = this.getUser;
-            if(user.roles == null){
-                return false
+            if(user !== null){
+                if(user.roles == null){
+                    return false
+                }
+                if(user.roles == 'Admin'){
+                    return true
+                }
+                return user.roles?.toLowerCase() == page.toLowerCase();
             }
-            if(user.roles == 'Admin'){
-                return true
-            }
-            return user.roles?.toLowerCase() == page.toLowerCase();    
+            return false;
         },
         isSupervisor(){
             let user = this.getUser;

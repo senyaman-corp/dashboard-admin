@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <h3>Data Pre Buy</h3>
-            <div>
+            <div v-if="dataPrebuy.length == 0">
                 <ButtonBaseButton 
                 variant="primary"
                 to="/pre-buy/add"
@@ -51,6 +51,7 @@ const { $bus ,$dataTableOptions} = useNuxtApp();
 navStore.setPage("PreBuy");
 navStore.setSubpage("Index PreBuy");
 const router = useRouter();
+const dataPrebuy = ref([]);
 const options = $dataTableOptions(config.public.baseUrl + 'pre-buy/list', authStore.getToken);
 options.columnDefs = [
   { targets:[0],className:'text-start'},
@@ -65,6 +66,9 @@ options.columnDefs = [
             return data.length;
         }},
 ];
+options.footerCallback = function (row, data, start, end, display) {
+    dataPrebuy.value = data;
+}
 
 const columns = ref([
   { title: "ID", data: "id" },
@@ -76,6 +80,7 @@ const columns = ref([
   { title: "Booking", data: "pre_buy_booking" },
   { title: "Action", data: "id" },
 ]);
+
 
 const deletePrebuy = async (id) => {
     const { data, status } = await $fetch(`${config.public.baseUrl}pre-buy/delete`, {

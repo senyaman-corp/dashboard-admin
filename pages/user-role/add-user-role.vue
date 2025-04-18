@@ -3,7 +3,8 @@
     <CardBaseCard title="Tambah User">
       <FormBaseForm @submit="handleSubmit">
         <InputBaseInput
-          v-model="formData.name" required
+          v-model="formData.name" 
+          required
           label="Nama User"
           placeholder="Masukkan Nama User"
         />
@@ -28,7 +29,7 @@
         <div class="mb-3">
           <label  class="form-label">Roles</label>
           <select class="form-select" v-model="formData.roles">
-            <option v-for="option in ['Admin', 'Housekeeping', 'Front Office', 'Accounting', 'Technical']" :key="option" :value="option">
+            <option v-for="option in ['Admin', 'Housekeeping', 'Front Office', 'Accounting', 'Technical','Direksi','Co Working']" :key="option" :value="option">
               {{ option }}
             </option>
           </select>

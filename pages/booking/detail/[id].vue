@@ -47,7 +47,7 @@
               <div class="form-check" v-for="(feature, index) in extraFeatures" :key="index">
                 <input class="form-check-input" type="checkbox" :id="feature.name" />
                 <label class="form-check-label" :for="feature.name">
-                  {{ feature.name }} <span class="text-muted">(${{ feature.price }})</span>
+                  {{ feature.name }} <span class="text-muted">({{ feature.price }})</span>
                 </label>
               </div>
             </div>

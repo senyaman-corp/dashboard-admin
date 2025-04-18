@@ -21,6 +21,8 @@
                                     auto-apply
                                     :format="'yyyy-MM-dd'"
                                     class="mb-3" required
+                                    :min-date="new Date()"
+                                    locale="ID"
                                 />
                             </div>
                         </div>
@@ -32,24 +34,12 @@
                                     auto-apply
                                     :format="'yyyy-MM-dd'"
                                     class="mb-3" required
+                                    :min-date="new Date()"
+                                    locale="ID"
                                 />
                             </div>
                         </div>
                     </div>
-
-                    <!-- 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <InputBaseInput
-                                v-model="formData.quantity" required
-                                label="Quantity"
-                                placeholder="Masukkan Nama Vendor"
-                                type="number" inputmode="numeric"
-                                
-                                />
-                        </div>
-                    </div>
-                    -->
                     <div class="list-group">
                         <div class="list-group-item bg-gray">
                             <div class="row justify-content-between">
@@ -58,8 +48,9 @@
                                 <div class="col-lg-2">Price Per Room</div>
                             </div>
                         </div>
-                        <div class="list-group-item" v-for="(item,index) in roomTypes" :key="item.id">
-                            <div class="row justify-content-between">
+                        <div v-for="(item,index) in roomTypes" :key="item.id">
+                        <div class="list-group-item" v-if="item == 'Studio'">
+                            <div class="row justify-content-between" >
                                 <div class="col-lg-8 t-bold flex-grow-1">{{ item }}</div>
                                 <div class="col-lg-2">
                                     <InputAutonumeric
@@ -76,6 +67,7 @@
                                   
                                 </div>
                             </div>
+                        </div>
                         </div>
                     </div>   
                     <div class="d-flex justify-content-end my-4">
@@ -104,6 +96,7 @@ const { $bus ,$dataTableOptions} = useNuxtApp();
 navStore.setPage("PreBuy");
 navStore.setSubpage("Index PreBuy");
 const router = useRouter();
+const route = useRoute();
 const formData = ref({
   vendor: "",
   room_types: [],
@@ -124,7 +117,9 @@ const { data,status} = await $fetch(`${config.public.baseUrl}pre-buy/data`, {
 
 if(status == 1){
     vendors.value = data.vendors;
-    roomTypes.value = data.room_types
+    roomTypes.value = data.room_types.filter(itm=>{
+        return itm == 'Studio';
+    })
     roomTypes.value.map((item,index) => {
         formData.value.quantity.push(0);
         formData.value.price.push(0);
@@ -148,6 +143,10 @@ const handleSubmit = async () => {
 
 onMounted(() => {
   $bus.$emit("pagechange", { page: "PreBuy", subpage: "Add PreBuy" });
+  let vName = route.query.vendor;
+  if(vName !== undefined){
+    formData.value.vendor = vName;
+  }
 });
 </script>
 

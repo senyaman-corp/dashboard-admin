@@ -1,35 +1,42 @@
 <template>
-    <div>
-        <CardBaseCard title="Tambah Harga">
+    <div class="mb-5">
+        <CardBaseCard title="Tambah Harga" class="mb-5">
             <FormBaseForm @submit="handleSubmit">
                 <div class="form-group">
                   <label class="t-bold t-required">Tanggal</label>
                   <VueDatePicker v-model="formData.date" :format="'yyyy-MM-dd'" multi-dates 
                   :enable-time-picker="false"
-                  :id="'date-picker-1'" :min-date="new Date()" class="mb-3" 
+                  :id="'date-picker-1'" :min-date="new Date()" 
                   placeholder="Pilih tanggal, klik multiple untuk memilih beberapa tanggal sekaligus"></VueDatePicker>
                 </div>
-                <InputSelect 
-                  v-model="formData.room_type" 
-                  label="Type Room" 
-                  placeholder="Type Room" 
-                  :options="roomTypes" 
-                  required
-                />
-                <InputSelect 
-                  v-model="formData.room_view" 
-                  label="View" 
-                  placeholder="Type Room" 
-                  :options="roomView" 
-                  required
-                />
+                <div class="row mt-3">
+                  <div class="col-6">
+                    <InputWithCombobox 
+                      v-model="formData.room_type" 
+                      label="Type Room" 
+                      placeholder="Type Room" 
+                      :options="roomTypes" 
+                      required
+                    />
+                  </div>
+                  <div class="col-6">
+                    <InputWithCombobox 
+                      v-model="formData.room_view" 
+                      label="View" 
+                      placeholder="Type Room" 
+                      :options="roomView" 
+                      required
+                    />
+                  </div>
+                </div>
                 <InputAutonumeric
                   v-model="formData.price"
                   label="Harga Kamar"
                   placeholder="Masukkan Harga Kamar"
+                  class="mt-3"
                   required
                 />
-                <ButtonBaseButton type="submit" variant="primary">Submit</ButtonBaseButton>
+                <ButtonBaseButton type="submit" variant="primary" class="btn-lg">Submit</ButtonBaseButton>
             </FormBaseForm>
         </CardBaseCard>
     </div>
@@ -46,7 +53,7 @@ const config = useRuntimeConfig();
 const authStore = useAuthStore();
 import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
-navStore.setPage("Room");
+navStore.setPage("Setting");
 navStore.setSubpage("Index Price");
 const { $bus,$swal,$moment } = useNuxtApp();
 const formData = ref({
@@ -114,7 +121,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Index Price" });
+  $bus.$emit("pagechange", { page: "Setting", subpage: "Index Price" });
 });
 
 definePageMeta({

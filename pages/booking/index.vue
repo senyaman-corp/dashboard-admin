@@ -3,6 +3,11 @@
     <div class="card-body">
       <div class="row justify-content-between align-items-center">
         <h3 class="col-lg-3 flex-grow-1 mb-1">Data Booking</h3>
+        <div class="col-lg pe-sm-1 mb-1">
+          <label class="">
+            <input type="checkbox" class="form-check-input me-2" v-model="isChecked" @change="showExpectedCheckout"> Expected Checkout
+          </label>
+        </div>
         <div class="col-lg-2 pe-sm-1 mb-1">
           <select class="form-select form-select-md"
               :id="'year'"
@@ -19,6 +24,7 @@
               </option>
             </select>
         </div>
+       
         <div class="col-lg-2 pe-sm-1 mb-1">
           <select class="form-select form-select-md"
               :id="'year'"
@@ -30,11 +36,11 @@
               <option value="City">City</option>
             </select>
         </div>
-        <div class="col-lg-2 pe-sm-1 mb-1">
+        <div class="col-lg-2 text-end">
           <ButtonBaseButton
             variant="primary"
             to="/booking/add-booking"
-            class="w-100"
+            class="btn-md"
             >Tambah Booking</ButtonBaseButton
           >
         </div>
@@ -58,7 +64,7 @@
                       </a>
                     </li>
                     <li class="dropdown-item">
-                      <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id)">
+                      <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id_booking_room)">
                           <i class="fas fa-info-circle me-2"></i>Detail
                       </a>
                     </li>
@@ -106,7 +112,7 @@
         </div>
         <div class="col-lg-1 px-3 ps-sm-0">
           <ButtonBaseButton 
-            variant="primary" @click="exportBooking" class="btn-md w-100" style="height:34px;">
+            variant="primary" @click="exportBooking" class="btn-md w-100">
               <i class="fas fa-file-excel me-2"></i>Export
             </ButtonBaseButton
           >
@@ -117,7 +123,7 @@
       <form @submit.prevent="handleAddAdditionalCharge">
         <WidgetAdditionalCharge :addChargesData="addChargesData" @update:additionalCharges="updateAdditionalCharges" />
         <div class="d-flex justify-content-end">
-          <ButtonBaseButton type="submit" variant="primary" class="mt-4 btn-lg">Tambah</ButtonBaseButton>
+          <ButtonBaseButton type="submit" variant="primary" class="mt-4 btn-md">Tambah</ButtonBaseButton>
         </div>
       </form>
     </WidgetModalPad>
@@ -142,6 +148,8 @@ const start_date = ref(new Date());
 const end_date = ref(new Date());
 const addChargesData = ref([]);
 const additionalCharges = ref([]);
+const isChecked = ref(false);
+
 navStore.setPage("Booking");
 navStore.setSubpage("Index Booking");
 const router = useRouter();
@@ -158,7 +166,8 @@ const columns = ref([
 ]);
 const body = ref({
   type:'',
-  view:''
+  view:'',
+  expected_checkout:0,
 })
 const options = $dataTableOptions(config.public.baseUrl + 'bookings/list', authStore.getToken,body.value);
 options.order = [[8,'DESC']];
@@ -172,6 +181,7 @@ options.columnDefs = [
     return $formatDateTime(data);
   }}
 ];
+
 const selectedId = ref('');
 const addAdditionalCharge = async (id)=>{
   const { data,status} = await $fetch(`${config.public.baseUrl}bookings/additional-charges`,{
@@ -283,6 +293,16 @@ const viewDetail = async (id)=>{
   router.push('/booking/detail/'+id);
 }
 
+const showExpectedCheckout = (e)=>{
+  if(e.target.checked){
+    body.value.expected_checkout = 1;
+  }else{
+    body.value.expected_checkout = 0;
+  }
+  dt.ajax.reload();
+}
+
+
 const extendsBooking = async (id)=>{
   $swal.fire({
     title:'Extends Booking',
@@ -303,6 +323,7 @@ const extendsBooking = async (id)=>{
     }
   })
 }
+
 
 
 let dt;
