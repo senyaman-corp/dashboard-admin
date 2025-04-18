@@ -64,7 +64,7 @@
                       </a>
                     </li>
                     <li class="dropdown-item">
-                      <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id)">
+                      <a type="button" class="btn btn-default" @click="viewDetail(props.rowData.id_booking_room)">
                           <i class="fas fa-info-circle me-2"></i>Detail
                       </a>
                     </li>

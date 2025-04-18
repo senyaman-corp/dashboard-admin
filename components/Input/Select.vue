@@ -67,4 +67,8 @@ const emit = defineEmits(["update:modelValue"]);
     { immediate: true }
   );
 </script>
-<style></style>
+<style>
+.multiselect{
+  font-size:14px !important;
+}
+</style>
