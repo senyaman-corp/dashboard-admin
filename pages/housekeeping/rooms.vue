@@ -14,6 +14,15 @@
         <div class="col-lg-2 mb-1">
           <select
             class="form-select form-select-lg"
+            @change="filterByStatus"
+            v-model="roomStatus">
+            <option value="">Pilih Status</option>
+            <option v-for="rState in ['VR','VC','CO','OO']" :key="rState" :value="rState">{{ rState }}</option>
+          </select>
+        </div>
+        <div class="col-lg-2 mb-1">
+          <select
+            class="form-select form-select-lg"
             @change="filterByView"
             v-model="roomView">
             <option value="">Pilih View</option>
@@ -51,7 +60,7 @@
         />
       </div>
     </CardBaseCard>
-    <WidgetModalPad>
+    <WidgetModalPad :modalId="'room-detail'">
       <div class="container-fluid px-1">
         <div class="row gy-2">
           <div class="col-12 d-flex justify-content-between">
@@ -146,18 +155,21 @@
   const rooms = ref([]);
   const preservedRooms = ref([]);
   const roomTypes = ref([]);
+  const roomStatus = ref('');
+  const searchQuery = ref('');
   const months = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
   const bulans = ['01', '02', '03', '04', '05', '06',
     '07', '08', '09`', '10', '11', '12'
   ];
-  const years = ['2024', '2025', '2026'];
+  
 
   const selectedMonth = ref(months[date.value.month]);
   const selectedYear = ref(date.value.year.toString());
-  const loading = ref(false);
+  //const loading = ref(false);
   // Calculate days in selected month
+  //const years = ['2024', '2025', '2026'];
   const daysInMonth = computed(() => {
     const monthIndex = months.indexOf(selectedMonth.value);
     const year = parseInt(selectedYear.value);
@@ -258,7 +270,7 @@
     if (response.status == 1) {
       detail.value = response.data;
       $bus.$emit('openModal', {
-
+        id: 'room-detail'
       })
     }
 
@@ -309,7 +321,7 @@
   const shouldShowChecklistButton = (status) => {
     let lastStatus = status[status.length - 1];
     if(lastStatus !== undefined) {
-      if(lastStatus.status === 'CO') {
+      if(lastStatus.status === 'CO' && lastStatus.tanggal == $moment().format('YYYY-MM-DD')) {
         return true;
       }
     }
@@ -346,6 +358,38 @@
     }
     //navigateTo(`/housekeeping/detail/${detail.id}`);
   };
+
+  function filterByStatus(event) {
+      //roomStatus.value = newValue;
+      if (preservedRooms.value.length > 0) {
+          let filteredRooms = [];
+          filteredRooms = preservedRooms.value.filter(room => {
+            let prices = room.actual_prices;
+            let toDay = new Date().getDate();
+            console.log(prices[toDay-1]);
+
+            return prices[toDay -1].status == roomStatus.value;
+          });
+          rooms.value = filteredRooms;
+      }
+      let days = [];
+      for(let i=0; i<daysInMonth.value; i++) {
+        days.push({
+          room_id: '',
+          tanggal: '',
+          status:''
+        })
+      }
+      if(rooms.value.length == 0) {
+        rooms.value.push({
+          id: ' ',
+          room_number: ' ',
+          type: ' ',
+          view: ' ',
+          actual_prices: days
+        })
+      }
+  }
 
   const checkListRoom = async (detail) => {
     navigateTo(`/housekeeping/add-check-list?id=${detail.id}`);

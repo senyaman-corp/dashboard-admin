@@ -22,8 +22,8 @@
           <td
             class="px-3 py-1 whitespace-nowrap border-bottom-1 border-gray-200"
           >
-            <div class="t-bold">{{ room.room_number }} - {{ room.name }}</div>
-            <div class="small">{{ room.type }}({{ room.view }})</div>
+            <div class="t-bold" v-if="room.room_number !== ' '">{{ room.room_number }} - {{ room.name }}</div>
+            <div class="small" v-if="room.type !== ' '">{{ room.type }}({{ room.view }})</div>
           </td>
 
           <td
@@ -34,6 +34,7 @@
               'room-item',
               't-bold',
               'text-16',
+              'p-2',
               {
                 'p-2 text-success': price.status === 'VR',
                 'bg-info p-2': price.status === 'VC',
@@ -44,7 +45,7 @@
               },
             ]">
             <div @click="$emit('view-detail', room.id, index)">
-              {{ price.status }}
+              {{ price.status || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
             </div>
           </td>
         </tr>
