@@ -32,6 +32,10 @@ const props = defineProps({
     type: String,
     default: "modal-md",
   },
+  modalId: {
+    type: String,
+    required: true,
+  },
 })
 const isWarningVisible = ref(false);
 const { $bus } = useNuxtApp();
@@ -41,11 +45,22 @@ const closeModal = () => {
 };
 
 onMounted(() => {
-  $bus.$on("openModal", () => {
-    isWarningVisible.value = true;
+  // $bus.$on("openModal", () => {
+  //   isWarningVisible.value = true;
+  // });
+  // $bus.$on("closeModal", () => {
+  //   isWarningVisible.value = false;
+  // });
+  $bus.$on("openModal", (payload) => {
+    if (payload?.id === props.modalId) {
+      isWarningVisible.value = true;
+    }
   });
-  $bus.$on("closeModal", () => {
-    isWarningVisible.value = false;
+
+  $bus.$on("closeModal", (payload) => {
+    if (payload?.id === props.modalId) {
+      isWarningVisible.value = false;
+    }
   });
 });
 </script>

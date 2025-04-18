@@ -33,7 +33,7 @@
                             >
                             <template #column-1="props">
                                 <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-primary mx-1" @click="deleteRoomType(props.rowData)">Edit</button>
+                                    <button type="button" class="btn btn-primary mx-1" @click="editRoomType(props.rowData)">Edit</button>
                                     <button type="button" class="btn btn-primary mx-1" @click="viewProperties(props.rowData)">Properties</button>
                                 </div>
                             </template>
@@ -143,7 +143,7 @@
                             </div>
                             <div class="col-lg-1">
                                 <label>&nbsp;</label>
-                                <div class="mb-3">
+                                <div class="text-end mb-3">
                                     <ButtonBaseButton type="submit" variant="primary" class="mt-2 min-h-100 btn-md">Tambah</ButtonBaseButton>
                                 </div>
                             </div>
@@ -156,12 +156,71 @@
                             :columns="propertiesColumns"
                             :data="properties"
                             style="width: 100%"
-                        />
+                        >
+                            <template #column-2="props">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary mx-1" @click="editRoomProperty(props.rowData)">Edit</button>
+                                </div>
+                            </template>
+                        </DataTable>
                     </client-only>
                 </div>
             </div>
         </div>
     </div>
+    <WidgetModalPad :title="'Edit Room Type'" modal-id="edit-room-type">
+        <form @submit.prevent="updateRoomType">
+            <div class="container-fluid px-1">
+            <div class="row gy-2">
+                <div class="col-12">
+                <InputBaseInput
+                    type="text"
+                    v-model="type"
+                    label="Room Type"
+                    placeholder="Insert room type"
+                    :class="'flex-grow-1 me-2'"
+                    required
+                />
+                </div>
+            </div>
+            <div class="mt-3 text-end">
+                <ButtonBaseButton type="submit" variant="primary">Update</ButtonBaseButton>
+                <ButtonBaseButton type="button" variant="danger" class="mx-2" @click="$bus.$emit('closeModal', { id: 'edit-room-type' })">
+                    Cancel
+                </ButtonBaseButton>
+            </div>
+            </div>
+        </form>
+    </WidgetModalPad>
+
+    <WidgetModalPad :title="'Edit Property'" modal-id="edit-room-property">
+        <form @submit.prevent="updateRoomProperty">
+            <div class="container-fluid px-1">
+                <div class="mb-3">
+                    <label class="form-label t-required">Category</label>
+                    <select class="form-select" v-model="category" required>
+                        <option value="">Select Category</option>
+                        <option v-for="option in categoryOptions" :key="option" :v-model="option">
+                            {{ option }}
+                        </option>
+                    </select>
+                </div>
+                <InputBaseInput
+                    type="text" 
+                    v-model="name"
+                    label="Nama Property"
+                    placeholder="Insert property name"
+                    required
+                />
+                <div class="mt-3 text-end">
+                    <ButtonBaseButton type="submit" variant="primary">Update</ButtonBaseButton>
+                    <ButtonBaseButton type="button" variant="danger" class="mx-2" @click="$bus.$emit('closeModal', { id: 'edit-room-property' })">
+                        Cancel
+                    </ButtonBaseButton>
+                </div>
+            </div>
+        </form>
+    </WidgetModalPad>
   </div>
 </template>
 
@@ -196,7 +255,8 @@
 
     const propertiesColumns = ref([
         { title: "Category", data: "category" },
-        { title: "Name", data: "name" }
+        { title: "Name", data: "name" },
+        { title: "Action", data: "id" }
     ]);
     const roomTypes = ref([]);
     const properties = ref([]);
@@ -284,10 +344,18 @@
         }
     };
 
-    const deleteRoomType = (props)=>{
-        console.log(props.type);
+    const roomTypeId = ref(null)
+    const editRoomType = (room)=>{
+        type.value = room.name;
+        roomTypeId.value = room.id;
+        $bus.$emit("openModal", { id: 'edit-room-type' })
     }
-
+    const roomPropertyId = ref(null)
+    const editRoomProperty = (properties)=>{
+        propertyName.value = properties.type;
+        roomPropertyId.value = properties.id;
+        $bus.$emit("openModal", { id: 'edit-room-property' })
+    }
     const addProperty = async () => {
         const { data, status } = await $fetch(`${config.public.baseUrl}rooms/create-property`, {
             method: "POST",

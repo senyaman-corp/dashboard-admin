@@ -12,7 +12,7 @@
             v-for="day in daysInMonth"
             :key="day"
             class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
-            :class="{ 'text-danger': isHoliday(day) }"
+            :class="{ 'bg-danger': isHoliday(day),'current-day':new Date().getDate() == day }"
           >
             {{ day }}
           </th>
@@ -23,7 +23,7 @@
           <td
             class="px-4 py-2 whitespace-nowrap border-bottom-1 border-gray-200"
           >
-            <div class="t-bold">{{ room.room_number }} - {{ room.name }}</div>
+            <div class="text-16 t-bold">{{ room.room_number }} - {{ room.name }}</div>
             <div class="small">{{ room.type }}({{ room.view }})</div>
           </td>
 
@@ -36,11 +36,12 @@
               't-bold',
               'text-16',
               {
-                'badge-success p-2': price.status === 'VR',
-                'badge-info p-2': price.status === 'VC',
-                'badge-warning p-2': price.status === 'VD',
-                'badge-danger p-2': price.status === 'OO',
+                'p-2 text-success': price.status === 'VR',
+                'bg-info p-2': price.status === 'VC',
+                'bg-warning p-2': price.status === 'VD',
+                'bg-danger text-white p-2': price.status === 'O',
                 'text-danger': isHoliday(index + 1),
+                'current-day':new Date().getDate() == index + 1 
               },
             ]"
           >
@@ -85,5 +86,10 @@ th {
 }
 .room-item {
   cursor: pointer;
+}
+
+.current-day{
+  font-weight: bold;
+  border: 2px solid #1e1e1e;
 }
 </style>

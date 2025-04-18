@@ -114,7 +114,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Price" });
+  $bus.$emit("pagechange", { page: "Room", subpage: "Index Price" });
 });
 
 definePageMeta({

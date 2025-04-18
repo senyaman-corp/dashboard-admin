@@ -63,7 +63,7 @@
                 v-for="day in daysInMonth"
                 :key="day"
                 class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase"
-                :class="{ 'text-danger': isHoliday(day) }"
+                :class="{ 'text-danger': isHoliday(day),'current-day':new Date().getDate() == day }"
               >
                 {{ day }}
               </th>
@@ -82,6 +82,7 @@
                 v-for="(price, index) in room.price"
                 :key="index"
                 class="px-4 py-2 text-center border-bottom-1 border-gray-200"
+                :class="{ 'text-danger': isHoliday(index + 1),'current-day':new Date().getDate() == index + 1 }"
               >
                 <div>{{ $formatAngka(price.price) }}</div>
               </td>
@@ -100,6 +101,7 @@ import { useNavigatorStore } from "~/stores/navigator";
 const navStore = useNavigatorStore();
 navStore.setPage("Room");
 navStore.setSubpage("Index Price");
+
 import { useAuthStore } from "~/stores/auth";
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
@@ -238,3 +240,31 @@ definePageMeta({
   middleware: ["auth"],
 });
 </script>
+
+<style scoped>
+.overflow-x-auto {
+  overflow-x: auto;
+}
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.max-vh-65 {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+th {
+  position: sticky;
+  top: 0;
+  background-color: #38c66c;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+}
+.room-item {
+  cursor: pointer;
+}
+.current-day{
+  font-weight: bold;
+  border: 2px solid #1e1e1e;
+}
+</style>

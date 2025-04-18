@@ -7,6 +7,15 @@
             <ButtonBaseButton variant="primary"> Add Room </ButtonBaseButton>
           </NuxtLink>
         </div>
+        <div class="col-lg-3 mb-1">
+          <input
+            v-model="searchQuery"
+            @input="filterBySearch"
+            type="text"
+            class="form-control"
+            placeholder="Search Room Number / Name / Type"
+          />
+        </div>
         <div class="col-lg-2 mb-1">
           
             <select
@@ -299,36 +308,49 @@ const viewDetail = async (id, index) => {
   }
 };
 
-const filterByType = () => {
-  if (roomType.value == "" && roomView.value == "") {
-    rooms.value = preservedRooms.value;
-    return;
+const applyFilters = () => {
+  let filteredRooms = preservedRooms.value;
+
+  if (roomType.value) {
+    filteredRooms = filteredRooms.filter(room => room.type === roomType.value);
   }
-  if (preservedRooms.value.length > 0) {
-    let filteredRooms = [];
-    if(roomView.value !== ''){
-      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value && room.view === roomView.value);
-    }else{
-      filteredRooms = preservedRooms.value.filter(room => room.type === roomType.value);
-    }
-    rooms.value = filteredRooms;
+
+  if (roomView.value) {
+    filteredRooms = filteredRooms.filter(room => room.view === roomView.value);
   }
+
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filteredRooms = filteredRooms.filter(room =>
+      room.room_number.toLowerCase().includes(query) ||
+      room.name.toLowerCase().includes(query) ||
+      room.type.toLowerCase().includes(query)
+    );
+  }
+
+  rooms.value = filteredRooms;
 };
 
-const filterByView = () => {
-  if (roomView.value == "" && roomType.value == "") {
-    rooms.value = preservedRooms.value;
+const filterByType = applyFilters;
+const filterByView = applyFilters;
+
+
+const searchQuery = ref('');
+const filterBySearch = () => {
+  const query = searchQuery.value.trim().toLowerCase();
+
+  if (query === '') {
+    applyFilters(); // fallback to type/view filters
     return;
   }
-  if (preservedRooms.value.length > 0) {
-    let filteredRooms = [];
-    if(roomType.value !== ''){
-      filteredRooms = preservedRooms.value.filter((room) => room.view === roomView.value && room.type === roomType.value);
-    }else{
-      filteredRooms = preservedRooms.value.filter((room) => room.view === roomView.value);
-    }
-    rooms.value = filteredRooms;
-  }
+
+  rooms.value = preservedRooms.value.filter(room => {
+    return (
+      room.room_number.toLowerCase().includes(query) ||
+      room.name.toLowerCase().includes(query) ||
+      room.type.toLowerCase().includes(query)
+    );
+  });
 };
 
 const checkoutDay = (date)=>{
@@ -344,7 +366,6 @@ const checkoutDay = (date)=>{
 const checkout = async(id)=>{
   navigateTo('/booking/checkout?booking_id='+id);
 }
-
 
 watch([selectedMonth, selectedYear], () => {
   initializePrices();

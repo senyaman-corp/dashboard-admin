@@ -2,41 +2,59 @@
   <div>
     <CardBaseCard title="Tambah Kamar">
       <FormBaseForm @submit="handleSubmit">
-        <InputBaseInput
-          v-model="formData.room_number"
-          label="Nomor Kamar"
-          placeholder="Masukkan Nomor Kamar"
-          required
-        />
-        <InputBaseInput
-          v-model="formData.name"
-          label="Nama Kamar"
-          placeholder="Masukkan Nama Kamar"
-        />
-        <InputWithCombobox
-          v-model="formData.type"
-          :options="roomTypes"
-          label="Tipe Kamar"
-          id="type"
-          placeholder="Pilih Tipe Ruangan"
-        />
-        <InputWithCombobox
-          v-model="formData.view"
-          :options="roomView"
-          label="View Kamar"
-          id="view"
-          placeholder="Masukkan View Kamar"
-        />
-        <InputBaseInput
-          v-model="formData.floor_number"
-          label="Lantai Kamar"
-          placeholder="Masukkan Lantai Kamar"
-        />
-        <InputBaseInput
-          v-model="formData.size"
-          label="Ukuran Kamar"
-          placeholder="Masukkan Ukuran Kamar"
-        />
+        <div class="row">
+          <div class="col-6">
+            <InputBaseInput
+              v-model="formData.room_number"
+              label="Nomor Kamar"
+              placeholder="Masukkan Nomor Kamar"
+              required
+            />
+          </div>
+          <div class="col-6">
+            <InputBaseInput
+              v-model="formData.name"
+              label="Nama Kamar"
+              placeholder="Masukkan Nama Kamar"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <InputWithCombobox
+              v-model="formData.type"
+              :options="roomTypes"
+              label="Tipe Kamar"
+              id="type"
+              placeholder="Pilih Tipe Ruangan"
+            />
+          </div>
+          <div class="col-6">
+            <InputWithCombobox
+              v-model="formData.view"
+              :options="roomView"
+              label="View Kamar"
+              id="view"
+              placeholder="Masukkan View Kamar"
+            />
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-6">
+            <InputBaseInput
+              v-model="formData.floor_number"
+              label="Lantai Kamar"
+              placeholder="Masukkan Lantai Kamar"
+            />
+          </div>
+          <div class="col-6">
+            <InputBaseInput
+              v-model="formData.size"
+              label="Ukuran Kamar"
+              placeholder="Masukkan Ukuran Kamar"
+            />
+          </div>
+        </div>
         <InputAutonumeric
           v-model="formData.default_price"
           label="Default Harga Kamar"
@@ -148,7 +166,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  $bus.$emit("pagechange", { page: "Room", subpage: "Room" });
+  $bus.$emit("pagechange", { page: "Room", subpage: "Index Room" });
 });
 definePageMeta({
   middleware: ["auth"],
