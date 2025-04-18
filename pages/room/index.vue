@@ -115,6 +115,7 @@
               }}
             </span>
           </div>
+          <!-- 
           <div class="t-bold">Status</div>
           <div  v-for="status in detail.status" :key="status.id">
             <div class="d-flex justify-content-between">
@@ -122,6 +123,7 @@
               <span>{{ $moment(status.created_at).format('DD-MMMM-YYYY HH:mm')}}</span>
             </div>
           </div>
+           -->
           <div v-if="detail.booking_room_price !== null">
               <div class="d-flex justify-content-between">
                 <div class="t-bold">Booking</div>
