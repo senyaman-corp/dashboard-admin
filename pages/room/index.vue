@@ -423,9 +423,3 @@ definePageMeta({
   middleware: ["auth"],
 });
 </script>
-
-<style>
-  #dp-input-searchDate{
-    padding: .2rem 2rem !important;
-  }
-</style>

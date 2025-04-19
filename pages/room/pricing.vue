@@ -26,7 +26,7 @@
             :format="'yyyy-MM'"
             @closed="searchRoom"
             class="mb-3"
-          ></VueDatePicker>
+          ></VueDatePicker>a
         </div>
       </div>
 
@@ -145,11 +145,9 @@ const initData = async () => {
       },
     }
   );
-  console.log("Rooms", data);
   if (status == 1) {
     rooms.value = data;
     preservedRooms.value = data;
-    console.log("Rooms", rooms.value);
   } else {
     if (statusCode == 403) {
       //redirect login;

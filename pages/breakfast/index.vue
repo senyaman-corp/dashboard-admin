@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="mt-3">
-                <div class="table-responsive mt-3 min-vh-65">
+                <div class="table-responsive mt-3 min-vh-65" id="style-datatable">
                     <client-only>
                         <DataTable
                             class="table table-striped table-bordered"
